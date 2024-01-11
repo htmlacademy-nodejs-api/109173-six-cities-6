@@ -1,1 +1,5 @@
-console.log(`Main cli. Node version: ${process.version}`);
+import { CLIApplication } from './cli-application.js';
+
+const test = new CLIApplication();
+
+console.log(test.parseCommands());

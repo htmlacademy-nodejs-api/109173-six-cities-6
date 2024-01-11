@@ -1,10 +1,10 @@
-import { City } from './city.enum.js'
-import { Coordinate } from './coordinate.type.js'
-import { FacilitiesType } from './facilities-type.enum.js'
-import { OfferType } from './offer-type.js'
-import { User } from './user.type.js'
+import { City } from './city.enum.js';
+import { Coordinate } from './coordinate.type.js';
+import { FacilitiesType } from './facilities-type.enum.js';
+import { OfferType } from './offer-type.js';
+import { User } from './user.type.js';
 
-type Images = String[];
+type Images = string[];
 
 export type Offer = {
   name: string,
