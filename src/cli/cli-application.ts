@@ -1,6 +1,7 @@
 import { readdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { Command } from './commands/command.interface.js';
+import { upperCaseFirst } from '../utils/common.js';
 
 const Settings = {
   COMMANDS_PATH: './src/cli/commands',
@@ -36,10 +37,13 @@ export class CLIApplication {
         .map((file) => {
           const splittedFilename = file.split(Settings.FILE_NAME_DELIMITER);
           const className = `${upperCaseFirst(splittedFilename[0])}${upperCaseFirst(splittedFilename[1])}`;
-          this.commands[splittedFilename[0]] = className;
+          // const modulePath = `${Settings.COMMANDS_PATH}/${file}`;
+          // const module = await import(modulePath);
+          // console.log('EVAL: ', eval(`new ${className}();`));
+          // this.commands[splittedFilename[0]] = className;
+          console.log(`ClassName: ${className}`);
+          console.log('Commands: ', this.commands);
         });
-
-      // console.log(this.commands);
     } catch(err) {
       console.error(ErrorText.CANT_READ_DIR);
 
