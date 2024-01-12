@@ -1,7 +1,7 @@
 # Личный проект «Шесть городов»
 
 * Студент: [Дмитрий Носиков](https://up.htmlacademy.ru/nodejs-api/6/user/109173).
-* Наставник: [Светослав Колпаков](https://htmlacademy.ru/profile/id2448693).
+* Наставник: [Владислав Поклонский](https://htmlacademy.ru/profile/id2210683).
 
 ---
 
