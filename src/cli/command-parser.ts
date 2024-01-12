@@ -1,7 +1,6 @@
 const COMMAND_BEGINNING = '--';
 
 type ParsedCommands = Record<string, string[]>;
-
 export class CommandParser {
   static parse(cliArguments: string[]): ParsedCommands {
     const parsedCommands: ParsedCommands = {};
