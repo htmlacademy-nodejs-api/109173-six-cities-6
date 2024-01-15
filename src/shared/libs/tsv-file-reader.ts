@@ -22,7 +22,7 @@ export class TSVFileReader {
     try {
       const fileContent = readFileSync(resolve(this.filePath), Settings.ENCODING);
       const splittedContent = this.toArray(fileContent);
-      console.log(splittedContent);
+      console.info('Imported file content: ', splittedContent);
     } catch(err) {
       console.error(`${ErrorText.CANT_READ}: ${this.filePath}`);
 
@@ -37,12 +37,14 @@ export class TSVFileReader {
     const offers = fileContent
       .trim()
       .split('\n')
-      .slice()
-      .map((fileLine) => {
+      .filter((fileLine) => {
         if(fileLine.startsWith('#')) {
-          return;
+          return false;
         }
 
+        return true;
+      })
+      .map((fileLine) => {
         const [
           name,
           description,
