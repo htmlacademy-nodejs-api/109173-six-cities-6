@@ -1,7 +1,7 @@
 import { Command } from './command.interface.js';
 
 const Settings = {
-  COMMAND_NAME: '--import',
+  COMMAND_NAME: '--generate',
   ENCODING: 'utf-8'
 } as const;
 

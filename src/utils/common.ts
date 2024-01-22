@@ -13,11 +13,14 @@ function getRandomArrayElement<T>(array: T[]) {
 }
 
 function getRandomArrayElements<T>(array: T[], elementsCount: number) {
-  return Array.from()
+  const elemsCount = elementsCount ?? getRandomInRange(0, array.length);
+
+  return Array.from({length: elemsCount}, () => getRandomArrayElement(array));
 }
 
 export {
   upperCaseFirst,
   getRandomInRange,
-  getRandomArrayElement
+  getRandomArrayElement,
+  getRandomArrayElements
 };
