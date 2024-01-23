@@ -1,9 +1,13 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-// import { Offer } from '../types/offer.type.js';
+
+const Delimiter = {
+  LINE: '\n',
+  PARAMS: '|',
+  VALUES: ';'
+};
 
 const Settings = {
-  COMMAND_NAME: '--import',
   DEFAULT_FILEPATH: './src/mocks/mocks-data.tsv',
   ENCODING: 'utf-8',
 } as const;
@@ -22,6 +26,7 @@ export class TSVFileReader {
     try {
       const fileContent = readFileSync(resolve(this.filePath), Settings.ENCODING);
       const splittedContent = this.toArray(fileContent);
+
       console.info('Imported file content: ', splittedContent);
     } catch(err) {
       console.error(`${ErrorText.CANT_READ}: ${this.filePath}`);
@@ -36,14 +41,8 @@ export class TSVFileReader {
   private toArray(fileContent: string) {
     const offers = fileContent
       .trim()
-      .split('\n')
-      .filter((fileLine) => {
-        if(fileLine.startsWith('#')) {
-          return false;
-        }
-
-        return true;
-      })
+      .split(Delimiter.LINE)
+      .filter((fileLine) => !fileLine.startsWith('#'))
       .map((fileLine) => {
         const [
           name,
@@ -63,9 +62,10 @@ export class TSVFileReader {
           author,
           comments,
           coordinates
-        ] = fileLine.trim().split('|');
+        ] = fileLine.trim().split(Delimiter.PARAMS);
 
-        const [lat, long] = coordinates.split(';');
+        console.log('---------------------- TEST: ', images);
+        const [latitude, longitude] = coordinates.split(Delimiter.VALUES);
 
         return {
           name,
@@ -73,7 +73,7 @@ export class TSVFileReader {
           date: new Date(date),
           city,
           previewImage,
-          images: images.split(';') ?? [],
+          images: images.split(Delimiter.VALUES) ?? [],
           isPremium,
           isFavorite,
           rating,
@@ -81,10 +81,10 @@ export class TSVFileReader {
           rooms,
           guests,
           price,
-          facilities: facilities.split(';') ?? [],
+          facilities: facilities.split(Delimiter.VALUES) ?? [],
           author,
           comments,
-          coordinates: {lat, long}
+          coordinates: {latitude, longitude}
         };
       });
 

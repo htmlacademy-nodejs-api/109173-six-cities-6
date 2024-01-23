@@ -17,7 +17,7 @@ async function bootstrap() {
     const filePath = resolve(file);
     const commandPath = `${WINDOWS_FILE_PROTOCOL}${filePath}`;
     const importedModule = await import(commandPath);
-    const CommandClassName = Object.keys(importedModule)[0];
+    const [CommandClassName] = Object.keys(importedModule);
 
     if(typeof importedModule[CommandClassName] !== 'function') {
       return;

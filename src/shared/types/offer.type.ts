@@ -1,6 +1,6 @@
-import { City } from './city.js';
+import { City } from './city.type.js';
 import { Coordinate } from './coordinate.type.js';
-import { FacilitiesType } from './facilities-type.enum.js';
+import { FacilitiesType } from './facilities-type.js';
 import { OfferType } from './offer-type.js';
 import { User } from './user.type.js';
 

@@ -6,21 +6,26 @@ function getRandomInRange(min: number = 0, max: number = Infinity) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function getRandomArrayElement<T>(array: T[]) {
-  const randomIndex = getRandomInRange(0, array.length);
+function getRandomBoolean() {
+  return !!getRandomInRange(0, 1);
+}
+
+function getRandomElement<T>(array: T[]): T {
+  const randomIndex = getRandomInRange(0, array.length - 1);
 
   return array[randomIndex];
 }
 
-function getRandomArrayElements<T>(array: T[], elementsCount: number) {
-  const elemsCount = elementsCount ?? getRandomInRange(0, array.length);
+function getRandomElements<T>(array: T[], elementsCount?: number): T[] {
+  const elemsCount = elementsCount ?? getRandomInRange(0, array.length - 1);
 
-  return Array.from({length: elemsCount}, () => getRandomArrayElement(array));
+  return Array.from({length: elemsCount}, () => getRandomElement(array));
 }
 
 export {
   upperCaseFirst,
   getRandomInRange,
-  getRandomArrayElement,
-  getRandomArrayElements
+  getRandomBoolean,
+  getRandomElement,
+  getRandomElements,
 };
