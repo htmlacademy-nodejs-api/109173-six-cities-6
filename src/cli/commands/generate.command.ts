@@ -2,8 +2,8 @@ import { resolve } from 'node:path';
 import { Command } from './command.interface.js';
 import { MockData } from '../../shared/types/mock-data.type.js';
 import { ServiceURL, createAPI } from '../../shared/services/api.js';
-import { TSVFileGenerator } from '../../shared/libs/tsv-file-generator.js';
-import { TSVFileWriter } from '../../shared/libs/tsv-file-writer.js';
+import { TSVFileGenerator } from '../../shared/libs/tsv-file-generator/tsv-file-generator.js';
+import { TSVFileWriter } from '../../shared/libs/tsv-file-writer/tsv-file-writer.js';
 
 const Settings = {
   COMMAND_NAME: '--generate',

@@ -1,9 +1,13 @@
-import { TSVFileReader } from '../../shared/libs/tsv-file-reader.js';
+import { TSVFileReader } from '../../shared/libs/tsv-file-reader/tsv-file-reader.js';
 import { Command, ExecuteParameters } from './command.interface.js';
 
 const Settings = {
   COMMAND_NAME: '--import',
   ENCODING: 'utf-8'
+} as const;
+
+const MessageText = {
+  OFFERS: 'Offers in file: ',
 } as const;
 
 export class ImportCommand implements Command {
@@ -15,6 +19,6 @@ export class ImportCommand implements Command {
     const [filepath] = parameters;
     const fileReader = new TSVFileReader(filepath);
 
-    console.info('Offers in file: ', fileReader.read());
+    console.info(MessageText.OFFERS, fileReader.read());
   }
 }

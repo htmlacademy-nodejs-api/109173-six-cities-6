@@ -8,4 +8,4 @@ export const Cities = {
 } as const;
 
 
-export type City = keyof [keyof typeof Cities];
+export type City = keyof typeof Cities;

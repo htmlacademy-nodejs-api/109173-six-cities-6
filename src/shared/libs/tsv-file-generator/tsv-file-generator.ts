@@ -1,8 +1,8 @@
-import { getRandomBoolean, getRandomElement, getRandomElements, getRandomInRange } from '../../utils/common.js';
-import { FacilitiesType } from '../types/facilities-type.js';
-import { MockData } from '../types/mock-data.type.js';
-import { OfferType } from '../types/offer-type.js';
-import { User } from '../types/user.type.js';
+import { getRandomBoolean, getRandomElement, getRandomElements, getRandomInRange } from '../../../utils/common.js';
+import { FacilitiesType } from '../../types/facilities-type.js';
+import { MockData } from '../../types/mock-data.type.js';
+import { OfferType } from '../../types/offer-type.js';
+import { User } from '../../types/user.type.js';
 
 const Rating = {
   MIN: 1,
@@ -75,7 +75,7 @@ export class TSVFileGenerator {
       offerPrice,
       offerFacilities.join(Delimiter.VALUES),
       author.name,
-      comments,
+      comments ?? [],
       [latitude, longitude].join(Delimiter.VALUES)
     ].join(Delimiter.PARAMS);
   }
