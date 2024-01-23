@@ -4,17 +4,11 @@ import { FileReader } from './tsv-file-reader.interface.js';
 import { Offer } from '../../types/offer.type.js';
 import { City } from '../../types/city.type.js';
 import { OfferType } from '../../types/offer-type.js';
+import { GlobalSettings } from '../../../global-settings.js';
+import { TSVSettings } from '../tsv-settings.js';
 
-const Delimiter = {
-  LINE: '\n',
-  PARAMS: '|',
-  VALUES: ';'
-};
-
-const Settings = {
-  DEFAULT_FILEPATH: './src/mock/mock-data.tsv',
-  ENCODING: 'utf-8',
-} as const;
+const DEFAULT_FILEPATH = './src/mock/mock-data.tsv';
+const {DELIMITER} = TSVSettings;
 
 const ErrorText = {
   CANT_READ: 'Can`t read file'
@@ -26,12 +20,12 @@ const MessageText = {
 
 export class TSVFileReader implements FileReader {
   constructor(
-    private readonly filePath: string = Settings.DEFAULT_FILEPATH
+    private readonly filePath: string = DEFAULT_FILEPATH
   ) {}
 
   public read() {
     try {
-      const fileContent = readFileSync(resolve(this.filePath), Settings.ENCODING);
+      const fileContent = readFileSync(resolve(this.filePath), GlobalSettings.CHARSET);
       const splittedContent = this.toArray(fileContent);
 
       console.info(MessageText.IMPORTED, splittedContent);
@@ -48,7 +42,7 @@ export class TSVFileReader implements FileReader {
   private toArray(fileContent: string): Offer[] {
     const offers = fileContent
       .trim()
-      .split(Delimiter.LINE)
+      .split(DELIMITER.LINE)
       .filter((fileLine) => !fileLine.startsWith('#'))
       .map((fileLine) => {
         const [
@@ -69,9 +63,9 @@ export class TSVFileReader implements FileReader {
           author,
           comments,
           coordinates
-        ] = fileLine.trim().split(Delimiter.PARAMS);
+        ] = fileLine.trim().split(DELIMITER.PARAMS);
 
-        const [latitude, longitude] = coordinates.split(Delimiter.VALUES);
+        const [latitude, longitude] = coordinates.split(DELIMITER.VALUES);
         const city = offerCity as City;
         const type = offerType as OfferType;
 
@@ -81,7 +75,7 @@ export class TSVFileReader implements FileReader {
           date: new Date(date).toISOString(),
           city,
           previewImage,
-          images: images.split(Delimiter.VALUES) ?? [],
+          images: images.split(DELIMITER.VALUES) ?? [],
           isPremium,
           isFavorite,
           rating,
@@ -89,9 +83,9 @@ export class TSVFileReader implements FileReader {
           rooms,
           guests,
           price,
-          facilities: facilities.split(Delimiter.VALUES) ?? [],
+          facilities: facilities.split(DELIMITER.VALUES) ?? [],
           author,
-          comments: comments.split(Delimiter.VALUES) ?? [],
+          comments: comments.split(DELIMITER.VALUES) ?? [],
           coordinates: {latitude, longitude}
         };
       });

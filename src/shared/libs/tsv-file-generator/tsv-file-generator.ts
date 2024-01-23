@@ -3,6 +3,7 @@ import { FacilitiesType } from '../../types/facilities-type.js';
 import { MockData } from '../../types/mock-data.type.js';
 import { OfferType } from '../../types/offer-type.js';
 import { User } from '../../types/user.type.js';
+import { TSVSettings } from '../tsv-settings.js';
 
 const Rating = {
   MIN: 1,
@@ -24,10 +25,6 @@ const Price = {
   MAX: 100000,
 };
 
-const Delimiter = {
-  PARAMS: '|',
-  VALUES: ';'
-};
 
 export class TSVFileGenerator {
   constructor(private readonly mockData: MockData) {}
@@ -64,8 +61,8 @@ export class TSVFileGenerator {
       offerDescription,
       date,
       city.name,
-      preview.join(Delimiter.VALUES),
-      offerPhotos.join(Delimiter.VALUES),
+      preview.join(TSVSettings.DELIMITER.VALUES),
+      offerPhotos.join(TSVSettings.DELIMITER.VALUES),
       premium,
       favorite,
       rating,
@@ -73,10 +70,10 @@ export class TSVFileGenerator {
       rooms,
       guests,
       offerPrice,
-      offerFacilities.join(Delimiter.VALUES),
+      offerFacilities.join(TSVSettings.DELIMITER.VALUES),
       author.name,
       comments ?? [],
-      [latitude, longitude].join(Delimiter.VALUES)
-    ].join(Delimiter.PARAMS);
+      [latitude, longitude].join(TSVSettings.DELIMITER.VALUES)
+    ].join(TSVSettings.DELIMITER.PARAMS);
   }
 }

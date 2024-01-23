@@ -1,15 +1,13 @@
+import { GlobalSettings } from '../../global-settings.js';
 import { Command } from './command.interface.js';
 import chalk from 'chalk';
 
-const Settings = {
-  COMMAND_NAME: '--help',
-} as const;
-
+const COMMAND_NAME = `${GlobalSettings.COMMAND_BEGINNING}help`;
 export class HelpCommand implements Command {
   constructor() {}
 
   getName() {
-    return Settings.COMMAND_NAME;
+    return COMMAND_NAME;
   }
 
   execute() {

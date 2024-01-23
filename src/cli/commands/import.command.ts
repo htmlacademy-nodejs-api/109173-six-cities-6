@@ -1,10 +1,8 @@
+import { GlobalSettings } from '../../global-settings.js';
 import { TSVFileReader } from '../../shared/libs/tsv-file-reader/tsv-file-reader.js';
 import { Command, ExecuteParameters } from './command.interface.js';
 
-const Settings = {
-  COMMAND_NAME: '--import',
-  ENCODING: 'utf-8'
-} as const;
+const COMMAND_NAME = `${GlobalSettings.COMMAND_BEGINNING}import`;
 
 const MessageText = {
   OFFERS: 'Offers in file: ',
@@ -12,7 +10,7 @@ const MessageText = {
 
 export class ImportCommand implements Command {
   getName(): string {
-    return Settings.COMMAND_NAME;
+    return COMMAND_NAME;
   }
 
   async execute(...parameters: ExecuteParameters): Promise<void> {

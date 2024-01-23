@@ -4,11 +4,9 @@ import { MockData } from '../../shared/types/mock-data.type.js';
 import { ServiceURL, createAPI } from '../../shared/services/api.js';
 import { TSVFileGenerator } from '../../shared/libs/tsv-file-generator/tsv-file-generator.js';
 import { TSVFileWriter } from '../../shared/libs/tsv-file-writer/tsv-file-writer.js';
+import { GlobalSettings } from '../../global-settings.js';
 
-const Settings = {
-  COMMAND_NAME: '--generate',
-  ENCODING: 'utf-8'
-} as const;
+const COMMAND_NAME = `${GlobalSettings.COMMAND_BEGINNING}generate`;
 
 const ErrorText = {
   LOAD: 'Can`t load data from url:',
@@ -44,7 +42,7 @@ export class GenerateCommand implements Command {
   }
 
   getName(): string {
-    return Settings.COMMAND_NAME;
+    return COMMAND_NAME;
   }
 
   async execute(...parameters: string[]) {
