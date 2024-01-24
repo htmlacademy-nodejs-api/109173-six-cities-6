@@ -1,8 +1,9 @@
 import { ReadStream, createReadStream } from 'node:fs';
+import { EventEmitter } from 'node:events';
 import { resolve } from 'node:path';
 import { FileReader } from './tsv-file-reader.interface.js';
-import { TSVSettings } from '../tsv-settings.js';
 import { GlobalSettings } from '../../../global-settings.js';
+import { ReadEvent } from '../tsv-settings.js';
 
 const CHUNK_SIZE = 16 * 1024; // 16 Kb
 
@@ -11,16 +12,17 @@ const ErrorText = {
 } as const;
 
 const MessageText = {
-  INIT: 'Starting to read content:',
-  ROWS_COUNT: 'Read rows count:'
+  INIT: 'Starting to read content',
 } as const;
 
-export class TSVFileReader implements FileReader {
+export class TSVFileReader extends EventEmitter implements FileReader {
   private stream: ReadStream;
 
   constructor(
     private readonly filePath: string
   ) {
+    super();
+
     this.stream = createReadStream(resolve(this.filePath), {
       encoding: GlobalSettings.ENCODING,
       highWaterMark: CHUNK_SIZE
@@ -28,7 +30,7 @@ export class TSVFileReader implements FileReader {
   }
 
   public async read() {
-    console.info(`${MessageText.INIT} ${resolve(this.filePath)}`);
+    console.info(`${MessageText.INIT}: ${resolve(this.filePath)}`);
 
     let readData = '';
     let endRowPosition = 0;
@@ -41,16 +43,24 @@ export class TSVFileReader implements FileReader {
         readData += chunk.toString();
 
         while((endRowPosition = readData.indexOf('\n')) >= 0) {
-          const readLine = readData.slice(0, endRowPosition + 1);
+          const readRow = readData.slice(0, endRowPosition + 1);
 
-          console.log('Read line: ', readLine);
+          this.emit(ReadEvent.READ_ROW, readRow);
 
           readData = readData.slice(++endRowPosition);
           readRowCount++;
         }
       }
-
-      console.info(`${MessageText.ROWS_COUNT} ${readRowCount}`);
     });
+
+    this.stream.on('error', () => {
+      this.emit(ReadEvent.ERROR, readRowCount);
+
+      console.error(`${ErrorText.CANT_READ}: ${resolve(this.filePath)}`);
+
+      this.stream.destroy();
+    });
+
+    this.stream.on('end', () => this.emit(ReadEvent.END, readRowCount));
   }
 }
