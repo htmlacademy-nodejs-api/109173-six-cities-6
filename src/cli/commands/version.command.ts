@@ -39,7 +39,7 @@ export class VersionCommand implements Command {
   }
 
   private readVersion(): string {
-    const jsonContent = readFileSync(resolve(this.filepath), GlobalSettings.CHARSET);
+    const jsonContent = readFileSync(resolve(this.filepath), GlobalSettings.ENCODING);
     const parsedContent: unknown = JSON.parse(jsonContent);
 
     if(!this.isPackageJSONConfig(parsedContent)) {

@@ -1,5 +1,6 @@
 import { WriteStream, createWriteStream } from 'node:fs';
 import { FileWriter } from './tsv-file-writer.interface.js';
+import { GlobalSettings } from '../../../global-settings.js';
 
 export class TSVFileWriter implements FileWriter {
   private stream: WriteStream;
@@ -7,7 +8,7 @@ export class TSVFileWriter implements FileWriter {
   constructor(private readonly filename: string) {
     this.stream = createWriteStream(filename, {
       flags: 'w',
-      encoding: 'utf-8',
+      encoding: GlobalSettings.ENCODING,
       autoClose: true,
     });
   }
