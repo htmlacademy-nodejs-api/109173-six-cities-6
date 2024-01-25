@@ -1,6 +1,6 @@
 import { City } from './city.type.js';
-import { FacilitiesType } from './facilities-type.js';
-import { OfferType } from './offer-type.js';
+import { FacilitiesType } from './facilities-type.enum.js';
+import { OfferType } from './offer-type.enum.js';
 import { User } from './user.type.js';
 
 type MockCities = {

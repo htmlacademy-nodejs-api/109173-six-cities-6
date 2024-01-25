@@ -15,7 +15,7 @@
     "compile": "tsc -p tsconfig.json",
     "clean": "rimraf dist",
     "ts": "node --loader ts-node/esm",
-    "json-server": "json-server ./src/mocks/mock-server-data.json"
+    "mock:json-server": "json-server ./src/mocks/mocks-server-data.json"
   },
   "devDependencies": {
     "@types/node": "18.17.17",

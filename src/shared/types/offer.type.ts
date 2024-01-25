@@ -1,6 +1,6 @@
 import { City } from './city.type.js';
 import { Coordinate } from './coordinate.type.js';
-import { OfferType } from './offer-type.js';
+import { OfferType } from './offer-type.enum.js';
 
 type Images = string[];
 

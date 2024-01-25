@@ -1,7 +1,7 @@
 import { getRandomBoolean, getRandomElement, getRandomElements, getRandomInRange } from '../../../utils/common.js';
-import { FacilitiesType } from '../../types/facilities-type.js';
+import { FacilitiesType } from '../../types/facilities-type.enum.js';
 import { MockData } from '../../types/mock-data.type.js';
-import { OfferType } from '../../types/offer-type.js';
+import { OfferType } from '../../types/offer-type.enum.js';
 import { User } from '../../types/user.type.js';
 import { TSVSettings } from '../tsv-settings.js';
 
