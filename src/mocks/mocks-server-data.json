@@ -1,0 +1,85 @@
+{
+  "api": {
+    "offer": {
+      "names": ["Shale", "Farfale", "Ulale"],
+      "descriptions": [
+        "Some text description",
+        "Other description",
+        "Another one descriiption"
+      ],
+      "cities": [
+        {
+          "name": "Paris",
+          "latitude": "48.85661",
+          "longitude": "2.351499"
+        },
+        {
+          "name": "Cologne",
+          "latitude": "50.938361",
+          "longitude": "6.959974"
+        },
+        {
+          "name": "Brussels",
+          "latitude": "50.846557",
+          "longitude": "4.351697"
+        },
+        {
+          "name": "Amsterdam",
+          "latitude": "52.370216",
+          "longitude": "4.895168"
+        },
+        {
+          "name": "Hamburg",
+          "latitude": "53.550341",
+          "longitude": "10.000654"
+        },
+        {
+          "name": "Dusseldorf",
+          "latitude": "51.225402",
+          "longitude": "6.776314"
+        }
+      ],
+      "previewImages": [
+        "/some/photo/preview.jpg",
+        "/some/photo/preview2.jpg",
+        "/some/photo/preview3.jpg",
+        "/some/photo/preview4.jpg"
+      ],
+      "photos": ["photo1.jpg", "photo2.jpg", "photo3.jpg", "photo4.jpg"],
+      "type": ["apartment", "house", "room", "hotel"],
+      "facilities": [
+        "Breakfast",
+        "Air conditioning",
+        "friendly workspace",
+        "Baby seat",
+        "Washer",
+        "Towels",
+        "Fridge"
+      ],
+      "comments": []
+    },
+    "users": {
+      "User1": {
+        "name": "Some User One",
+        "email": "someEmail1@email.com",
+        "avatarUrl": "/avatar/url.jpg",
+        "password": "123456",
+        "isPro": "true"
+      },
+      "User2": {
+        "name": "Some User 2",
+        "email": "someEmail2@email.com",
+        "avatarUrl": "/avatar/url2.jpg",
+        "password": "Qwerty123",
+        "isPro": "true"
+      },
+      "User3": {
+        "name": "Some User Three",
+        "email": "someEmail3@email.com",
+        "avatarUrl": "/avatar/url3.jpg",
+        "password": "Qwe123456789rty",
+        "isPro": "false"
+      }
+    }
+  }
+}

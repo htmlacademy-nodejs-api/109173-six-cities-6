@@ -1,4 +1,4 @@
-export const FacilitiesType = {
+export const FacilitiesTypes = {
   Breakfast: 'Breakfast',
   Conditioning: 'Air conditioning',
   Laptop: 'Laptop',
@@ -9,13 +9,4 @@ export const FacilitiesType = {
   Fridge: 'Fridge',
 } as const;
 
-/* export enum FacilitiesType {
-  Breakfast = 'Breakfast',
-  Conditioning = 'Air conditioning',
-  Laptop = 'Laptop',
-  Workspace = 'friendly workspace',
-  Babyseat = 'Baby seat',
-  Washer = 'Washer',
-  Towels = 'Towels',
-  Fridge = 'Fridge',
-} */
+export type FacilitiesType = keyof typeof FacilitiesTypes;

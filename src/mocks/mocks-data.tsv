@@ -1,4 +1,0 @@
-#name description date city preview photos premium favorite rating type rooms guests price facilities(Breakfast;Air_conditioning;Laptop;friendly_workspace;Baby_seat;Washer;Towels;Fridge) author comments coordinates(lat:long)
-Shale|Some text description|2024-01-11T09:16:19Z|Amsterdam|/some/photo/preview.jpg|photo2;photo3|true|false|5|apartment|6|6|3500|Breakfast;Laptop|Milana|281|52.370216;4.895168
-Farfale|Some text description|2024-01-11T09:16:19Z|Dusseldorf|some/photo/preview.jpg|photo3|true|true|5|house|4|4|2800|Breakfast;Laptop|Eugene|181|51.225402;6.776314
-Ulale|Some text description (min: 20, max: 1024)|2024-01-11T09:16:19Z|Hamburg|some/photo/preview.jpg|photo1;photo2;photo3|false|false|3|room|2|4|4200|friendly_workspace;Baby_seat|Alex|300|53.550341;10.000654

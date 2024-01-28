@@ -1,12 +1,10 @@
 import { Command, ExecuteParameters } from './command.interface.js';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { GlobalSettings } from '../../global-settings.js';
 
-const Settings = {
-  COMMAND_NAME: '--version',
-  DEFAULT_FILEPATH: './package.json',
-  ENCODING: 'utf-8'
-} as const;
+const COMMAND_NAME = `${GlobalSettings.COMMAND_BEGINNING}version`;
+const DEFAULT_FILEPATH = './package.json';
 
 const ErrorText = {
   NOT_JSON_CONFIG: 'Failed to parse JSON config file.',
@@ -19,11 +17,11 @@ type PackageJSONConfig = {
 
 export class VersionCommand implements Command {
   constructor(
-    private readonly filepath: string = Settings.DEFAULT_FILEPATH
+    private readonly filepath: string = DEFAULT_FILEPATH
   ) {}
 
   getName() {
-    return Settings.COMMAND_NAME;
+    return COMMAND_NAME;
   }
 
   async execute(..._parameters: ExecuteParameters): Promise<void> {
@@ -41,7 +39,7 @@ export class VersionCommand implements Command {
   }
 
   private readVersion(): string {
-    const jsonContent = readFileSync(resolve(this.filepath), Settings.ENCODING);
+    const jsonContent = readFileSync(resolve(this.filepath), GlobalSettings.ENCODING);
     const parsedContent: unknown = JSON.parse(jsonContent);
 
     if(!this.isPackageJSONConfig(parsedContent)) {
