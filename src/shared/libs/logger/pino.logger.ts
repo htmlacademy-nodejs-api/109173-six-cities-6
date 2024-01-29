@@ -1,9 +1,15 @@
+import { injectable } from 'inversify';
+import { resolve } from 'node:path';
 import { Logger as PinoInstance, pino, transport } from 'pino';
 import { Logger } from './logger.interface.js';
-import { getCurrentModuleDirectoryPath } from '../../../utils/file-system.js';
 import { GlobalSettings } from '../../../global-settings.js';
-import { resolve } from 'node:path';
+import { getCurrentModuleDirectoryPath } from '../../../utils/file-system.js';
 
+const MessageText = {
+  INIT: 'Logger initialized'
+};
+
+@injectable()
 export class PinoLogger implements Logger {
   private readonly logger: PinoInstance;
 
@@ -22,6 +28,8 @@ export class PinoLogger implements Logger {
     ];
 
     this.logger = pino({}, transport({ targets: transports }));
+
+    this.logger.info(MessageText.INIT);
   }
 
   info(message: string, ...args: unknown[]) {

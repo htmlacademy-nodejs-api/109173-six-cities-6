@@ -7,3 +7,4 @@ export * from './user.type.js';
 export * from './user.type.js';
 export * from './city-type.enum.js';
 export * from './comment.type.js';
+export * from './component.enum.js';
