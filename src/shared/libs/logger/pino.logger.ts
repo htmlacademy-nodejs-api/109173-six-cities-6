@@ -20,10 +20,12 @@ export class PinoLogger implements Logger {
       {
         target: 'pino/file',
         options: { destination: logFilePath }, // Write logs into file
+        level: 'debug'
       },
       {
         target: 'pino/file',
         oprions: {}, // Write logs into console
+        level: 'info'
       }
     ];
 
