@@ -1,5 +1,5 @@
-import { RestConfig } from '../shared/libs/config/rest.config.js';
-import { Logger } from '../shared/libs/logger/index.js';
+import { Config } from '../shared/libs/config/config.interface.js';
+import { Logger } from '../shared/libs/logger/logger.interface.js';
 import { Rest } from './rest.interface.js';
 
 const MessageText = {
@@ -7,8 +7,12 @@ const MessageText = {
 } as const;
 
 export class RestApplication implements Rest{
-  init(logger: Logger) {
-    const config = new RestConfig(logger);
-    logger.info(`${MessageText.INIT} ${config.get('PORT')}`);
+  constructor(
+    private readonly logger: Logger,
+    private readonly config: Config
+  ) {}
+
+  init() {
+    this.logger.info(`${MessageText.INIT} ${this.config.get('PORT')}`);
   }
 }
