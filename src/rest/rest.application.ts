@@ -6,7 +6,9 @@ import { Rest } from './rest.interface.js';
 import { Component } from '../shared/types/component.enum.js';
 
 const MessageText = {
-  INIT: 'Rest application is initialized on port'
+  INIT: 'Rest application is initialized on port',
+  DB_HOST: 'Current database host IP',
+  SALT: 'Current encoding Salt'
 } as const;
 
 @injectable()
@@ -17,6 +19,8 @@ export class RestApplication implements Rest{
   ) {}
 
   init() {
-    this.logger.info(`${MessageText.INIT} ${this.config.get('PORT')}`);
+    this.logger.info(`${MessageText.INIT}: ${this.config.get('PORT')}`);
+    this.logger.info(`${MessageText.DB_HOST}: ${this.config.get('DB_HOST')}`);
+    this.logger.info(`${MessageText.SALT}: ${this.config.get('SALT')}`);
   }
 }
