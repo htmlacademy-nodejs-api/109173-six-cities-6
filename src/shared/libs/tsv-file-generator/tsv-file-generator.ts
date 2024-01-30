@@ -24,8 +24,6 @@ const Price = {
   MIN: 100,
   MAX: 100000,
 };
-
-
 export class TSVFileGenerator {
   constructor(private readonly mockData: MockData) {}
 

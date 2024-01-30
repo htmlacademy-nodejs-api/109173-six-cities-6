@@ -1,5 +1,5 @@
 import { TSVSettings } from '../shared/libs/tsv-settings.js';
-import { City } from '../shared/types/city.type.js';
+import { City } from '../shared/types/city-type.enum.js';
 import { OfferType } from '../shared/types/offer-type.enum.js';
 import { Offer } from '../shared/types/offer.type.js';
 
