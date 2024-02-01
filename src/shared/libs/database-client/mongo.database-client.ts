@@ -1,9 +1,9 @@
+import * as Mongoose from 'mongoose';
 import { inject, injectable } from 'inversify';
 import { setTimeout } from 'node:timers/promises';
 import { DatabaseClient } from './database-client.interface.js';
 import { Component } from '../../types/component.enum.js';
 import { Logger } from '../logger/logger.interface.js';
-import * as Mongoose from 'mongoose';
 
 const Connection = {
   COUNT: 5,
