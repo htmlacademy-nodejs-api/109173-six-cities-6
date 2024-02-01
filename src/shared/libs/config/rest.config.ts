@@ -6,8 +6,8 @@ import { Config } from './config.interface.js';
 import { RestSchema, configRestSchema } from './rest.schema.js';
 
 const MessageText = {
-  SUCCESS: 'Application config (.env) successfully parsed'
-};
+  SUCCESS: 'Application config (.env) successfully parsed',
+} as const;
 
 const ErrorText = {
   READ: 'Can`t read .env file (possible reason: file doesn`t exists).'
@@ -16,6 +16,7 @@ const ErrorText = {
 @injectable()
 export class RestConfig implements Config<RestSchema> {
   private readonly config: RestSchema;
+
   constructor(
     @inject(Component.Logger) private logger: Logger
   ) {

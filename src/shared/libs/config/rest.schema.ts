@@ -33,18 +33,6 @@ export const configRestSchema = convict<RestSchema>({
     default: '27017',
     env: 'DB_PORT',
   },
-  DB_NAME: {
-    doc: 'Database`s name (MongoDB)',
-    format: String,
-    default: 'six-cities_mongo',
-    env: 'DB_NAME',
-  },
-  DB_NAME_EXPRESS: {
-    doc: 'Database`s UI name (MongoDB Express)',
-    format: String,
-    default: 'six-cities_mongo_express',
-    env: 'DB_NAME_EXPRESS',
-  },
   DB_USER: {
     doc: 'Database`s user name (MongoDB)',
     format: String,
@@ -56,6 +44,18 @@ export const configRestSchema = convict<RestSchema>({
     format: String,
     default: null,
     env: 'DB_PASSWORD',
+  },
+  DB_NAME: {
+    doc: 'Database`s name (MongoDB)',
+    format: String,
+    default: null,
+    env: 'DB_NAME',
+  },
+  DB_NAME_EXPRESS: {
+    doc: 'Database`s UI name (MongoDB Express)',
+    format: String,
+    default: 'six-cities_mongo_express',
+    env: 'DB_NAME_EXPRESS',
   },
   SALT: {
     doc: 'Special string to encoding user password',

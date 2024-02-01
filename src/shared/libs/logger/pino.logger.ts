@@ -35,18 +35,18 @@ export class PinoLogger implements Logger {
   }
 
   info(message: string, ...args: unknown[]) {
-    this.logger.info(message, args);
+    this.logger.info(message, ...args);
   }
 
   warn(message: string, ...args: unknown[]) {
-    this.logger.warn(message, args);
+    this.logger.warn(message, ...args);
   }
 
   debug(message: string, ...args: unknown[]) {
-    this.logger.debug(message, args);
+    this.logger.debug(message, ...args);
   }
 
   error(message: string, ...args: unknown[]) {
-    this.logger.error(message, args);
+    this.logger.error(message, ...args);
   }
 }
