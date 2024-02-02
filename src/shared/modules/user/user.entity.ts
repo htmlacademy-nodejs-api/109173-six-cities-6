@@ -1,0 +1,57 @@
+import { defaultClasses, getModelForClass, modelOptions, prop } from '@typegoose/typegoose';
+import { User } from '../../types/user.type.js';
+import { getSHA256Hash } from '../../../utils/hash.js';
+
+const ErrorText = {
+  NAME_MIN: 'User name must contain at least 1 symbol. Got {VALUE}',
+  NAME_MAX: 'User name length mustn`t be more than 15 symbols. Got {VALUE}',
+  PASSWORD_MIN: 'User password must contain at least 6 symbols. Got {VALUE}',
+  PASSWORD_MAX: 'User password length mustn`t be more than 12 symbols. Got {VALUE}',
+} as const;
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
+export interface UserEntity extends defaultClasses.Base {}
+
+@modelOptions({
+  schemaOptions: {
+    collection: 'users',
+    timestamps: true
+  }
+})
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
+export class UserEntity extends defaultClasses.TimeStamps implements User {
+  @prop({ minlength: [10, ErrorText.NAME_MIN], maxlength: [100, ErrorText.NAME_MAX], required: true })
+  public name: string;
+
+  @prop({ required: true, unique: true })
+  public email: string;
+
+  @prop({ required: false, default: '' })
+  public avatarUrl: string;
+
+  @prop({ minlength: 6, maxlength: 12, default: ''})
+  public password: string;
+
+  @prop({ default: false })
+  public isPro: boolean;
+
+  constructor(userData: User) {
+    super();
+
+    this.name = userData.name;
+    this.email = userData.email;
+    this.avatarUrl = userData.avatarUrl;
+    this.password = userData.password;
+    this.isPro = userData.isPro;
+  }
+
+  public setPassword(password: string, salt: string) {
+    return getSHA256Hash(password, salt);
+  }
+
+  public getPassword() {
+    return this.password;
+  }
+}
+
+export const UserModel = getModelForClass(UserEntity);
