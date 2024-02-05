@@ -1,5 +1,4 @@
 import { Ref, defaultClasses, getModelForClass, modelOptions, prop } from '@typegoose/typegoose';
-import { Offer } from '../../types/offer.type.js';
 import { Coordinate } from '../../types/coordinate.type.js';
 import { OfferType, OfferTypes } from '../../types/offer-type.enum.js';
 import { Cities, City } from '../../types/city-type.enum.js';

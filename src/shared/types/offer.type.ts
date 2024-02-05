@@ -4,7 +4,7 @@ import { FacilitiesType } from './facilities-type.enum.js';
 import { OfferType } from './offer-type.enum.js';
 import { User } from './user.type.js';
 
-type Images = string[];
+export type Images = string[];
 
 export type Offer = {
   name: string,

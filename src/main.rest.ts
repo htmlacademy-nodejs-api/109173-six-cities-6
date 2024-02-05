@@ -6,6 +6,7 @@ import { PinoLogger } from './shared/libs/logger/pino.logger.js';
 import { Component } from './shared/types/component.enum.js';
 import { DatabaseClient } from './shared/libs/database-client/database-client.interface.js';
 import { MongoDatabaseClient } from './shared/libs/database-client/mongo.database-client.js';
+import { CreateUserDTO, DefaultUserService, UserModel } from './shared/modules/user/index.js';
 
 function makeComponentsContainer() {
   const componentsContainer = new Container();

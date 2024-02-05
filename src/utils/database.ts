@@ -4,6 +4,6 @@ export function getMongoURI(
   host: string,
   port: string,
   dbname: string): string {
-  return `mongodb://${username}:${password}@${host}:${port}/${dbname}/?authSource=admin`;
+  return `mongodb://${username}:${password}@${host}:${port}/${dbname}?authSource=admin`;
 }
 
