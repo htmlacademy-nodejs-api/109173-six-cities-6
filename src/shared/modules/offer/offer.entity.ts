@@ -1,8 +1,10 @@
-import { defaultClasses, getModelForClass, modelOptions, prop } from '@typegoose/typegoose';
+import { Ref, defaultClasses, getModelForClass, modelOptions, prop } from '@typegoose/typegoose';
 import { Offer } from '../../types/offer.type.js';
 import { Coordinate } from '../../types/coordinate.type.js';
-import { OfferType } from '../../types/offer-type.enum.js';
-import { City } from '../../types/city-type.enum.js';
+import { OfferType, OfferTypes } from '../../types/offer-type.enum.js';
+import { Cities, City } from '../../types/city-type.enum.js';
+import { FacilitiesType, FacilitiesTypes } from '../../types/facilities-type.enum.js';
+import { UserEntity } from '../user/user.entity.js';
 
 const ErrorText = {
   NAME_MIN: 'Offer name must contain at least 10 symbol. Got {VALUE}',
@@ -29,98 +31,111 @@ export interface OfferEntity extends defaultClasses.Base {}
   }
 })
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-export class OfferEntity extends defaultClasses.TimeStamps implements Offer {
-  @prop({ minlength: [10, ErrorText.NAME_MIN], maxlength: [100, ErrorText.NAME_MAX], required: true })
-  public name: string;
-
-  @prop({ minlength: 100, maxlength: 1024, required: true })
-  public description: string;
-
-  @prop({})
-  public date: string;
+export class OfferEntity extends defaultClasses.TimeStamps {
+  @prop({
+    minlength: [10, ErrorText.NAME_MIN],
+    maxlength: [100, ErrorText.NAME_MAX],
+    trim: true,
+    required: true
+  })
+  public name!: string;
 
   @prop({
+    minlength: 100,
+    maxlength: 1024,
+    trim: true,
+    required: true
+  })
+  public description!: string;
+
+  @prop({ required: true })
+  public date!: string;
+
+  @prop({
+    type: () => String,
     enum: {
-      values: ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'],
+      values: Cities,
       message: ErrorText.ENUM,
     },
     required: true
   })
-  public city: City;
+  public city!: City;
 
   @prop({ required: true })
-  public previewImage: string;
+  public previewImage!: string;
 
   @prop({ min: [6, ErrorText.IMAGES_COUNT] })
-  public images: string[];
+  public images!: string[];
 
   @prop({ required: true })
-  public isPremium: string;
+  public isPremium!: boolean;
 
   @prop({ required: true })
-  public isFavorite: string;
-
-  @prop({ min: 1, max: 5, required: true })
-  public rating: string;
+  public isFavorite!: boolean;
 
   @prop({
+    min: 1,
+    max: 5,
+    required: true
+  })
+  public rating!: number;
+
+  @prop({
+    type: () => String,
     enum: {
-      values: ['apartment', 'house', 'room', 'hotel'],
+      values: OfferTypes,
       message: ErrorText.ENUM,
     },
     required: true
   })
-  public type: OfferType;
-
-  @prop({ min: [1, ErrorText.ROOMS_MIN], max: [8, ErrorText.ROOMS_MAX], required: true })
-  public rooms: string;
-
-  @prop({ min: [1, ErrorText.GUESTS_MIN],max: [10, ErrorText.GUESTS_MAX], required: true })
-  public guests: string;
-
-  @prop({ min: [100, ErrorText.PRICE_MIN], max: [100000, ErrorText.PRICE_MAX], required: true })
-  public price: string;
+  public type!: OfferType;
 
   @prop({
+    min: [1, ErrorText.ROOMS_MIN],
+    max: [8, ErrorText.ROOMS_MAX],
+    required: true
+  })
+  public rooms!: number;
+
+  @prop({
+    min: [1, ErrorText.GUESTS_MIN],
+    max: [10, ErrorText.GUESTS_MAX],
+    required: true
+  })
+  public guests!: number;
+
+  @prop({
+    min: [100, ErrorText.PRICE_MIN],
+    max: [100000, ErrorText.PRICE_MAX],
+    required: true
+  })
+  public price!: number;
+
+  @prop({
+    type: () => [String],
     enum: {
-      values: ['Breakfast', 'Air conditioning', 'Laptop', 'friendly workspace', 'Baby seat', 'Washer', 'Towels', 'Fridge'],
+      values: FacilitiesTypes,
       message: ErrorText.ENUM,
     },
     required: true
   })
-  public facilities: string[];
+  public facilities!: FacilitiesType[];
 
-  @prop({})
-  public author: string;
+  @prop({
+    type: () => String,
+    ref: () => UserEntity,
+    _id: false,
+    required: true,
+  })
+  public userId!: Ref<UserEntity>;
 
-  @prop({})
-  public comments: string[];
+  @prop({
+    default: 0
+  })
+  public commentCount!: number;
 
-  @prop({})
-  public coordinates: Coordinate;
-
-
-  constructor(offerData: Offer) {
-    super();
-
-    this.name = offerData.name;
-    this.description = offerData.description;
-    this.date = offerData.date;
-    this.city = offerData.city;
-    this.previewImage = offerData.previewImage;
-    this.images = offerData.images;
-    this.isPremium = offerData.isPremium;
-    this.isFavorite = offerData.isFavorite;
-    this.rating = offerData.rating;
-    this.type = offerData.type;
-    this.rooms = offerData.rooms;
-    this.guests = offerData.guests;
-    this.price = offerData.price;
-    this.facilities = offerData.facilities;
-    this.author = offerData.author;
-    this.comments = offerData.comments;
-    this.coordinates = offerData.coordinates;
-  }
+  @prop({ required: true })
+  public coordinates!: Coordinate; // TODO: Заменить, возможно на  GeoJSON (https://mongoosejs.com/docs/geojson.html)
 }
 
 export const OfferModel = getModelForClass(OfferEntity);

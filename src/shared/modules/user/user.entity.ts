@@ -1,3 +1,4 @@
+// Описание схемы хранения данных в БД (сущность: User)
 import { defaultClasses, getModelForClass, modelOptions, prop } from '@typegoose/typegoose';
 import { User } from '../../types/user.type.js';
 import { getSHA256Hash } from '../../../utils/hash.js';
@@ -20,16 +21,29 @@ export interface UserEntity extends defaultClasses.Base {}
 })
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class UserEntity extends defaultClasses.TimeStamps implements User {
-  @prop({ minlength: [10, ErrorText.NAME_MIN], maxlength: [100, ErrorText.NAME_MAX], required: true })
+  @prop({
+    minlength: [1, ErrorText.NAME_MIN],
+    maxlength: [15, ErrorText.NAME_MAX],
+    required: true
+  })
   public name: string;
 
-  @prop({ required: true, unique: true })
+  @prop({
+    unique: true,
+    required: true,
+  })
   public email: string;
 
-  @prop({ required: false, default: '' })
+  @prop({
+    default: ''
+  })
   public avatarUrl: string;
 
-  @prop({ minlength: 6, maxlength: 12, default: ''})
+  @prop({
+    minlength: 6,
+    maxlength: 12,
+    default: ''
+  })
   public password: string;
 
   @prop({ default: false })
