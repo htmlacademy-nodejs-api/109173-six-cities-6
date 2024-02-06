@@ -65,7 +65,10 @@ export class OfferEntity extends defaultClasses.TimeStamps {
 
   @prop({
     type: () => [String],
-    min: [6, ErrorText.IMAGES_COUNT]
+    validate: [
+      (val: string[]) => val.length >= 6,
+      ErrorText.IMAGES_COUNT
+    ]
   })
   public images!: string[];
 

@@ -5,13 +5,14 @@ import { ServiceURL, createAPI } from '../../shared/services/api.js';
 import { TSVFileGenerator } from '../../shared/libs/tsv-file-generator/tsv-file-generator.js';
 import { TSVFileWriter } from '../../shared/libs/tsv-file-writer/tsv-file-writer.js';
 import { GlobalSettings } from '../../global-settings.js';
+import { injectable } from 'inversify';
 
 const COMMAND_NAME = `${GlobalSettings.COMMAND_BEGINNING}generate`;
 
 const ErrorText = {
   LOAD: 'Can`t load data from url:',
 } as const;
-
+@injectable()
 export class GenerateCommand implements Command {
   private data: MockData | null = null;
 

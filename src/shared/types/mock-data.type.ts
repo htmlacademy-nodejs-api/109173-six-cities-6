@@ -1,7 +1,4 @@
 import { City } from './city-type.enum.js';
-import { FacilitiesType } from './facilities-type.enum.js';
-import { OfferType } from './offer-type.enum.js';
-import { User } from './user.type.js';
 
 type MockCities = {
   name: City,
@@ -15,10 +12,15 @@ type MockOffer = {
   comments: [],
   previewImages: string[],
   photos: string[],
-  type: OfferType[],
-  facilities: FacilitiesType[],
+  type: string[],
+  facilities: string[],
 }
-type MockUsers = Record<string, User>;
+type MockUsers = {
+  names: string[],
+  emails: string[],
+  avatarUrls: string[],
+  passwords: string[]
+}
 
 export type MockData = {
   offer: MockOffer,

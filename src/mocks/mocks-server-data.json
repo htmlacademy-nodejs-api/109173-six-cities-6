@@ -59,27 +59,26 @@
       "comments": []
     },
     "users": {
-      "User1": {
-        "name": "Some User One",
-        "email": "someEmail1@email.com",
-        "avatarUrl": "/avatar/url.jpg",
-        "password": "123456",
-        "isPro": "true"
-      },
-      "User2": {
-        "name": "Some User 2",
-        "email": "someEmail2@email.com",
-        "avatarUrl": "/avatar/url2.jpg",
-        "password": "Qwerty123",
-        "isPro": "true"
-      },
-      "User3": {
-        "name": "Some User Three",
-        "email": "someEmail3@email.com",
-        "avatarUrl": "/avatar/url3.jpg",
-        "password": "Qwe123456789rty",
-        "isPro": "false"
-      }
+      "names": [
+        "Some User One",
+        "Some User 2",
+        "Some User Three"
+      ],
+      "emails": [
+        "someEmail1@email.com",
+        "someEmail2@email.com",
+        "someEmail3@email.com"
+      ],
+      "avatarUrls": [
+        "/avatar/url.jpg",
+        "/avatar/url2.jpg",
+        "/avatar/url3.jpg"
+      ],
+      "passwords": [
+        "123456",
+        "Qwerty123",
+        "Qwe123456789rty"
+      ]
     }
   }
 }
