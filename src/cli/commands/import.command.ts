@@ -13,6 +13,7 @@ import { DefaultUserService, UserService } from '../../shared/modules/user/index
 import { OfferService } from '../../shared/modules/offer/offer-service.interface.js';
 import { DefaultOfferService } from '../../shared/modules/offer/default-offer.service.js';
 import { PinoLogger } from '../../shared/libs/logger/pino.logger.js';
+import { Offer } from '../../shared/types/offer.type.js';
 
 const COMMAND_NAME = `${GlobalSettings.COMMAND_BEGINNING}import`;
 
@@ -40,14 +41,45 @@ export class ImportCommand implements Command {
     return COMMAND_NAME;
   }
 
-  private onRowRead(readRow: string) {
-    this.logger.info(`${MessageText.PREPARED_OFFER}:\n %s`, makeOffer(readRow));
+  private async onRowRead(readRow: string, resolve: () => void) {
+    const offer = makeOffer(readRow);
+
+    this.logger.info(`${MessageText.PREPARED_OFFER}:\n %s`, offer);
+    await this.saveToDatabase(offer);
+
+    resolve();
   }
 
   private onFileReadEnd(readRowsCount: number) {
     this.logger.info(`${MessageText.READ_ROWS}: ${readRowsCount}`);
 
     this.database.disconnect();
+  }
+
+  private async saveToDatabase(offer: Offer) {
+    const salt = this.config.get('SALT');
+    const user = await this.userService.findOrCreate(offer.user, salt);
+    const offerToSave = {
+      name: offer.name,
+      description: offer.description,
+      date: offer.date,
+      city: offer.city,
+      previewImage: offer.previewImage,
+      images: offer.images,
+      isPremium: offer.isPremium,
+      isFavorite: offer.isFavorite,
+      rating: offer.rating,
+      type: offer.type,
+      rooms: offer.rooms,
+      guests: offer.guests,
+      price: offer.price,
+      facilities: offer.facilities,
+      userId: user.id,
+      commentCount: offer.commentCount,
+      coordinates: offer.coordinates
+    };
+
+    await this.offerService.create(offerToSave);
   }
 
   async execute(...parameters: ExecuteParameters): Promise<void> {

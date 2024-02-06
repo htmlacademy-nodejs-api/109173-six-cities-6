@@ -6,11 +6,7 @@ import { Offer } from '../shared/types/offer.type.js';
 
 const {DELIMITER} = TSVSettings;
 
-export function makeOffer(fileRow: string): Offer | void {
-  if(fileRow.startsWith('#')) {
-    return;
-  }
-
+export function makeOffer(fileRow: string): Offer {
   const [
     name,
     description,
