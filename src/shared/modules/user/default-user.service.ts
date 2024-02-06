@@ -4,7 +4,7 @@ import { inject, injectable } from 'inversify';
 import { Logger } from '../../libs/logger/logger.interface.js';
 import { Component } from '../../types/component.enum.js';
 import { UserService } from './user-service.interface.js';
-import { DocumentType } from '@typegoose/typegoose';
+import { DocumentType, types } from '@typegoose/typegoose';
 
 const MessageText = {
   ADDED: 'New user successfully added. Email:',
@@ -12,6 +12,7 @@ const MessageText = {
 @injectable()
 export class DefaultUserService implements UserService {
   constructor(
+    @inject(Component.UserModel) private readonly userModel: types.ModelType<UserEntity>,
     @inject(Component.Logger) private readonly logger: Logger
   ){}
 
@@ -19,7 +20,7 @@ export class DefaultUserService implements UserService {
     const user = new UserEntity(dto);
     user.setPassword(dto.password, salt);
 
-    const addedUser = await UserModel.create(user);
+    const addedUser = await this.userModel.create(user);
 
     this.logger.info(`${MessageText.ADDED} ${user.email}`);
 
@@ -27,11 +28,11 @@ export class DefaultUserService implements UserService {
   }
 
   public async findById(id: string): Promise<DocumentType<UserEntity> | null> {
-    return await UserModel.findById({ id });
+    return await this.userModel.findById({ id });
   }
 
   public async findByEmail(email: string): Promise<DocumentType<UserEntity> | null> {
-    return await UserModel.findOne({ email });
+    return await this.userModel.findOne({ email });
   }
 
   public async findOrCreate(dto: CreateUserDTO, salt: string): Promise<DocumentType<UserEntity>> {

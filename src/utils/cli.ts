@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 import { Command } from '../cli/commands/command.interface.js';
 import { glob } from 'glob';
 import { Logger } from '../shared/libs/logger/logger.interface.js';
-import { PinoLogger } from '../shared/libs/logger/pino.logger.js';
+import { ConsoleLogger } from '../shared/libs/logger/console.logger.js';
 
 const WINDOWS_FILE_PROTOCOL = 'file:///';
 const COMMANDS_DIR = 'src/cli/commands/';
@@ -18,9 +18,9 @@ const ErrorText = {
   IMPORT: ' Can`t import command module. Error:'
 } as const;
 
-export async function parseCommands(): Promise<Command[] | []> {
-  const logger: Logger = new PinoLogger(false);
-  const parsedCommands: Command[] = [];
+export async function importCommands(): Promise<Command[] | []> {
+  const logger: Logger = new ConsoleLogger();
+  const importedCommands: Command[] = [];
   const commandFiles = glob.sync(`${COMMANDS_DIR}/*.command.ts`);
 
   for(const file of commandFiles) {
@@ -42,8 +42,8 @@ export async function parseCommands(): Promise<Command[] | []> {
 
       logger.info(`${MessageText.SUCCESS} ${CommandClassName}`);
 
-      if(!parsedCommands[commandInstance]) {
-        parsedCommands.push(commandInstance);
+      if(!importedCommands[commandInstance]) {
+        importedCommands.push(commandInstance);
       }
     } catch(err) {
       logger.error(ErrorText.IMPORT, err);
@@ -54,7 +54,7 @@ export async function parseCommands(): Promise<Command[] | []> {
     }
   }
 
-  logger.info(`${MessageText.PARSED_COMMANDS} ${parsedCommands.length}`);
+  logger.info(`${MessageText.PARSED_COMMANDS} ${importedCommands.length}`);
 
-  return parsedCommands;
+  return importedCommands;
 }
