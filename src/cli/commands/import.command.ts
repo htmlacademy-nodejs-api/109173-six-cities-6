@@ -44,17 +44,15 @@ export class ImportCommand implements Command {
   private async onRowRead(readRow: string, resolve: () => void) {
     const offer = makeOffer(readRow);
 
-    this.logger.info(`${MessageText.PREPARED_OFFER} `, offer);
-
     await this.saveToDatabase(offer);
 
     resolve();
   }
 
-  private onFileReadEnd(readRowsCount: number) {
+  private async onFileReadEnd(readRowsCount: number) {
     this.logger.info(`${MessageText.READ_ROWS} ${readRowsCount}`);
 
-    this.database.disconnect();
+    await this.database.disconnect();
   }
 
   private async saveToDatabase(offer: Offer) {
@@ -62,7 +60,7 @@ export class ImportCommand implements Command {
     const user = await this.userService.findOrCreate(offer.user, salt);
     const offerToSave = adaptOfferToDB(offer, user);
 
-    await this.offerService.findOrCreate(offerToSave);
+    this.offerService.findOrCreate(offerToSave);
   }
 
   async execute(...parameters: ExecuteParameters): Promise<void> {
@@ -73,7 +71,7 @@ export class ImportCommand implements Command {
 
     let dburi = null;
 
-    if(!dburi) {
+    if(!databaseUri) {
       const {username, password, host, port, dbname} = getDbConnectiondata();
       dburi = getMongoURI(username, password, host, port, dbname);
     }
