@@ -1,0 +1,351 @@
+openapi: 3.0.2
+info:
+  title: API сервер для приложения "Шесть городов"
+  description: |-
+    * Список ресурсов и маршрутов сервера "Шесть городов".
+  version: "1.0.0"
+  contact:
+    name: Nosikov Dmitriy
+    url: https://github.com/DmitriyNosikov
+tags: #Сущности приложения
+  - name: offers
+    description: Действия с предложениями
+  - name: users
+    description: Действия с пользователями
+  - name: comments
+    description: Действия с комментариями
+paths: #API
+  /offers:
+    post:
+      tags:
+        - offers
+      summary: Создание предложения
+      description: Создает новое предложение
+
+      requestBody:
+        description: Информация для создания нового предложения
+
+        content:
+          application-json:
+            schema:
+              $ref: '#/components/schemas/createOffer'
+
+      responses:
+        '201':
+          description: Предложение успешно добавлено на сервер
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/offer'
+        '409':
+          description: Предложение с таким названием и автором уже существует
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/offer'
+        '400':
+          description: Ошибка валидации. Переданы не все, необходимые для создания предложения, данные
+        '401':
+          description: Вы не авторизованы. Добавлять предложения могут только авторизованные пользователи
+    get:
+      tags:
+        - offers
+      summary: Получение списка предлжений
+      description: Возвращает список не более чем из 60 (по-умолчанию) предложений, отсортированных по дате публикации (по-убыванию)
+
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          description: Количество офферов, которое необходимо вернуть (если их > 60)
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Список предложений успешно загружен
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/offers'
+
+  /offers/{offerId}:
+    put:
+      tags:
+        - offers
+      summary: Редактирование предолжения
+      description: Редактирует предложение, существующее на сервере и принадлежащее конкретному пользователю
+
+      requestBody:
+        description: Информация для обновления предложения
+
+        content:
+          application-json:
+            schema:
+              $ref: '#/components/schemas/createOffer'
+
+      responses:
+        '201':
+          description: Предложение успешно отредактировано
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/offer'
+        '404':
+          description: Предложение с таким идентификатором не существует
+        '400':
+          description: Ошибка валидации. Переданы не все, необходимые для создания предложения, данные
+        '401':
+          description: Вы не можете редактировать данное предложение, т.к. не являетесь его создателем
+
+    delete:
+      tags:
+        - offers
+      summary: Удаление предолжения
+      description: Удаляет предложение, существующее на сервере и принадлежащее конкретному пользователю
+
+      responses:
+        '204':
+          description: Предложение успешно удалено
+        '404':
+          description: Предложение с таким идентификатором не существует
+        '401':
+          description: Вы не можете удалить данное предложение, т.к. не являетесь его создателем
+    get:
+      tags:
+        - offers
+      summary: Информация о предложении
+      description: Предоставляет детальную информацию о предложении
+
+      responses:
+        '200':
+          description: Информация о предложении успешно загружена
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/createOffer'
+        '404':
+          description: Предложение с таким идентификатором не существует
+
+components:
+  schemas:
+    createOffer:
+      type: object
+      required:
+        - name
+        - description
+        - date
+        - city
+        - previewImage
+        - images
+        - isPremium
+        - isFavorite
+        - rating
+        - type
+        - rooms
+        - guests
+        - price
+        - facilities
+        - user
+        - coordinates
+
+      properties:
+        name:
+          type: string
+          example: President`s apartament
+
+        description:
+          type: string
+          example: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam enim quam, mollis vel suscipit
+
+        date:
+          type: string
+          example: 2024-02-07T09:55:28.799Z
+
+        city:
+          type: string
+          example: Amsterdam
+
+        previewImage:
+          type: array
+          example: [/some/photo/preview4.jpg; /some/photo/preview.jpg]
+
+        images:
+          type: array
+          example: [ 'photo11.jpg', 'photo5.jpg', 'photo4.jpg', 'photo10.jpg', 'photo6.jpg', 'photo8.jpg' ]
+
+        isPremium:
+          type: boolean
+          example: true
+
+        isFavorite:
+          type: boolean
+          example: false
+
+        rating:
+          type: number
+          example: 3
+
+        type:
+          type: string
+          example: apartment
+
+        rooms:
+          type: number
+          example: 6
+
+        guests:
+          type: number
+          example: 3
+
+        price:
+          type: number
+          example: 84680
+
+        facilities:
+          type: array
+          example: [ 'Baby seat', 'Breakfast' ]
+
+        user:
+          type: object
+          example: {
+            name: 'User One',
+            email: 'someEmail1@email.com',
+            avatarUrl: '/avatar/url3.jpg',
+            password: '123456',
+            isPro: true
+          }
+
+        commentCount:
+          type: number
+          example: 1
+
+        coordinates:
+          type: object
+          example: { latitude: '52.370216', longitude: '4.895168' }
+
+    offer:
+      type: object
+
+      properties:
+        id:
+          type: string
+          example: 238y9fiwej9283y40928
+
+        name:
+          type: string
+          example: President`s apartament
+
+        description:
+          type: string
+          example: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam enim quam, mollis vel suscipit
+
+        date:
+          type: string
+          example: 2024-02-07T09:55:28.799Z
+
+        city:
+          type: string
+          example: Amsterdam
+
+        previewImage:
+          type: array
+          example: [/some/photo/preview4.jpg; /some/photo/preview.jpg]
+
+        images:
+          type: array
+          example: [ 'photo11.jpg', 'photo5.jpg', 'photo4.jpg', 'photo10.jpg', 'photo6.jpg', 'photo8.jpg' ]
+
+        isPremium:
+          type: boolean
+          example: true
+
+        isFavorite:
+          type: boolean
+          example: false
+
+        rating:
+          type: number
+          example: 3
+
+        type:
+          type: string
+          example: apartment
+
+        rooms:
+          type: number
+          example: 6
+
+        guests:
+          type: number
+          example: 3
+
+        price:
+          type: number
+          example: 84680
+
+        facilities:
+          type: array
+          example: [ 'Baby seat', 'Breakfast' ]
+
+        user:
+          type: object
+          example: {
+            name: 'User One',
+            email: 'someEmail1@email.com',
+            avatarUrl: '/avatar/url3.jpg',
+            password: '123456',
+            isPro: true
+          }
+
+        commentCount:
+          type: number
+          example: 1
+
+        coordinates:
+          type: object
+          example: { latitude: '52.370216', longitude: '4.895168' }
+
+    offers:
+      type: array
+
+      properties:
+        name:
+          type: string
+          example: President`s apartament
+
+        date:
+          type: string
+          example: 2024-02-07T09:55:28.799Z
+
+        city:
+          type: string
+          example: Amsterdam
+
+        previewImage:
+          type: array
+          example: [/some/photo/preview4.jpg; /some/photo/preview.jpg]
+
+        isPremium:
+          type: boolean
+          example: true
+
+        isFavorite:
+          type: boolean
+          example: false
+
+        rating:
+          type: number
+          example: 3
+
+        type:
+          type: string
+          example: apartment
+
+        price:
+          type: number
+          example: 84680
+
+        commentCount:
+          type: number
+          example: 1
