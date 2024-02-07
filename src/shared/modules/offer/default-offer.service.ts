@@ -7,7 +7,8 @@ import { Component } from '../../types/component.enum.js';
 import { Logger } from '../../libs/logger/logger.interface.js';
 
 const MessageText = {
-  ADDED: 'New offer successfully added. Offer ID:'
+  ADDED: 'New offer successfully added. Offer ID:',
+  EXISTS: 'Offer already exists in database:',
 } as const;
 @injectable()
 export class DefaultOfferService implements OfferService {
@@ -26,5 +27,16 @@ export class DefaultOfferService implements OfferService {
 
   public async findById(id: string): Promise<DocumentType<OfferEntity> | null> {
     return await this.offerModel.findById({ id }).exec();
+  }
+
+  public async findOrCreate(dto: CreateOfferDTO): Promise<DocumentType<OfferEntity> | null> {
+    const offer = await this.offerModel.findOne({ name: dto.name, userId: dto.userId }).exec();
+
+    if(offer) {
+      this.logger.info(`${MessageText.EXISTS} ${offer.id}`);
+      return offer.id;
+    }
+
+    return this.create(dto);
   }
 }

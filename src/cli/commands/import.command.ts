@@ -8,7 +8,7 @@ import { MongoDatabaseClient } from '../../shared/libs/database-client/mongo.dat
 import { UserModel } from '../../shared/modules/user/user.entity.js';
 import { OfferModel } from '../../shared/modules/offer/offer.entity.js';
 import { RestConfig } from '../../shared/libs/config/rest.config.js';
-import { getMongoURI } from '../../utils/database.js';
+import { getDbConnectiondata, getMongoURI } from '../../utils/database.js';
 import { DefaultUserService, UserService } from '../../shared/modules/user/index.js';
 import { OfferService } from '../../shared/modules/offer/offer-service.interface.js';
 import { DefaultOfferService } from '../../shared/modules/offer/default-offer.service.js';
@@ -45,6 +45,7 @@ export class ImportCommand implements Command {
     const offer = makeOffer(readRow);
 
     this.logger.info(`${MessageText.PREPARED_OFFER} `, offer);
+
     await this.saveToDatabase(offer);
 
     resolve();
@@ -61,21 +62,23 @@ export class ImportCommand implements Command {
     const user = await this.userService.findOrCreate(offer.user, salt);
     const offerToSave = adaptOfferToDB(offer, user);
 
-    await this.offerService.create(offerToSave);
+    await this.offerService.findOrCreate(offerToSave);
   }
 
   async execute(...parameters: ExecuteParameters): Promise<void> {
     const [
       filepath,
-      username = this.config.get('DB_USER'),
-      password = this.config.get('DB_PASSWORD'),
-      host = this.config.get('DB_HOST'),
-      port = this.config.get('DB_PORT'),
-      dbname = this.config.get('DB_NAME')
+      databaseUri
     ] = parameters;
-    const dburi = getMongoURI(username, password, host, port, dbname);
 
-    this.database.connect(dburi);
+    let dburi = null;
+
+    if(!dburi) {
+      const {username, password, host, port, dbname} = getDbConnectiondata();
+      dburi = getMongoURI(username, password, host, port, dbname);
+    }
+
+    this.database.connect(databaseUri ?? dburi);
 
     const fileReader = new TSVFileReader(filepath);
     await fileReader.read();
