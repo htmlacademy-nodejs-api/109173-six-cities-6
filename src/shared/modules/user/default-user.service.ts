@@ -1,5 +1,5 @@
 // Слой-сервис, через который осуществляется взаимодействие с БД (сущность: User)
-import { CreateUserDTO, UserEntity, UserModel } from './index.js';
+import { CreateUserDTO, UserEntity } from './index.js';
 import { inject, injectable } from 'inversify';
 import { Logger } from '../../libs/logger/logger.interface.js';
 import { Component } from '../../types/component.enum.js';

@@ -17,7 +17,7 @@ function getRandomElement<T>(array: T[]): T {
 }
 
 function getRandomElements<T>(array: T[], elementsCount?: number): T[] {
-  const elemsCount = elementsCount ?? getRandomInRange(0, array.length - 1);
+  const elemsCount = elementsCount ?? getRandomInRange(1, array.length - 1);
 
   return Array.from({length: elemsCount}, () => getRandomElement(array));
 }

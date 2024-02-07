@@ -1,11 +1,9 @@
 {
   "api": {
     "offer": {
-      "names": ["Shale", "Farfale", "Ulale"],
+      "names": ["Beautiful Shale", "Pretty little house", "President`s apartament"],
       "descriptions": [
-        "Some text description",
-        "Other description",
-        "Another one descriiption"
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam enim quam, mollis vel suscipit et, venenatis a nulla. Integer vitae aliquam lacus. Vivamus semper leo nec bibendum malesuada. Morbi ligula velit, facilisis a vulputate vitae, malesuada sit amet massa. Praesent sed molestie lectus, vitae dignissim nulla. Maecenas sollicitudin in justo sed venenatis. Duis congue arcu quis iaculis molestie. Mauris lobortis imperdiet sem facilisis elementum. Proin ullamcorper leo in ultrices pretium. Curabitur ultricies vel nulla eu laoreet. Pellentesque id lectus nec justo tempus bibendum. Nulla facilisi. Phasellus scelerisque est at est varius bibendum. Vestibulum eget mauris gravida, imperdiet sapien a, bibendum."
       ],
       "cities": [
         {
@@ -45,7 +43,19 @@
         "/some/photo/preview3.jpg",
         "/some/photo/preview4.jpg"
       ],
-      "photos": ["photo1.jpg", "photo2.jpg", "photo3.jpg", "photo4.jpg"],
+      "photos": [
+        "photo1.jpg",
+        "photo2.jpg",
+        "photo3.jpg",
+        "photo4.jpg",
+        "photo5.jpg",
+        "photo6.jpg",
+        "photo7.jpg",
+        "photo8.jpg",
+        "photo9.jpg",
+        "photo10.jpg",
+        "photo11.jpg"
+      ],
       "type": ["apartment", "house", "room", "hotel"],
       "facilities": [
         "Breakfast",
@@ -60,9 +70,11 @@
     },
     "users": {
       "names": [
-        "Some User One",
+        "User One",
         "Some User 2",
-        "Some User Three"
+        "Test User",
+        "Admin",
+        "Neo"
       ],
       "emails": [
         "someEmail1@email.com",
@@ -77,7 +89,10 @@
       "passwords": [
         "123456",
         "Qwerty123",
-        "Qwe123456789rty"
+        "Qwe123459rty",
+        "Superstar",
+        "1qaSW@#ED",
+        "!@#EWQR$@d"
       ]
     }
   }

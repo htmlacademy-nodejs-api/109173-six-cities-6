@@ -21,6 +21,12 @@ const Price = {
   MIN: 100,
   MAX: 100000,
 };
+
+const Image = {
+  MIN: 6,
+  MAX: 10
+};
+
 export class TSVFileGenerator {
   constructor(private readonly mockData: MockData) {}
 
@@ -39,7 +45,7 @@ export class TSVFileGenerator {
     const date = new Date().toISOString();
     const city = getRandomElement(cities);
     const preview = getRandomElements<string>(previewImages);
-    const offerPhotos = getRandomElements<string>(photos);
+    const offerPhotos = getRandomElements<string>(photos, getRandomInRange(Image.MIN, Image.MAX));
     const premium = getRandomBoolean();
     const favorite = getRandomBoolean();
     const rating = getRandomInRange(Rating.MIN, Rating.MAX);

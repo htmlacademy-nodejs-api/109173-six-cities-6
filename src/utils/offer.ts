@@ -1,8 +1,11 @@
+import { DocumentType } from '@typegoose/typegoose';
 import { TSVSettings } from '../shared/libs/tsv-settings.js';
+import { CreateOfferDTO } from '../shared/modules/offer/dto/create-offer.dto.js';
 import { City } from '../shared/types/city-type.enum.js';
 import { FacilitiesType } from '../shared/types/facilities-type.enum.js';
 import { OfferType } from '../shared/types/offer-type.enum.js';
 import { Offer } from '../shared/types/offer.type.js';
+import { UserEntity } from '../shared/modules/user/user.entity.js';
 
 const {DELIMITER} = TSVSettings;
 
@@ -57,4 +60,28 @@ export function makeOffer(fileRow: string): Offer {
     commentCount: comments.split(DELIMITER.VALUES).length ?? 0,
     coordinates: {latitude, longitude}
   };
+}
+
+export function adaptOfferToDB(offer: Offer, user: DocumentType<UserEntity>): CreateOfferDTO {
+  const adaptedOffer = {
+    name: offer.name,
+    description: offer.description,
+    date: offer.date,
+    city: offer.city,
+    previewImage: offer.previewImage,
+    images: offer.images,
+    isPremium: offer.isPremium,
+    isFavorite: offer.isFavorite,
+    rating: offer.rating,
+    type: offer.type,
+    rooms: offer.rooms,
+    guests: offer.guests,
+    price: offer.price,
+    facilities: offer.facilities,
+    userId: user.id,
+    commentCount: offer.commentCount,
+    coordinates: offer.coordinates
+  };
+
+  return adaptedOffer;
 }
