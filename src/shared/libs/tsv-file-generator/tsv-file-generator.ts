@@ -1,8 +1,5 @@
 import { getRandomBoolean, getRandomElement, getRandomElements, getRandomInRange } from '../../../utils/common.js';
-import { FacilitiesType } from '../../types/facilities-type.enum.js';
 import { MockData } from '../../types/mock-data.type.js';
-import { OfferType } from '../../types/offer-type.enum.js';
-import { User } from '../../types/user.type.js';
 import { TSVSettings } from '../tsv-settings.js';
 
 const Rating = {
@@ -24,15 +21,21 @@ const Price = {
   MIN: 100,
   MAX: 100000,
 };
+
+const Image = {
+  MIN: 6,
+  MAX: 10
+};
+
 export class TSVFileGenerator {
   constructor(private readonly mockData: MockData) {}
 
-  generate() {
+  generate(): string {
     /**
      * FILE STRUCTURE:
      * name, description, date, city, previewImage,
        images, isPremium, isFavorite, rating, type,
-       rooms, guests, price, facilities, author,
+       rooms, guests, price, facilities, author
        comments, coordinates
      */
     const {offer, users} = this.mockData;
@@ -42,16 +45,23 @@ export class TSVFileGenerator {
     const date = new Date().toISOString();
     const city = getRandomElement(cities);
     const preview = getRandomElements<string>(previewImages);
-    const offerPhotos = getRandomElements<string>(photos);
+    const offerPhotos = getRandomElements<string>(photos, getRandomInRange(Image.MIN, Image.MAX));
     const premium = getRandomBoolean();
     const favorite = getRandomBoolean();
     const rating = getRandomInRange(Rating.MIN, Rating.MAX);
-    const offerType = getRandomElement<OfferType>(type);
+    const offerType = getRandomElement(type);
     const rooms = getRandomInRange(Room.MIN, Room.MAX);
     const guests = getRandomInRange(Guest.MIN, Guest.MAX);
     const offerPrice = getRandomInRange(Price.MIN, Price.MAX);
-    const offerFacilities = getRandomElements<FacilitiesType>(facilities);
-    const author = getRandomElement<User>(Object.values(users));
+    const offerFacilities = getRandomElements(facilities);
+
+    const userName = getRandomElement(users.names);
+    const userEmail = getRandomElement(users.emails);
+    const userAvatar = getRandomElement(users.avatarUrls);
+    const userPassword = getRandomElement(users.passwords);
+    const userIsPro = getRandomBoolean();
+    const author = [userName, userEmail, userAvatar, userPassword, userIsPro].join(TSVSettings.DELIMITER.VALUES);
+
     const {latitude, longitude} = city;
 
     return [
@@ -69,7 +79,7 @@ export class TSVFileGenerator {
       guests,
       offerPrice,
       offerFacilities.join(TSVSettings.DELIMITER.VALUES),
-      author.name,
+      author,
       comments ?? [],
       [latitude, longitude].join(TSVSettings.DELIMITER.VALUES)
     ].join(TSVSettings.DELIMITER.PARAMS);

@@ -1,3 +1,4 @@
+import { injectable } from 'inversify';
 import { CommandParser } from './command-parser.js';
 import { Command } from './commands/command.interface.js';
 
@@ -10,6 +11,7 @@ const ErrorText = {
 
 type CommandCollection = Record<string, Command>;
 
+@injectable()
 export class CLIApplication {
   private commands: CommandCollection = {};
 

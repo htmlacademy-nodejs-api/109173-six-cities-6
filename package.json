@@ -42,10 +42,12 @@
     "npm": ">=8"
   },
   "dependencies": {
+    "@typegoose/typegoose": "12.1.0",
     "axios": "1.6.5",
     "convict": "6.2.4",
     "convict-format-with-validator": "6.2.0",
     "glob": "10.3.10",
+    "mongoose": "8.1.1",
     "pino": "8.17.2"
   }
 }

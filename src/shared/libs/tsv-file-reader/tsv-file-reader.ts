@@ -1,6 +1,6 @@
 import { ReadStream, createReadStream } from 'node:fs';
 import { EventEmitter } from 'node:events';
-import { resolve } from 'node:path';
+import { resolve as nodeResolve } from 'node:path';
 import { FileReader } from './tsv-file-reader.interface.js';
 import { GlobalSettings } from '../../../global-settings.js';
 import { ReadEvent } from '../tsv-settings.js';
@@ -23,20 +23,20 @@ export class TSVFileReader extends EventEmitter implements FileReader {
   ) {
     super();
 
-    this.stream = createReadStream(resolve(this.filePath), {
+    this.stream = createReadStream(nodeResolve(this.filePath), {
       encoding: GlobalSettings.ENCODING,
       highWaterMark: CHUNK_SIZE
     });
   }
 
   public async read() {
-    console.info(`${MessageText.INIT}: ${resolve(this.filePath)}`);
+    console.info(`${MessageText.INIT}: ${nodeResolve(this.filePath)}`);
 
     let readData = '';
     let endRowPosition = 0;
     let readRowCount = 0;
 
-    this.stream.on('readable', () => {
+    this.stream.on('readable', async () => {
       const chunk = this.stream.read(CHUNK_SIZE);
 
       if(chunk !== null) {
@@ -45,7 +45,9 @@ export class TSVFileReader extends EventEmitter implements FileReader {
         while((endRowPosition = readData.indexOf('\n')) >= 0) {
           const readRow = readData.slice(0, endRowPosition + 1);
 
-          this.emit(ReadEvent.READ_ROW, readRow);
+          await new Promise((resolve) => {
+            this.emit(ReadEvent.READ_ROW, readRow, resolve);
+          });
 
           readData = readData.slice(++endRowPosition);
           readRowCount++;
@@ -56,7 +58,7 @@ export class TSVFileReader extends EventEmitter implements FileReader {
     this.stream.on('error', () => {
       this.emit(ReadEvent.ERROR, readRowCount);
 
-      console.error(`${ErrorText.CANT_READ}: ${resolve(this.filePath)}`);
+      console.error(`${ErrorText.CANT_READ}: ${nodeResolve(this.filePath)}`);
 
       this.stream.destroy();
     });

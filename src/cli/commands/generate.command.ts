@@ -11,18 +11,17 @@ const COMMAND_NAME = `${GlobalSettings.COMMAND_BEGINNING}generate`;
 const ErrorText = {
   LOAD: 'Can`t load data from url:',
 } as const;
-
 export class GenerateCommand implements Command {
   private data: MockData | null = null;
 
   private async load(url: string = ServiceURL.API) {
     try {
       const api = createAPI();
-      const {data} = await api.get(url);
+      const { data } = await api.get(url);
 
       this.data = data;
     } catch(err) {
-      throw new Error(ErrorText.LOAD);
+      throw new Error(`${ErrorText.LOAD} ${url}`);
     }
   }
 
