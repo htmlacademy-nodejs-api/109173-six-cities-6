@@ -40,7 +40,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   public name!: string;
 
   @prop({
-    minlength: 100,
+    minlength: 20,
     maxlength: 1024,
     trim: true,
     required: true
