@@ -1,10 +1,13 @@
-import { DocumentType, types } from '@typegoose/typegoose';
+import { types } from '@typegoose/typegoose';
 import { CreateOfferDTO } from './dto/create-offer.dto.js';
-import { OfferService } from './offer-service.interface.js';
+import { FoundOffer, FoundOffers, OfferDoc, OfferService } from './offer-service.interface.js';
 import { OfferEntity } from './offer.entity.js';
 import { inject, injectable } from 'inversify';
 import { Component } from '../../types/component.enum.js';
 import { Logger } from '../../libs/logger/logger.interface.js';
+import { UpdateOfferDTO } from './dto/update-offer.dto.js';
+
+const DEFAULT_OFFERS_COUNT = 60;
 
 const MessageText = {
   ADDED: 'New offer successfully added. Offer ID:',
@@ -17,7 +20,7 @@ export class DefaultOfferService implements OfferService {
     @inject(Component.Logger) private readonly logger: Logger
   ){}
 
-  public async create(dto: CreateOfferDTO): Promise<DocumentType<OfferEntity>> {
+  public async create(dto: CreateOfferDTO): Promise<OfferDoc> {
     const offer = await this.offerModel.create(dto);
 
     this.logger.info(`${MessageText.ADDED} ${offer.id}`);
@@ -25,11 +28,33 @@ export class DefaultOfferService implements OfferService {
     return offer;
   }
 
-  public async findById(id: string): Promise<DocumentType<OfferEntity> | null> {
-    return await this.offerModel.findById({ id }).exec();
+  public async updateById(offerId: number, dto: UpdateOfferDTO): FoundOffer {
+    return await this.offerModel
+      .findByIdAndUpdate(offerId, dto, {new: true})
+      .exec();
   }
 
-  public async findOrCreate(dto: CreateOfferDTO): Promise<DocumentType<OfferEntity> | null> {
+  public async deleteById(offerId: number): FoundOffer {
+    return await this.offerModel
+      .findByIdAndDelete(offerId)
+      .exec();
+  }
+
+  public async find(offersCount: number = DEFAULT_OFFERS_COUNT): FoundOffers {
+    return await this.offerModel
+      .find()
+      .limit(offersCount)
+      .exec();
+  }
+
+  public async findById(id: string): FoundOffer {
+    return await this.offerModel
+      .findById({ id })
+      .populate([ 'userId' ])
+      .exec();
+  }
+
+  public async findOrCreate(dto: CreateOfferDTO): FoundOffer {
     const offer = await this.offerModel.findOne({ name: dto.name, userId: dto.userId }).exec();
 
     if(offer) {
