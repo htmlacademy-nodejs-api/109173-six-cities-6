@@ -7,6 +7,7 @@ import { Component } from '../../types/component.enum.js';
 import { Logger } from '../../libs/logger/logger.interface.js';
 import { UpdateOfferDTO } from './dto/update-offer.dto.js';
 import { City } from '../../types/city-type.enum.js';
+import { SortType } from '../../types/sort-type.enum.js';
 
 const DEFAULT_OFFERS_COUNT = 60;
 const DEFAULT_PREMIUM_OFFERS_COUNT = 3;
@@ -30,15 +31,15 @@ export class DefaultOfferService implements OfferService {
     return offer;
   }
 
-  public async updateById(offerId: number, dto: UpdateOfferDTO): FoundOffer {
+  public async updateById(id: number, dto: UpdateOfferDTO): FoundOffer {
     return await this.offerModel
-      .findByIdAndUpdate(offerId, dto, {new: true})
+      .findByIdAndUpdate(id, dto, {new: true})
       .exec();
   }
 
-  public async deleteById(offerId: number): FoundOffer {
+  public async deleteById(id: number): FoundOffer {
     return await this.offerModel
-      .findByIdAndDelete(offerId)
+      .findByIdAndDelete(id)
       .exec();
   }
 
@@ -46,6 +47,7 @@ export class DefaultOfferService implements OfferService {
     return await this.offerModel
       .find()
       .limit(offersCount)
+      .sort({ createdAt: SortType.DOWN })
       .exec();
   }
 
@@ -80,9 +82,16 @@ export class DefaultOfferService implements OfferService {
       .exec();
   }
 
-  public async changeFavoriteStatus(offerId: string, status: boolean): FoundOffer {
+  public async changeFavoriteStatus(id: string, status: boolean): FoundOffer {
     return await this.offerModel
-      .findByIdAndUpdate({ _id: offerId }, { isFavorite: status }, { new: true })
+      .findByIdAndUpdate(id, { isFavorite: status }, { new: true })
       .exec();
+  }
+
+  public async incCommentsCount(id: number): FoundOffer {
+    return this.offerModel
+      .findByIdAndUpdate(id, {
+        '$inc': { commentCount: 1 }
+      }).exec();
   }
 }

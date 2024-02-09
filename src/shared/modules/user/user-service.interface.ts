@@ -11,10 +11,10 @@ export type FoundUser = Promise<UserDoc | null>
 
 export interface UserService {
   create(dto: CreateUserDTO, salt: string): Promise<UserDoc>;
-  updateById(userId: string, dto: UpdateUserDTO): FoundUser;
+  updateById(id: string, dto: UpdateUserDTO): FoundUser;
   login(dto: LoginUserDTO, salt: string): Promise<UserToken | null>;
   logout(token: UserToken): void;
-  checkAuthStatus(userId: string): FoundUser;
+  checkAuthStatus(id: string): FoundUser;
   findById(id: string): FoundUser;
   findByEmail(email: string): FoundUser;
   findOrCreate(dto: CreateUserDTO, salt: string): Promise<UserDoc>;

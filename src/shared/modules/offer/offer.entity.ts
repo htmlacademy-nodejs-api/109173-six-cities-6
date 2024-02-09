@@ -140,7 +140,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   public commentCount!: number;
 
   @prop({ required: true })
-  public coordinates!: Coordinate; // TODO: Заменить, возможно на  GeoJSON (https://mongoosejs.com/docs/geojson.html)
+  public coordinates!: Coordinate;
 }
 
 export const OfferModel = getModelForClass(OfferEntity);

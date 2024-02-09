@@ -29,9 +29,9 @@ export class DefaultUserService implements UserService {
     return addedUser;
   }
 
-  public async updateById(userId: string, dto: UpdateUserDTO): FoundUser {
+  public async updateById(id: string, dto: UpdateUserDTO): FoundUser {
     return await this.userModel
-      .findByIdAndUpdate(userId, dto, {new: true})
+      .findByIdAndUpdate(id, dto, {new: true})
       .exec();
   }
 
@@ -64,9 +64,9 @@ export class DefaultUserService implements UserService {
     }
   }
 
-  public async checkAuthStatus(userId: string):FoundUser {
+  public async checkAuthStatus(id: string):FoundUser {
     return await this.userModel
-      .findOne({ userId, token: {$ne: ''} })
+      .findOne({ userId: id, token: { '$ne': '' } })
       .exec();
   }
 
