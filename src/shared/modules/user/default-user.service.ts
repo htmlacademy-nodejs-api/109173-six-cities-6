@@ -35,22 +35,22 @@ export class DefaultUserService implements UserService {
       .exec();
   }
 
-  public async login(dto: LoginUserDTO, salt: string): UserToken | null {
+  public async login(dto: LoginUserDTO, salt: string): Promise<UserToken | null> {
     const user = await this.findByEmail(dto.email);
     const checkPassword = user?.checkPassword(dto.email, dto.password, user.password);
 
-    if(!checkPassword) {
+    if(!user || !checkPassword) {
       return null;
     }
 
-    const token = user?.createAuthToken(dto.email, dto.password, salt);
+    const token = user.createAuthToken(dto.email, dto.password, salt);
 
     await this.updateById(user?.id, { token });
 
     return token;
   }
 
-  public async logout(token: UserToken): void {
+  public async logout(token: UserToken): Promise<void> {
     const user = await this.userModel
       .findOne({ token })
       .exec();
@@ -64,12 +64,18 @@ export class DefaultUserService implements UserService {
     }
   }
 
+  public async checkAuthStatus(userId: string):FoundUser {
+    return await this.userModel
+      .findOne({ userId, token: {$ne: ''} })
+      .exec();
+  }
+
   public async findById(id: string): FoundUser {
-    return await this.userModel.findById({ id });
+    return await this.userModel.findById({ id }).exec();
   }
 
   public async findByEmail(email: string):FoundUser {
-    return await this.userModel.findOne({ email });
+    return await this.userModel.findOne({ email }).exec();
   }
 
   public async findOrCreate(dto: CreateUserDTO, salt: string): Promise<UserDoc> {

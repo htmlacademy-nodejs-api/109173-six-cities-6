@@ -2,6 +2,7 @@ import { DocumentType } from '@typegoose/typegoose';
 import { CreateOfferDTO } from './dto/create-offer.dto.js';
 import { OfferEntity } from './offer.entity.js';
 import { UpdateOfferDTO } from './dto/update-offer.dto.js';
+import { City } from '../../types/city-type.enum.js';
 
 export type OfferDoc = DocumentType<OfferEntity>;
 export type FoundOffer = Promise<OfferDoc | null>;
@@ -13,4 +14,7 @@ export interface OfferService {
   find(offersCount: number): FoundOffers
   findById(id: string): FoundOffer
   findOrCreate(dto: CreateOfferDTO): FoundOffer
+  getPremiumByCity(cityName: City, offersCount: number): FoundOffers
+  getFavorites(): FoundOffers;
+  changeFavoriteStatus(offerId: string, status: boolean): FoundOffer
 }

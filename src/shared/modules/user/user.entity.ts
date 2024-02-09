@@ -74,7 +74,7 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
     return this.setPassword(password, salt) === hash;
   }
 
-  public createAuthToken(email: string, password: string, salt: string) {
+  public createAuthToken(email: string, password: string, salt: string): string {
     const currentDate = new Date().toDateString();
     const preparedValue = `${email}${password}${currentDate}`;
     return getSHA256Hash(preparedValue, salt);

@@ -6,8 +6,10 @@ import { inject, injectable } from 'inversify';
 import { Component } from '../../types/component.enum.js';
 import { Logger } from '../../libs/logger/logger.interface.js';
 import { UpdateOfferDTO } from './dto/update-offer.dto.js';
+import { City } from '../../types/city-type.enum.js';
 
 const DEFAULT_OFFERS_COUNT = 60;
+const DEFAULT_PREMIUM_OFFERS_COUNT = 3;
 
 const MessageText = {
   ADDED: 'New offer successfully added. Offer ID:',
@@ -63,5 +65,24 @@ export class DefaultOfferService implements OfferService {
     }
 
     return this.create(dto);
+  }
+
+  public async getPremiumByCity(city: City, offersCount: number = DEFAULT_PREMIUM_OFFERS_COUNT): FoundOffers {
+    return await this.offerModel
+      .find({ city })
+      .limit(offersCount)
+      .exec();
+  }
+
+  public async getFavorites(): FoundOffers {
+    return await this.offerModel
+      .find({ isFavorite: true })
+      .exec();
+  }
+
+  public async changeFavoriteStatus(offerId: string, status: boolean): FoundOffer {
+    return await this.offerModel
+      .findByIdAndUpdate({ _id: offerId }, { isFavorite: status }, { new: true })
+      .exec();
   }
 }
