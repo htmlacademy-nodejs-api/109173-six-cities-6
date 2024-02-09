@@ -8,10 +8,9 @@ export type FoundComment = Promise<DocumentType<CommentEntity> | null>;
 export type FoundComments = Promise<DocumentType<CommentEntity>[] | null>;
 
 export interface CommentServise {
-  create(offerId: string): Promise<CommentDoc>;
+  create(dto: CreateCommentDTO): Promise<CommentDoc>
   updateById(id: number, dto: CreateCommentDTO): FoundComment
   deleteById(id: number): FoundComment
-  find(city: City, commentsCount: number): FoundComments;
+  find(city: City, commentsCount: number): FoundComments
   findById(id: string): FoundComment
-  findOrCreate(dto: CreateCommentDTO): FoundComment
 }

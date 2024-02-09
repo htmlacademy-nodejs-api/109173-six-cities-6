@@ -10,12 +10,12 @@ export type UserDoc = DocumentType<UserEntity>;
 export type FoundUser = Promise<UserDoc | null>
 
 export interface UserService {
-  create(dto: CreateUserDTO, salt: string): Promise<UserDoc>;
-  updateById(id: string, dto: UpdateUserDTO): FoundUser;
-  login(dto: LoginUserDTO, salt: string): Promise<UserToken | null>;
-  logout(token: UserToken): void;
-  checkAuthStatus(id: string): FoundUser;
-  findById(id: string): FoundUser;
-  findByEmail(email: string): FoundUser;
-  findOrCreate(dto: CreateUserDTO, salt: string): Promise<UserDoc>;
+  create(dto: CreateUserDTO, salt: string): Promise<UserDoc>
+  updateById(id: string, dto: UpdateUserDTO): FoundUser
+  login(dto: LoginUserDTO, salt: string): Promise<UserToken | null>
+  logout(token: UserToken): void
+  checkAuthStatus(id: string): FoundUser
+  findById(id: string): FoundUser
+  findByEmail(email: string): FoundUser
+  findOrCreate(dto: CreateUserDTO, salt: string): Promise<UserDoc>
 }

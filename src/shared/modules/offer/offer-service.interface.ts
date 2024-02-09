@@ -9,13 +9,17 @@ export type FoundOffer = Promise<OfferDoc | null>;
 export type FoundOffers = Promise<OfferDoc[] | null>;
 export interface OfferService {
   create(dto: CreateOfferDTO): Promise<OfferDoc>
-  updateById(id: number, dto: UpdateOfferDTO): FoundOffer
-  deleteById(id: number): FoundOffer
+  updateById(id: string, dto: UpdateOfferDTO): FoundOffer
+  deleteById(id: string): FoundOffer
   find(offersCount: number): FoundOffers
   findById(id: string): FoundOffer
   findOrCreate(dto: CreateOfferDTO): FoundOffer
   getPremiumByCity(cityName: City, offersCount: number): FoundOffers
-  getFavorites(): FoundOffers;
+  getFavorites(): FoundOffers
   changeFavoriteStatus(offerId: string, status: boolean): FoundOffer
-  incCommentsCount(id: number): FoundOffer;
+  incCommentsCount(id: string): FoundOffer
+
+  updateCommentsCount(id: string): Promise<FoundOffer | void>
+  // updateRating(id: string): FoundOffer
+  // updateCommentsCount(id: string): FoundOffer
 }

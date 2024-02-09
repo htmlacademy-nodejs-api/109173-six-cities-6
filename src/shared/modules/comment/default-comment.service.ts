@@ -15,16 +15,20 @@ export class DefaultCommentService implements CommentServise {
     @inject(Component.CommentModel) private readonly commentModel: types.ModelType<CommentEntity>
   ){}
 
-  public create(offerId: string): Promise<CommentDoc> {
-
+  public async create(dto: CreateCommentDTO): Promise<CommentDoc> {
+    return await this.commentModel.create(dto);
   }
 
-  public updateById(id: number, dto: CreateCommentDTO): FoundComment {
-
+  public async updateById(id: number, dto: CreateCommentDTO): FoundComment {
+    return await this.commentModel
+      .findByIdAndUpdate(id, dto, { new: true })
+      .exec();
   }
 
-  public deleteById(id: number): FoundComment {
-
+  public async deleteById(id: number): FoundComment {
+    return await this.commentModel
+      .findByIdAndDelete(id)
+      .exec();
   }
 
   public async find(city: City, commentsCount: number = DEFAULT_COMMENTS_COUNT): FoundComments {
@@ -35,11 +39,9 @@ export class DefaultCommentService implements CommentServise {
       .exec();
   }
 
-  public findById(id: string): FoundComment {
-
-  }
-
-  public findOrCreate(dto: CreateCommentDTO): FoundComment {
-
+  public async findById(id: string): FoundComment {
+    return await this.commentModel
+      .findById({ id })
+      .exec();
   }
 }

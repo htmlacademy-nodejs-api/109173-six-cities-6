@@ -31,13 +31,13 @@ export class DefaultOfferService implements OfferService {
     return offer;
   }
 
-  public async updateById(id: number, dto: UpdateOfferDTO): FoundOffer {
+  public async updateById(id: string, dto: UpdateOfferDTO): FoundOffer {
     return await this.offerModel
-      .findByIdAndUpdate(id, dto, {new: true})
+      .findByIdAndUpdate(id, dto, { new: true })
       .exec();
   }
 
-  public async deleteById(id: number): FoundOffer {
+  public async deleteById(id: string): FoundOffer {
     return await this.offerModel
       .findByIdAndDelete(id)
       .exec();
@@ -54,7 +54,7 @@ export class DefaultOfferService implements OfferService {
   public async findById(id: string): FoundOffer {
     return await this.offerModel
       .findById({ id })
-      .populate([ 'userId' ])
+      .populate('userId')
       .exec();
   }
 
@@ -88,10 +88,27 @@ export class DefaultOfferService implements OfferService {
       .exec();
   }
 
-  public async incCommentsCount(id: number): FoundOffer {
+  public async incCommentsCount(id: string): FoundOffer {
     return this.offerModel
       .findByIdAndUpdate(id, {
         '$inc': { commentCount: 1 }
       }).exec();
+  }
+
+  public async updateCommentsCount(id: string): Promise<FoundOffer | void> {
+    const commentsCount = await this.offerModel
+      .aggregate([
+        {
+          $lookup: {
+            from: 'comments',
+            localField: 'offerId',
+            foreignField: '_id',
+            as: 'comments'
+          }
+        }
+      ])
+      .exec();
+
+    console.log('Comment count: ', commentsCount);
   }
 }
