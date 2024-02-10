@@ -1,0 +1,621 @@
+openapi: 3.0.2
+info:
+  title: API сервер для приложения "Шесть городов"
+  description: |-
+    * Список ресурсов и маршрутов сервера "Шесть городов".
+  version: "1.0.0"
+  contact:
+    name: Nosikov Dmitriy
+    url: https://github.com/DmitriyNosikov
+tags: #Сущности приложения
+  - name: offers
+    description: Действия с предложениями
+  - name: users
+    description: Действия с пользователями
+  - name: comments
+    description: Действия с комментариями
+  - name: login
+    description: Действия с авторизацией на сервере
+  - name: logout
+    description: Действия со сбросом авторизации на сервере
+  - name: premium
+    description: Действия с премиальными предложениями
+  - name: favorites
+    description: Действия с избранными предложениями
+paths: #API
+  /offers:
+    post:
+      tags:
+        - offers
+      summary: Создание предложения
+      description: Создает новое предложение
+
+      requestBody:
+        description: Информация для создания нового предложения
+
+        content:
+          application-json:
+            schema:
+              $ref: '#/components/schemas/createOffer'
+
+      responses:
+        '201':
+          description: Предложение успешно добавлено на сервер
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/offer'
+        '409':
+          description: Предложение с таким названием и автором уже существует
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/offer'
+        '400':
+          description: Ошибка валидации. Переданы не все, необходимые для создания предложения, данные
+        '401':
+          description: Вы не авторизованы. Добавлять предложения могут только авторизованные пользователи
+    get:
+      tags:
+        - offers
+      summary: Получение списка предлжений
+      description: Возвращает список не более чем из 60 (по-умолчанию) предложений, отсортированных по дате публикации (по-убыванию)
+
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          description: Количество офферов, которое необходимо вернуть (если их > 60)
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Список предложений успешно загружен
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/offers'
+
+  /offers/{offerId}:
+    put:
+      tags:
+        - offers
+      summary: Редактирование предолжения
+      description: Редактирует предложение, существующее на сервере и принадлежащее конкретному пользователю
+
+      requestBody:
+        description: Информация для обновления предложения
+
+        content:
+          application-json:
+            schema:
+              $ref: '#/components/schemas/createOffer'
+
+      responses:
+        '201':
+          description: Предложение успешно отредактировано
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/offer'
+        '404':
+          description: Предложение с указанным ID не найдено
+        '400':
+          description: Ошибка валидации. Переданы не все, необходимые для создания предложения, данные
+        '401':
+          description: Вы не можете редактировать данное предложение, т.к. не являетесь его создателем
+
+    delete:
+      tags:
+        - offers
+      summary: Удаление предолжения
+      description: Удаляет предложение, существующее на сервере и принадлежащее конкретному пользователю
+
+      responses:
+        '204':
+          description: Предложение успешно удалено
+        '404':
+          description: Предложение с таким идентификатором не существует
+        '401':
+          description: Вы не можете удалить данное предложение, т.к. не являетесь его создателем
+    get:
+      tags:
+        - offers
+      summary: Информация о предложении
+      description: Предоставляет детальную информацию о предложении
+
+      responses:
+        '200':
+          description: Информация о предложении успешно загружена
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/createOffer'
+        '404':
+          description: Предложение с указанным ID не найдено
+
+  /comments/{offerId}:
+    get:
+      tags:
+        - comments
+      summary: Получение списка комментариев
+      description: Возвращает список из 50 последних комментариев для определенного предложения, отсортированных по дате публикации (по убыванию)
+
+      responses:
+        '200':
+          description: Список комментариев успешно загружен
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/comments'
+        '404':
+          description: Предложение с указанным ID не найдено
+    post:
+      tags:
+        - comments
+      summary: Добавление комментария
+      description: Добавляет новый комментарий к предложению
+
+      requestBody:
+        description: Информация о добавляемом комментарии
+
+        content:
+          application-json:
+            schema:
+              $ref: '#/components/schemas/newComment'
+
+      responses:
+        '200':
+          description: Список комментариев успешно загружен
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/comments'
+        '404':
+          description: Предложение с указанным ID не найдено
+        '400':
+          description: Ошибка валидации. Переданы не все, необходимые для создания предложения, данные
+        '401':
+          description: Вы не можете оставлять комментарии, т.к. не авторизованы
+
+  /users:
+    post:
+      tags:
+        - users
+      summary: Создание пользователя
+      description: Регистрирует нового пользователя в системе
+
+      responses:
+        '200':
+          description: Пользователь успешно зарегистрирован на сервере
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/user'
+        '400':
+          description: Регистрироваться в системе могут только неавторизованные пользователи
+
+  /login:
+    post:
+      tags:
+        - login
+      summary: Авторизация пользователя
+      description: Авторизует зарегистрированного пользователя на сервере
+
+      requestBody:
+        content:
+          application-json:
+            schema:
+              $ref: '#/components/schemas/login'
+
+      responses:
+        '200':
+          description: Пользователь успешно авторизован на сервере
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/token'
+        '400':
+          description: Не удалось авторизовать пользователя. Ошибка в теле запроса.
+    get:
+      tags:
+        - login
+      summary: Проверка статуса авторизации пользоавтеля
+      description: Проверяет, авторизован ли пользователь на сервере
+
+      requestBody:
+        content:
+          application-json:
+            schema:
+              $ref: '#/components/schemas/token'
+
+      responses:
+        '200':
+          description: Пользователь авторизован на сервере
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/user'
+        '401':
+          description: Пользователь не авторизован на сервере
+
+  /logout:
+    post:
+      tags:
+        - logout
+      summary: Сброс авторизации пользователя
+      description: Разавторизует авторизованного пользователя на сервере
+
+      requestBody:
+        content:
+          application-json:
+            schema:
+              $ref: '#/components/schemas/token'
+
+      responses:
+        '204':
+          description: Пользователь успешно разавторизован
+
+  /premium/{cityId}:
+    get:
+      tags:
+        - premium
+      summary: Получение премиальных предложений
+      description: Возвращает список из 3 педложений с флагом isPremium для города с переданным ID, отсортированных по дате (по убыванию)
+
+      responses:
+        '200':
+          description: Список предложений успешно загружен
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/offers'
+
+  /favorites/:
+    get:
+      tags:
+        - favorites
+      summary: Получение списки избранных предложений
+      description: Возвращает список педложений с флагом isFavorite (только для авторизованных пользователей)
+
+      requestBody:
+        content:
+          application-json:
+            schema:
+              $ref: '#/components/schemas/token'
+      responses:
+        '200':
+          description: Список предложений успешно загружен
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/offers'
+        '401':
+          description: Список избранных предложений доступен только авторизованным пользователям
+
+  /favorites/{offerId}/{status}:
+    post:
+      tags:
+        - favorites
+      summary: Изменение статуса избранного
+      description: Изменяет статус избранного у переданного предложения
+
+      requestBody:
+        content:
+          application-json:
+            schema:
+              $ref: '#/components/schemas/token'
+
+      responses:
+        '200':
+          description: Статус избранного у предложения успешно изменен
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/offer'
+        '201':
+          description: Статус избранного у предложения успешно изменен
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/offer'
+        '401':
+          description: Список избранных предложений доступен только авторизованным пользователям
+        '400':
+          description: Ошибка в теле запроса. Переданы не все необходимые поля
+        '404':
+          description: Предолжение с указанным ID не найдено
+        '409':
+          description: Предолжение уже добавлено в избранное
+
+
+components:
+  schemas:
+    offerItem:
+      type: object
+
+      properties:
+        name:
+          type: string
+          description: Название предложения
+          minimum: 10
+          maximum: 100
+          example: President`s apartament
+
+        date:
+          type: string
+          description: Дата размещения предложения в формате ISO
+          example: 2024-02-07T09:55:28.799Z
+
+        city:
+          type: string
+          description: Город, в котором размещено предолжение
+          enum:
+            - 'Paris'
+            - 'Cologne'
+            - 'Brussels'
+            - 'Amsterdam'
+            - 'Hamburg'
+            - 'Dusseldorf'
+          example: Amsterdam
+
+        previewImage:
+          type: array
+          description: Превью изображения предложения
+          example: [/some/photo/preview4.jpg; /some/photo/preview.jpg]
+
+        isPremium:
+          type: boolean
+          description: Флаг, указывающий, является ли предложение премиальным
+          example: true
+
+        isFavorite:
+          type: boolean
+          description: Флаг, указывающий, находится ли предложение в избранном
+          example: true
+
+        rating:
+          type: number
+          minimum: 1
+          maximum: 5
+          description: Рейтинг предложения
+          example: 3
+
+        type:
+          type: string
+          description: Тип предложения. Представлен одним из 4 вариантов - apartment | house | room | hotel
+          enum:
+            - apartment
+            - house
+            - room
+            - hotel
+          example: apartment
+
+        price:
+          type: number
+          minimum: 100
+          maximum: 100000
+          description: Стоимость предложения
+          example: 84680
+
+        commentCount:
+          type: number
+          description: Количество комментариев у предложения
+          default: 0
+          example: 1
+
+    createOffer:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/offerItem'
+
+      required:
+        - name
+        - description
+        - date
+        - city
+        - previewImage
+        - images
+        - isPremium
+        - isFavorite
+        - rating
+        - type
+        - rooms
+        - guests
+        - price
+        - facilities
+        - user
+        - coordinates
+
+      properties:
+        description:
+          type: string
+          minimum: 20
+          maximum: 1024
+          description: Описание предложения
+          example: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam enim quam, mollis vel suscipit
+
+        images:
+          type: array
+          description: Детальные фотографии предложения
+          example: [ 'photo11.jpg', 'photo5.jpg', 'photo4.jpg', 'photo10.jpg', 'photo6.jpg', 'photo8.jpg' ]
+
+        rooms:
+          type: number
+          minimum: 1
+          maximum: 8
+          description: Количество номеров в предложении
+          example: 6
+
+        guests:
+          type: number
+          minimum: 1
+          maximum: 10
+          description: Максимальное количество гостей
+          example: 3
+
+        facilities:
+          type: array
+          description: Удобства, представленные в предложении (6 типов)
+          enum:
+            - Breakfast
+            - Air conditioning
+            - friendly workspace
+            - Baby seat
+            - Washer
+            - Towels
+            - Fridge
+          example: [ 'Baby seat', 'Breakfast' ]
+
+        user:
+          type: object
+          description: Пользователь, разместивший предложение
+          example: {
+            name: 'User One',
+            email: 'someEmail1@email.com',
+            avatarUrl: '/avatar/url3.jpg',
+            password: '123456',
+            isPro: true
+          }
+
+        coordinates:
+          type: object
+          description: Координаты предложения
+          example: { latitude: '52.370216', longitude: '4.895168' }
+
+    offer:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/createOffer'
+
+      properties:
+        id:
+          type: string
+          example: 238y9fiwej9283y40928
+
+    offers:
+      type: array
+
+      items:
+        $ref: "#/components/schemas/offerItem"
+
+    comment:
+      type: object
+
+      properties:
+        text:
+          type: string
+          description: Текст комментария
+          example: Отличный загородный домик. С удовольствием провели в нём свой отпуск.
+        rating:
+          type: number
+          description: Рейтинг, выставленный пользователем для конкретного предложения
+          minimum: 1
+          maximum: 5
+          example: 1
+        user:
+          type: object
+          description: Информация об авторе комментария
+          example: {
+            name: 'User One',
+            email: 'someEmail1@email.com',
+            avatarUrl: '/avatar/url3.jpg',
+            password: '123456',
+            isPro: true
+          }
+
+    newComment:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/comment'
+      required:
+        - date
+        - rating
+        - user
+
+      properties:
+        id:
+          type: string
+          example: b67ddfd5-b953-4a30-8c8d-bd083cd6b62a
+        date:
+          type: string
+          description: Дата публикации комментария в формате ISO
+          example: 2024-08-02T11:40:00.000Z
+
+    comments:
+      type: array
+
+      items:
+        $ref: '#/components/schemas/newComment'
+
+    userBase:
+      type: object
+
+      properties:
+        name:
+          type: string
+          minimum: 1
+          maximum: 15
+          description: Имя пользователя
+          example: Tony Stark
+        email:
+          type: string
+          description: Email-адрес пользователя
+          example: ironman@stark-industries.com
+        avatarUrl:
+          type: string
+          description: Ссылка на аватар пользователя
+          example: /tony/stark/images/best_photo,jpg
+        isPro:
+          type: boolean
+          description: Тип пользователя
+          example: true
+
+    user:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/userBase'
+        - $ref: '#/components/schemas/token'
+
+    newUser:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/userBase'
+      required:
+        - name
+        - email
+        - password
+        - isPro
+
+      properties:
+        password:
+          type: string
+          description: Пароль пользователя
+          example: 1qazXSW@3edc
+
+    login:
+      type: object
+
+      required:
+        - email
+        - password
+
+      properties:
+        email:
+          type: string
+          description: Email-адрес пользователя
+          example: ironman@stark-industries.com
+        password:
+          type: string
+          description: Пароль пользователя
+          example: 1qazXSW@3edc
+
+    token:
+      type: object
+
+      properties:
+        token:
+          type: string
+          description: Авторизационный токен пользователя
+          example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
