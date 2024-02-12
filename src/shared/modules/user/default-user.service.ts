@@ -7,8 +7,7 @@ import { FoundUser, UserDoc, UserService, UserToken } from './user-service.inter
 import { types } from '@typegoose/typegoose';
 import { LoginUserDTO } from './dto/login-user.dto.js';
 import { UpdateUserDTO } from './dto/update-user.dto.js';
-import { OfferEntity } from '../offer/offer.entity.js';
-import { FoundOffer, FoundOffers } from '../offer/offer-service.interface.js';
+import { FoundOffers } from '../offer/offer-service.interface.js';
 import mongoose from 'mongoose';
 
 const MessageText = {
@@ -18,7 +17,6 @@ const MessageText = {
 export class DefaultUserService implements UserService {
   constructor(
     @inject(Component.UserModel) private readonly userModel: types.ModelType<UserEntity>,
-    @inject(Component.OfferModel) private readonly offerModel: types.ModelType<OfferEntity>,
     @inject(Component.Logger) private readonly logger: Logger
   ){}
 
@@ -129,11 +127,5 @@ export class DefaultUserService implements UserService {
       .exec();
 
     return userWithFavorites.favoriteOffers ?? null;
-  }
-
-  public async changeFavoriteStatus(offerId: string, status: boolean): FoundOffer {
-    return await this.offerModel
-      .findByIdAndUpdate(offerId, { isFavorite: status }, { new: true })
-      .exec();
   }
 }
