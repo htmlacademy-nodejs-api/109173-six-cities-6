@@ -23,6 +23,5 @@ export interface OfferService {
   changeFavoriteStatus(offerId: string, status: boolean): FoundOffer
   incCommentsCount(id: string): FoundOffer
   countRatingAndComments(id: string): Promise<OfferRatingComments | void>
-  // updateCommentsCount(id: string): FoundOffer
-  // updateRating(id: string): FoundOffer
+  updateRatingAndComments(id: string): FoundOffer
 }

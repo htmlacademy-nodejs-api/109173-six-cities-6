@@ -131,23 +131,15 @@ export class DefaultOfferService implements OfferService {
     return { rating: offerRatingAverate, commentCount: offer.commentCount };
   }
 
-  public async updateCommentsCount(id: string): FoundOffer {
+  public async updateRatingAndComments(id: string): FoundOffer {
     const ratingAndComments = await this.countRatingAndComments(id);
 
     if(!ratingAndComments) {
       return null;
     }
 
-    return await this.updateById(id, { commentCount: ratingAndComments.commentCount });
-  }
+    const { rating, commentCount } = ratingAndComments;
 
-  public async updateRating(id: string): FoundOffer {
-    const ratingAndComments = await this.countRatingAndComments(id);
-
-    if(!ratingAndComments) {
-      return null;
-    }
-
-    return await this.updateById(id, { rating: ratingAndComments.rating });
+    return await this.updateById(id, { rating, commentCount });
   }
 }
