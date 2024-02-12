@@ -23,7 +23,7 @@ async function bootstrap() {
 
   const os = container.get<DefaultOfferService>(Component.OfferService);
 
-  os.updateCommentsCount('65c3539f177a2ad3d529effc');
+  console.log(await os.countRatingAndComments('65c3539f177a2ad3d529effc'));
 }
 
 bootstrap();

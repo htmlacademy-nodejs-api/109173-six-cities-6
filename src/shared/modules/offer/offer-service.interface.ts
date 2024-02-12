@@ -7,6 +7,10 @@ import { City } from '../../types/city-type.enum.js';
 export type OfferDoc = DocumentType<OfferEntity>;
 export type FoundOffer = Promise<OfferDoc | null>;
 export type FoundOffers = Promise<OfferDoc[] | null>;
+export type OfferRatingComments = {
+  rating: number,
+  commentCount: number
+};
 export interface OfferService {
   create(dto: CreateOfferDTO): Promise<OfferDoc>
   updateById(id: string, dto: UpdateOfferDTO): FoundOffer
@@ -18,8 +22,7 @@ export interface OfferService {
   getFavorites(): FoundOffers
   changeFavoriteStatus(offerId: string, status: boolean): FoundOffer
   incCommentsCount(id: string): FoundOffer
-  countComments(id: string): Promise<number | void>
-  updateCommentsCount(id: string): FoundOffer
-  countRating(id: string): Promise<number | void>
-  updateRating(id: string): FoundOffer
+  countRatingAndComments(id: string): Promise<OfferRatingComments | void>
+  // updateCommentsCount(id: string): FoundOffer
+  // updateRating(id: string): FoundOffer
 }

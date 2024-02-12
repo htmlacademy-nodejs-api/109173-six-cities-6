@@ -1,7 +1,7 @@
 import { types } from '@typegoose/typegoose';
 import * as mongoose from 'mongoose';
 import { CreateOfferDTO } from './dto/create-offer.dto.js';
-import { FoundOffer, FoundOffers, OfferDoc, OfferService } from './offer-service.interface.js';
+import { FoundOffer, FoundOffers, OfferDoc, OfferRatingComments, OfferService } from './offer-service.interface.js';
 import { OfferEntity } from './offer.entity.js';
 import { inject, injectable } from 'inversify';
 import { Component } from '../../types/component.enum.js';
@@ -96,7 +96,7 @@ export class DefaultOfferService implements OfferService {
       }).exec();
   }
 
-  public async countComments(id: string): Promise<number | void> {
+  public async countRatingAndComments(id: string): Promise<OfferRatingComments | void> {
     const offerObjectId = new mongoose.Types.ObjectId(id);
     const [ offer ] = await this.offerModel
       .aggregate([
@@ -107,15 +107,18 @@ export class DefaultOfferService implements OfferService {
             let: { targetOfferId: id },
             pipeline: [
               { $match: { $expr: { $eq: [ '$$targetOfferId', '$offerId' ] } } }, // $expr позволяет нам обращаться к let
-              { $project: { _id: 1 } }
+              { $project: { rating: 1 } } // Получаем не _id, а сразу рейтинг, т.к. нам в дальнейшем нужно будет его посчитать
             ],
-            as: 'offersCommentsCount',
+            as: 'comments',
           }
         },
         { // Считаем комментарии и записываем в commentCount поле документа из коллекции Offers
-          $addFields: { commentCount: { $size: '$offersCommentsCount' } }
+          $addFields: {
+            commentCount: { $size: '$comments' },
+            rating: { $sum: '$comments.rating' }
+          }
         },
-        { $unset: 'offersCommentsCount' } // Удаляем временную переменную
+        { $unset: 'comments' } // Удаляем временную переменную
       ])
       .exec();
 
@@ -123,24 +126,28 @@ export class DefaultOfferService implements OfferService {
       return;
     }
 
-    return offer.commentCount;
+    const offerRatingAverate = offer.rating / offer.commentCount; // Получаем среднее значение рейтинга
+
+    return { rating: offerRatingAverate, commentCount: offer.commentCount };
   }
 
   public async updateCommentsCount(id: string): FoundOffer {
-    const commentCount = await this.countComments(id);
+    const ratingAndComments = await this.countRatingAndComments(id);
 
-    if(!commentCount) {
+    if(!ratingAndComments) {
       return null;
     }
 
-    return await this.updateById(id, { commentCount });
+    return await this.updateById(id, { commentCount: ratingAndComments.commentCount });
   }
 
-  countRating(id: string): Promise<number | void> {
+  public async updateRating(id: string): FoundOffer {
+    const ratingAndComments = await this.countRatingAndComments(id);
 
-  }
+    if(!ratingAndComments) {
+      return null;
+    }
 
-  updateRating(id: string): FoundOffer {
-
+    return await this.updateById(id, { rating: ratingAndComments.rating });
   }
 }
