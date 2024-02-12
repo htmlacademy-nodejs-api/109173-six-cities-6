@@ -1,4 +1,5 @@
 import { types } from '@typegoose/typegoose';
+import * as mongoose from 'mongoose';
 import { CreateOfferDTO } from './dto/create-offer.dto.js';
 import { FoundOffer, FoundOffers, OfferDoc, OfferService } from './offer-service.interface.js';
 import { OfferEntity } from './offer.entity.js';
@@ -95,20 +96,51 @@ export class DefaultOfferService implements OfferService {
       }).exec();
   }
 
-  public async updateCommentsCount(id: string): Promise<FoundOffer | void> {
-    const commentsCount = await this.offerModel
+  public async countComments(id: string): Promise<number | void> {
+    const offerObjectId = new mongoose.Types.ObjectId(id);
+    const [ offer ] = await this.offerModel
       .aggregate([
-        {
+        { $match: { _id: offerObjectId} }, // Берем из коллекции Offers элемент с _id = id
+        { // Выбираем все соответствующие комментарии
           $lookup: {
             from: 'comments',
-            localField: 'offerId',
-            foreignField: '_id',
-            as: 'comments'
+            let: { targetOfferId: id },
+            pipeline: [
+              { $match: { $expr: { $eq: [ '$$targetOfferId', '$offerId' ] } } }, // $expr позволяет нам обращаться к let
+              { $project: { _id: 1 } }
+            ],
+            as: 'offersCommentsCount',
           }
-        }
+        },
+        { // Считаем комментарии и записываем в commentCount поле документа из коллекции Offers
+          $addFields: { commentCount: { $size: '$offersCommentsCount' } }
+        },
+        { $unset: 'offersCommentsCount' } // Удаляем временную переменную
       ])
       .exec();
 
-    console.log('Comment count: ', commentsCount);
+    if(!offer) {
+      return;
+    }
+
+    return offer.commentCount;
+  }
+
+  public async updateCommentsCount(id: string): FoundOffer {
+    const commentCount = await this.countComments(id);
+
+    if(!commentCount) {
+      return null;
+    }
+
+    return await this.updateById(id, { commentCount });
+  }
+
+  countRating(id: string): Promise<number | void> {
+
+  }
+
+  updateRating(id: string): FoundOffer {
+
   }
 }
