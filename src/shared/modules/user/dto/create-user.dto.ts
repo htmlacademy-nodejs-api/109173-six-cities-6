@@ -7,4 +7,5 @@ export class CreateUserDTO implements User {
   public avatarUrl!: string;
   public password!: string;
   public isPro!: boolean;
+  public favoriteOffers!: string[];
 }

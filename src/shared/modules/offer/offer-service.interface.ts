@@ -19,8 +19,6 @@ export interface OfferService {
   findById(id: string): FoundOffer
   findOrCreate(dto: CreateOfferDTO): FoundOffer
   getPremiumByCity(cityName: City, offersCount: number): FoundOffers
-  getFavorites(): FoundOffers
-  changeFavoriteStatus(offerId: string, status: boolean): FoundOffer
   incCommentsCount(id: string): FoundOffer
   countRatingAndComments(id: string): Promise<OfferRatingComments | void>
   updateRatingAndComments(id: string): FoundOffer

@@ -7,6 +7,9 @@ import { FoundUser, UserDoc, UserService, UserToken } from './user-service.inter
 import { types } from '@typegoose/typegoose';
 import { LoginUserDTO } from './dto/login-user.dto.js';
 import { UpdateUserDTO } from './dto/update-user.dto.js';
+import { OfferEntity } from '../offer/offer.entity.js';
+import { FoundOffer, FoundOffers } from '../offer/offer-service.interface.js';
+import mongoose from 'mongoose';
 
 const MessageText = {
   ADDED: 'New user successfully added. Email:',
@@ -15,6 +18,7 @@ const MessageText = {
 export class DefaultUserService implements UserService {
   constructor(
     @inject(Component.UserModel) private readonly userModel: types.ModelType<UserEntity>,
+    @inject(Component.OfferModel) private readonly offerModel: types.ModelType<OfferEntity>,
     @inject(Component.Logger) private readonly logger: Logger
   ){}
 
@@ -86,5 +90,50 @@ export class DefaultUserService implements UserService {
     }
 
     return this.create(dto, salt);
+  }
+
+  public async addToFavoritesIds(userId: string, offerId: string): FoundUser {
+    const userFavorites: string[] = await this.getFavoriteIds(userId);
+
+    userFavorites.push(offerId);
+
+    return await this.userModel.findByIdAndUpdate(userId, { favoriteOffers: userFavorites });
+  }
+
+  public async getFavoriteIds(userId: string): Promise<string[] | []> {
+    const user = await this.userModel
+      .findById(userId)
+      .exec();
+
+    return user?.favoriteOffers ?? [];
+  }
+
+  public async getFavoriteOffers(userId: string): FoundOffers {
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+    const userFavoritesIds = await this.getFavoriteIds(userId);
+    const userFavoritesObjectIds = userFavoritesIds.map((offerId) => new mongoose.Types.ObjectId(offerId));
+
+    const [ userWithFavorites ] = await this.userModel
+      .aggregate([
+        { $match: { _id: userObjectId} },
+        {
+          $lookup: {
+            from: 'offers',
+            pipeline: [
+              { $match: { $expr: { $in: ['$_id', userFavoritesObjectIds] } } }
+            ],
+            as: 'favoriteOffers'
+          }
+        }
+      ])
+      .exec();
+
+    return userWithFavorites.favoriteOffers ?? null;
+  }
+
+  public async changeFavoriteStatus(offerId: string, status: boolean): FoundOffer {
+    return await this.offerModel
+      .findByIdAndUpdate(offerId, { isFavorite: status }, { new: true })
+      .exec();
   }
 }

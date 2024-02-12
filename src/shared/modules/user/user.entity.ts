@@ -49,6 +49,12 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
   @prop({ default: false })
   public isPro: boolean;
 
+  @prop({
+    type: () => [String],
+    default: []
+  })
+  public favoriteOffers: string[];
+
   @prop({ default: '' })
   public token!: string;
 
@@ -60,6 +66,7 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
     this.avatarUrl = userData.avatarUrl;
     this.password = userData.password;
     this.isPro = userData.isPro;
+    this.favoriteOffers = userData.favoriteOffers;
   }
 
   public getPassword() {

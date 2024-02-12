@@ -4,6 +4,7 @@ import { UserEntity } from './user.entity.js';
 import { CreateUserDTO } from './dto/create-user.dto.js';
 import { LoginUserDTO } from './dto/login-user.dto.js';
 import { UpdateUserDTO } from './dto/update-user.dto.js';
+import { FoundOffer, FoundOffers } from '../offer/offer-service.interface.js';
 
 export type UserToken = string;
 export type UserDoc = DocumentType<UserEntity>;
@@ -18,4 +19,8 @@ export interface UserService {
   findById(id: string): FoundUser
   findByEmail(email: string): FoundUser
   findOrCreate(dto: CreateUserDTO, salt: string): Promise<UserDoc>
+  addToFavoritesIds(userId: string, offerId: string): FoundUser
+  getFavoriteIds(userId: string): Promise<string[] | []>
+  getFavoriteOffers(userId: string): FoundOffers
+  changeFavoriteStatus(offerId: string, status: boolean): FoundOffer
 }

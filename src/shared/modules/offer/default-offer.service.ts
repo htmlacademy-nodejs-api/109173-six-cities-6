@@ -77,18 +77,6 @@ export class DefaultOfferService implements OfferService {
       .exec();
   }
 
-  public async getFavorites(): FoundOffers {
-    return await this.offerModel
-      .find({ isFavorite: true })
-      .exec();
-  }
-
-  public async changeFavoriteStatus(id: string, status: boolean): FoundOffer {
-    return await this.offerModel
-      .findByIdAndUpdate(id, { isFavorite: status }, { new: true })
-      .exec();
-  }
-
   public async incCommentsCount(id: string): FoundOffer {
     return this.offerModel
       .findByIdAndUpdate(id, {
