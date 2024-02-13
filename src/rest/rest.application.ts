@@ -1,4 +1,5 @@
 import { inject, injectable } from 'inversify';
+import express from 'express';
 import { Config } from '../shared/libs/config/config.interface.js';
 import { RestSchema } from '../shared/libs/config/rest.schema.js';
 import { Component } from '../shared/types/component.enum.js';
@@ -8,9 +9,9 @@ import { DatabaseClient } from '../shared/libs/database-client/database-client.i
 import { getMongoURI } from '../utils/database.js';
 
 const MessageText = {
-  INIT: 'Rest application is initialized on port',
+  INIT: 'Rest application is initialized',
+  INIT_SERVER: 'Server started on',
   INIT_DB: 'Initializing Database',
-  DB_HOST: 'Current database host IP',
 } as const;
 
 @injectable()
@@ -35,10 +36,20 @@ export class RestApplication implements Rest{
     return await this.database.connect(dburi);
   }
 
-  public init() {
-    this.logger.info(`${MessageText.INIT}: ${this.config.get('PORT')}`);
-    this.logger.info(`${MessageText.DB_HOST}: ${this.config.get('DB_HOST')}`);
+  private async initServer() {
+    const app = express();
+    const port = this.config.get('PORT');
+    const serverHost = this.config.get('SERVER_HOST');
 
-    this.initDb();
+    app.get('/', (req, res) => res.send(`${MessageText.INIT_SERVER}: ${port}`));
+    app.listen(port, () => this.logger.info(`${MessageText.INIT_SERVER}: ${serverHost}:${port}`));
+  }
+
+  public async init() {
+    this.logger.info(`${MessageText.INIT}`);
+    await this.initServer();
+
+    this.logger.info(`${MessageText.INIT_DB}`);
+    await this.initDb();
   }
 }
