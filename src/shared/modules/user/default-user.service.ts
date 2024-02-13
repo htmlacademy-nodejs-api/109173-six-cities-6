@@ -68,7 +68,7 @@ export class DefaultUserService implements UserService {
 
   public async checkAuthStatus(id: string):FoundUser {
     return await this.userModel
-      .findOne({ userId: id, token: { '$ne': '' } })
+      .findOne({ userId: id, token: { $ne: '' } })
       .exec();
   }
 
