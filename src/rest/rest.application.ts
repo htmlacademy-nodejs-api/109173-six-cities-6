@@ -8,13 +8,15 @@ import { Rest } from './rest.interface.js';
 import { DatabaseClient } from '../shared/libs/database-client/database-client.interface.js';
 import { getMongoURI } from '../utils/database.js';
 import { UserController } from '../shared/modules/user/user.controller.js';
+import { AppExceptionFilter } from '../shared/libs/rest/exceprion-filter/app-exceprion-filter.js';
 
 const MessageText = {
   INIT: 'Rest application is initialized',
+  INIT_DB: 'Initializing: Database ...',
+  INIT_MIDDLEWARE: 'Initializing: Middlewares ...',
+  INIT_CONTROLLERS: 'Initializing: Controllers ...',
+  INIT_EXCEPTION_FILTERS: 'Initializing: Exception Filters ...',
   INIT_SERVER: 'Server started on',
-  INIT_CONTROLLERS: 'Controller initialized',
-  INIT_MIDDLEWARE: 'Initializing middlewares',
-  INIT_DB: 'Initializing Database',
 } as const;
 
 @injectable()
@@ -26,6 +28,7 @@ export class RestApplication implements Rest{
     @inject(Component.Config) private readonly config: Config<RestSchema>,
     @inject(Component.DatabaseClient) private readonly database: DatabaseClient,
     @inject(Component.UserController) private readonly userController: UserController,
+    @inject(Component.AppExceptionFilter) private readonly appExceptionFilter: AppExceptionFilter,
   ) {
     this.server = express();
   }
@@ -42,6 +45,18 @@ export class RestApplication implements Rest{
     return await this.database.connect(dburi);
   }
 
+  private async initMiddleware() {
+    this.server.use(express.json());
+  }
+
+  private async initControllers() {
+    this.server.use('/users', this.userController.router);
+  }
+
+  private async initExceptionFilters() {
+    this.server.use(this.appExceptionFilter.catch.bind(this.appExceptionFilter));
+  }
+
   private async initServer() {
     const port = this.config.get('PORT');
     const serverHost = this.config.get('SERVER_HOST');
@@ -49,25 +64,21 @@ export class RestApplication implements Rest{
     this.server.listen(port, () => this.logger.info(`${MessageText.INIT_SERVER}: ${serverHost}:${port}`));
   }
 
-  private async initControllers() {
-    this.server.use('/users', this.userController.router);
-  }
-
-  private async initMiddleware() {
-    this.server.use(express.json());
-  }
-
   public async init() {
-    this.logger.info(`${MessageText.INIT}`);
-    await this.initServer();
+    this.logger.info(MessageText.INIT_DB);
+    await this.initDb();
 
-    this.logger.info(`${MessageText.INIT_CONTROLLERS}: UserController`);
-    await this.initControllers();
-
-    this.logger.info(`${MessageText.INIT_MIDDLEWARE}`);
+    this.logger.info(MessageText.INIT_MIDDLEWARE);
     await this.initMiddleware();
 
-    this.logger.info(`${MessageText.INIT_DB}`);
-    await this.initDb();
+    this.logger.info(MessageText.INIT_CONTROLLERS);
+    await this.initControllers();
+
+    this.logger.info(MessageText.INIT_EXCEPTION_FILTERS);
+    await this.initExceptionFilters();
+
+    this.logger.info(MessageText.INIT_SERVER);
+    await this.initServer();
+    this.logger.info(MessageText.INIT);
   }
 }

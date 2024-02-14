@@ -44,19 +44,19 @@ export class BaseController implements Controller {
     this.send(res, StatusCodes.CREATED, data);
   }
 
-  public ok<T>(res: Response, statusCode: number, data: T): void {
+  public ok<T>(res: Response, data: T): void {
     this.send(res, StatusCodes.OK, data);
   }
 
-  public noContent<T>(res: Response, statusCode: number, data: T): void {
+  public noContent<T>(res: Response, data: T): void {
     this.send(res, StatusCodes.NO_CONTENT, data);
   }
 
-  public badRequest<T>(res: Response, statusCode: number, data: T): void {
+  public badRequest<T>(res: Response, data: T): void {
     this.send(res, StatusCodes.BAD_REQUEST, data);
   }
 
-  public unauthorized<T>(res: Response, statusCode: number, data: T): void {
+  public unauthorized<T>(res: Response, data: T): void {
     this.send(res, StatusCodes.UNAUTHORIZED, data);
   }
 }

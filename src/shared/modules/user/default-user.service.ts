@@ -66,7 +66,7 @@ export class DefaultUserService implements UserService {
     }
   }
 
-  public async checkAuthStatus(id: string):FoundUser {
+  public async checkAuthStatus(id: string): FoundUser {
     return await this.userModel
       .findOne({ userId: id, token: { $ne: '' } })
       .exec();
@@ -76,7 +76,7 @@ export class DefaultUserService implements UserService {
     return await this.userModel.findById({ id }).exec();
   }
 
-  public async findByEmail(email: string):FoundUser {
+  public async findByEmail(email: string): FoundUser {
     return await this.userModel.findOne({ email }).exec();
   }
 

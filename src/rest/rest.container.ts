@@ -8,6 +8,8 @@ import { DatabaseClient } from '../shared/libs/database-client/database-client.i
 import { MongoDatabaseClient } from '../shared/libs/database-client/mongo.database-client.js';
 import { Controller } from '../shared/libs/rest/controller/controller.interface.js';
 import { UserController } from '../shared/modules/user/user.controller.js';
+import { ExceptionFilter } from '../shared/libs/rest/exceprion-filter/exceprion-filter.interface.js';
+import { AppExceptionFilter } from '../shared/libs/rest/exceprion-filter/app-exceprion-filter.js';
 
 export function createRestContainer(): Container {
   const container = new Container();
@@ -17,6 +19,7 @@ export function createRestContainer(): Container {
   container.bind<Logger>(Component.Logger).to(PinoLogger).inSingletonScope();
   container.bind<DatabaseClient>(Component.DatabaseClient).to(MongoDatabaseClient).inSingletonScope();
   container.bind<Controller>(Component.UserController).to(UserController).inSingletonScope();
+  container.bind<ExceptionFilter>(Component.AppExceptionFilter).to(AppExceptionFilter).inSingletonScope();
 
   return container;
 }
