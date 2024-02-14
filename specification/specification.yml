@@ -14,10 +14,6 @@ tags: #Сущности приложения
     description: Действия с пользователями
   - name: comments
     description: Действия с комментариями
-  - name: login
-    description: Действия с авторизацией на сервере
-  - name: logout
-    description: Действия со сбросом авторизации на сервере
   - name: premium
     description: Действия с премиальными предложениями
   - name: favorites
@@ -179,7 +175,7 @@ paths: #API
         '401':
           description: Вы не можете оставлять комментарии, т.к. не авторизованы
 
-  /users:
+  /users/register:
     post:
       tags:
         - users
@@ -195,11 +191,10 @@ paths: #API
                 $ref: '#/components/schemas/user'
         '400':
           description: Регистрироваться в системе могут только неавторизованные пользователи
-
-  /login:
+  /users/login:
     post:
       tags:
-        - login
+        - users
       summary: Авторизация пользователя
       description: Авторизует зарегистрированного пользователя на сервере
 
@@ -220,7 +215,7 @@ paths: #API
           description: Не удалось авторизовать пользователя. Ошибка в теле запроса.
     get:
       tags:
-        - login
+        - users
       summary: Проверка статуса авторизации пользоавтеля
       description: Проверяет, авторизован ли пользователь на сервере
 
@@ -240,10 +235,10 @@ paths: #API
         '401':
           description: Пользователь не авторизован на сервере
 
-  /logout:
+  /users/logout:
     post:
       tags:
-        - logout
+        - users
       summary: Сброс авторизации пользователя
       description: Разавторизует авторизованного пользователя на сервере
 
