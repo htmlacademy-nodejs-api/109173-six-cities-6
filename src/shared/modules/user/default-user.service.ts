@@ -22,7 +22,7 @@ export class DefaultUserService implements UserService {
 
   public async create(dto: CreateUserDTO, salt: string): Promise<UserDoc> {
     const user = new UserEntity(dto);
-    user.setPassword(dto.password, salt);
+    user.password = user.getPasswordHash(dto.password, salt);
 
     const addedUser = await this.userModel.create(user);
 
@@ -66,9 +66,9 @@ export class DefaultUserService implements UserService {
     }
   }
 
-  public async checkAuthStatus(id: string): FoundUser {
+  public async checkAuthStatus(email: string): FoundUser {
     return await this.userModel
-      .findOne({ userId: id, token: { $ne: '' } })
+      .findOne({ email, token: { $ne: '' } })
       .exec();
   }
 

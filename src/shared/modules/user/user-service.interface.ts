@@ -15,7 +15,7 @@ export interface UserService {
   updateById(id: string, dto: UpdateUserDTO): FoundUser
   login(dto: LoginUserDTO, salt: string): Promise<UserToken | null>
   logout(token: UserToken): void
-  checkAuthStatus(id: string): FoundUser
+  checkAuthStatus(email: string): FoundUser
   findById(id: string): FoundUser
   findByEmail(email: string): FoundUser
   findOrCreate(dto: CreateUserDTO, salt: string): Promise<UserDoc>

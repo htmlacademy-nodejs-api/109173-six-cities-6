@@ -40,8 +40,8 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
   public avatarUrl: string;
 
   @prop({
-    minlength: 6,
-    maxlength: 12,
+    // minlength: 6,
+    // maxlength: 12,
     default: ''
   })
   public password: string;
@@ -73,12 +73,12 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
     return this.password;
   }
 
-  public setPassword(password: string, salt: string) {
+  public getPasswordHash(password: string, salt: string) {
     return getSHA256Hash(password, salt);
   }
 
   public checkPassword(password: string, salt: string, hash: string) {
-    return this.setPassword(password, salt) === hash;
+    return this.getPasswordHash(password, salt) === hash;
   }
 
   public createAuthToken(email: string, password: string, salt: string): string {

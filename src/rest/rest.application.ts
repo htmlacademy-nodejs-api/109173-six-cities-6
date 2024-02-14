@@ -16,7 +16,8 @@ const MessageText = {
   INIT_MIDDLEWARE: 'Initializing: Middlewares ...',
   INIT_CONTROLLERS: 'Initializing: Controllers ...',
   INIT_EXCEPTION_FILTERS: 'Initializing: Exception Filters ...',
-  INIT_SERVER: 'Server started on',
+  INIT_SERVER: 'Initializing: Server ...',
+  INIT_SERVER_SUCCESS: 'Server started on',
 } as const;
 
 @injectable()
@@ -61,7 +62,7 @@ export class RestApplication implements Rest{
     const port = this.config.get('PORT');
     const serverHost = this.config.get('SERVER_HOST');
 
-    this.server.listen(port, () => this.logger.info(`${MessageText.INIT_SERVER}: ${serverHost}:${port}`));
+    this.server.listen(port, () => this.logger.info(`${MessageText.INIT_SERVER_SUCCESS}: ${serverHost}:${port}`));
   }
 
   public async init() {
