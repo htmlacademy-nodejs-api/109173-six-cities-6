@@ -5,12 +5,14 @@ import { Container } from 'inversify';
 import { createRestContainer } from './rest/rest.container.js';
 import { createOfferContainer } from './shared/modules/offer/offer.container.js';
 import { createUserContainer } from './shared/modules/user/user.container.js';
+import { createCommentContainer } from './shared/modules/comment/comment.container.js';
 
 async function bootstrap() {
   const container = Container.merge(
     createRestContainer(),
     createOfferContainer(),
-    createUserContainer()
+    createUserContainer(),
+    createCommentContainer()
   );
 
   const restApplication = container.get<RestApplication>(Component.RestApplication);

@@ -49,6 +49,15 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
   @prop({ default: false })
   public isPro: boolean;
 
+  @prop({
+    type: () => [String],
+    default: []
+  })
+  public favoriteOffers: string[];
+
+  @prop({ default: '' })
+  public token!: string;
+
   constructor(userData: User) {
     super();
 
@@ -57,14 +66,25 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
     this.avatarUrl = userData.avatarUrl;
     this.password = userData.password;
     this.isPro = userData.isPro;
+    this.favoriteOffers = userData.favoriteOffers;
+  }
+
+  public getPassword() {
+    return this.password;
   }
 
   public setPassword(password: string, salt: string) {
     return getSHA256Hash(password, salt);
   }
 
-  public getPassword() {
-    return this.password;
+  public checkPassword(password: string, salt: string, hash: string) {
+    return this.setPassword(password, salt) === hash;
+  }
+
+  public createAuthToken(email: string, password: string, salt: string): string {
+    const currentDate = new Date().toDateString();
+    const preparedValue = `${email}${password}${currentDate}`;
+    return getSHA256Hash(preparedValue, salt);
   }
 }
 
