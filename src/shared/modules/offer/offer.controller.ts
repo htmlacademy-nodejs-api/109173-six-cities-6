@@ -4,10 +4,15 @@ import { Logger } from '../../libs/logger/logger.interface.js';
 import { BaseController } from '../../libs/rest/controller/base-controller.abstract.js';
 import { FoundOffer, OfferService } from './offer-service.interface.js';
 import { CommentService } from '../comment/comment-service.interface.js';
+import { UserService } from '../user/user-service.interface.js';
 
 import { StatusCodes } from 'http-status-codes';
 import { HttpMethod } from '../../libs/rest/types/http-method.enum.js';
 import { HttpError } from '../../libs/rest/error/http-error.js';
+import { City } from '../../types/city-type.enum.js';
+import { ParamsCityName } from '../../libs/rest/types/params-cityName.type.js';
+import { ParamsUserId } from '../../libs/rest/types/params-userid.type .js';
+import { ParamsFavoriteStatus } from '../../libs/rest/types/params-favorite-status.type.js';
 import { ParamsOfferId } from '../../libs/rest/types/params-offerid.type.js';
 import { Request, Response } from 'express';
 import { RequestBody, RequestParams } from '../../libs/rest/types/request.type.js';
@@ -20,10 +25,7 @@ import { GetOfferDTO } from './dto/get-offer.dto.js';
 import { OfferDetailRDO } from './rdo/offer-detail.rdo.js';
 import { UpdateOfferDTO } from './dto/update-offer.dto.js';
 import { OfferCommentsRDO } from './rdo/offer-comments.rdo.js';
-import { ParamsCityName } from '../../libs/rest/types/params-cityName.type.js';
-import { City } from '../../types/city-type.enum.js';
-import { ParamsUserId } from '../../libs/rest/types/params-userid.type .js';
-import { UserService } from '../user/user-service.interface.js';
+
 
 const MessageText = {
   INIT_CONTROLLER: 'OfferController initialized',
@@ -41,6 +43,7 @@ type UpdateOfferRequest = Request<ParamsOfferId, RequestBody, UpdateOfferDTO>
 type DeleteOfferRequest = Request<ParamsOfferId, RequestBody, GetOfferDTO>
 type GetPremiumOffers = Request<ParamsCityName, RequestBody, GetOfferDTO>
 type GetFavoriteOffers = Request<ParamsUserId, RequestBody, GetOfferDTO>
+type ChangeFavoriteStatus = Request<ParamsFavoriteStatus, RequestBody, GetOfferDTO>
 
 @injectable()
 export class OfferController extends BaseController {
@@ -55,6 +58,7 @@ export class OfferController extends BaseController {
     this.addRoute({ path: '/', method: HttpMethod.GET, handler: this.getList });
     this.addRoute({ path: '/', method: HttpMethod.POST, handler: this.create });
     this.addRoute({ path: '/favorites/:userId', method: HttpMethod.GET, handler: this.getFavorites });
+    this.addRoute({ path: '/favorites/:offerId/:status', method: HttpMethod.PATCH, handler: this.changeFavoriteStatus });
     this.addRoute({ path: '/premium/:cityName', method: HttpMethod.GET, handler: this.getPremium });
     this.addRoute({ path: '/:offerId', method: HttpMethod.GET, handler: this.getItem });
     this.addRoute({ path: '/:offerId', method: HttpMethod.PATCH, handler: this.update });
@@ -139,6 +143,16 @@ export class OfferController extends BaseController {
     const offers = await this.userService.getFavoriteOffers(userId);
 
     this.ok(res, fillDTO(OfferRDO, offers));
+  }
+
+  public async changeFavoriteStatus({ params }: ChangeFavoriteStatus, res: Response): Promise<void> {
+    const { offerId, status } = params;
+
+    await this.exists(offerId);
+
+    const updatedOffer = await this.offerService.changeFavoriteStatus(offerId, Number(status));
+
+    this.ok(res, fillDTO(OfferDetailRDO, updatedOffer));
   }
 
   public async getPremium({ params }: GetPremiumOffers, res: Response): Promise<void> {

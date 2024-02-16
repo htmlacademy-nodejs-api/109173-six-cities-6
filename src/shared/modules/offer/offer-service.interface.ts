@@ -20,7 +20,7 @@ export interface OfferService {
   findOrCreate(dto: CreateOfferDTO): FoundOffer;
   exists(docId: string): Promise<boolean>;
   getPremiumByCity(cityName: City, offersCount?: number): FoundOffers;
-  changeFavoriteStatus(offerId: string, status: boolean): FoundOffer;
+  changeFavoriteStatus(offerId: string, status: number): FoundOffer;
   incCommentsCount(id: string): FoundOffer;
   countRatingAndComments(id: string): Promise<OfferRatingComments | void>;
   updateRatingAndComments(id: string): FoundOffer;

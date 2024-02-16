@@ -14,10 +14,6 @@ tags: #Сущности приложения
     description: Действия с пользователями
   - name: comments
     description: Действия с комментариями
-  - name: premium
-    description: Действия с премиальными предложениями
-  - name: favorites
-    description: Действия с избранными предложениями
 paths: #API
   /offers:
     post:
@@ -74,7 +70,7 @@ paths: #API
                 $ref: '#/components/schemas/offers'
 
   /offers/{offerId}:
-    put:
+    patch:
       tags:
         - offers
       summary: Редактирование предолжения
@@ -131,10 +127,10 @@ paths: #API
         '404':
           description: Предложение с указанным ID не найдено
 
-  /comments/{offerId}:
+  /offers/{offerId}/comments/:
     get:
       tags:
-        - comments
+        - offers
       summary: Получение списка комментариев
       description: Возвращает список из 50 последних комментариев для определенного предложения, отсортированных по дате публикации (по убыванию)
 
@@ -149,7 +145,7 @@ paths: #API
           description: Предложение с указанным ID не найдено
     post:
       tags:
-        - comments
+        - offers
       summary: Добавление комментария
       description: Добавляет новый комментарий к предложению
 
@@ -174,6 +170,78 @@ paths: #API
           description: Ошибка валидации. Переданы не все, необходимые для создания предложения, данные
         '401':
           description: Вы не можете оставлять комментарии, т.к. не авторизованы
+
+  /offers//premium/{cityId}:
+    get:
+      tags:
+        - offers
+      summary: Получение премиальных предложений города
+      description: Возвращает список из 3 педложений с флагом isPremium для города с переданным ID, отсортированных по дате (по убыванию)
+
+      responses:
+        '200':
+          description: Список предложений успешно загружен
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/offers'
+
+  /offers/favorites/{userId}:
+    get:
+      tags:
+        - offers
+      summary: Получение списки избранных предложений пользователя
+      description: Возвращает список педложений с флагом isFavorite (только для авторизованных пользователей)
+
+      requestBody:
+        content:
+          application-json:
+            schema:
+              $ref: '#/components/schemas/token'
+      responses:
+        '200':
+          description: Список предложений успешно загружен
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/offers'
+        '401':
+          description: Список избранных предложений доступен только авторизованным пользователям
+
+  /offers/favorites/{offerId}/{status}:
+    post:
+      tags:
+        - offers
+      summary: Изменение статуса избранного
+      description: Изменяет статус избранного у переданного предложения
+
+      requestBody:
+        content:
+          application-json:
+            schema:
+              $ref: '#/components/schemas/token'
+
+      responses:
+        '200':
+          description: Статус избранного у предложения успешно изменен
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/offer'
+        '201':
+          description: Статус избранного у предложения успешно изменен
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/offer'
+        '401':
+          description: Список избранных предложений доступен только авторизованным пользователям
+        '400':
+          description: Ошибка в теле запроса. Переданы не все необходимые поля
+        '404':
+          description: Предолжение с указанным ID не найдено
+        '409':
+          description: Предолжение уже добавлено в избранное
 
   /users/register:
     post:
@@ -253,77 +321,6 @@ paths: #API
         '204':
           description: Пользователь успешно разавторизован
 
-  /premium/{cityId}:
-    get:
-      tags:
-        - premium
-      summary: Получение премиальных предложений
-      description: Возвращает список из 3 педложений с флагом isPremium для города с переданным ID, отсортированных по дате (по убыванию)
-
-      responses:
-        '200':
-          description: Список предложений успешно загружен
-          content:
-            application-json:
-              schema:
-                $ref: '#/components/schemas/offers'
-
-  /favorites/:
-    get:
-      tags:
-        - favorites
-      summary: Получение списки избранных предложений
-      description: Возвращает список педложений с флагом isFavorite (только для авторизованных пользователей)
-
-      requestBody:
-        content:
-          application-json:
-            schema:
-              $ref: '#/components/schemas/token'
-      responses:
-        '200':
-          description: Список предложений успешно загружен
-          content:
-            application-json:
-              schema:
-                $ref: '#/components/schemas/offers'
-        '401':
-          description: Список избранных предложений доступен только авторизованным пользователям
-
-  /favorites/{offerId}/{status}:
-    post:
-      tags:
-        - favorites
-      summary: Изменение статуса избранного
-      description: Изменяет статус избранного у переданного предложения
-
-      requestBody:
-        content:
-          application-json:
-            schema:
-              $ref: '#/components/schemas/token'
-
-      responses:
-        '200':
-          description: Статус избранного у предложения успешно изменен
-          content:
-            application-json:
-              schema:
-                $ref: '#/components/schemas/offer'
-        '201':
-          description: Статус избранного у предложения успешно изменен
-          content:
-            application-json:
-              schema:
-                $ref: '#/components/schemas/offer'
-        '401':
-          description: Список избранных предложений доступен только авторизованным пользователям
-        '400':
-          description: Ошибка в теле запроса. Переданы не все необходимые поля
-        '404':
-          description: Предолжение с указанным ID не найдено
-        '409':
-          description: Предолжение уже добавлено в избранное
 
 
 components:

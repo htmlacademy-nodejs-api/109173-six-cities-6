@@ -81,7 +81,12 @@ export class DefaultOfferService implements OfferService {
       .exec();
   }
 
-  public async changeFavoriteStatus(offerId: string, status: boolean): FoundOffer {
+  public async changeFavoriteStatus(offerId: string, status: number): FoundOffer {
+
+    if(![1, 0].includes(status)) {
+      return null;
+    }
+
     return await this.offerModel
       .findByIdAndUpdate(offerId, { isFavorite: status }, { new: true })
       .exec();
@@ -124,9 +129,9 @@ export class DefaultOfferService implements OfferService {
       return;
     }
 
-    const offerRatingAverate = offer.rating / offer.commentCount; // Получаем среднее значение рейтинга
+    const offerRatingAverage = offer.rating / offer.commentCount; // Получаем среднее значение рейтинга
 
-    return { rating: offerRatingAverate, commentCount: offer.commentCount };
+    return { rating: offerRatingAverage, commentCount: offer.commentCount };
   }
 
   public async updateRatingAndComments(id: string): FoundOffer {
