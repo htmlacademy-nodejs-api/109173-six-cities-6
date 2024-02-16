@@ -1,25 +1,24 @@
 import { inject, injectable } from 'inversify';
+import { Logger } from '../../libs/logger/logger.interface.js';
 import { BaseController } from '../../libs/rest/controller/base-controller.abstract.js';
 import { Component } from '../../types/component.enum.js';
-import { PinoLogger } from '../../libs/logger/pino.logger.js';
 import { Request, Response } from 'express';
+import { RequestBody, RequestParams } from '../../libs/rest/types/request.type.js';
 import { HttpMethod } from '../../libs/rest/types/http-method.enum.js';
 import { UserService } from './user-service.interface.js';
 import { CreateUserDTO } from './index.js';
 import { fillDTO } from '../../../utils/common.js';
 import { UserRDO } from './rdo/user.rdo.js';
 import { RestConfig } from '../../libs/config/rest.config.js';
-import { HttpError } from '../../libs/rest/exceprion-filter/error/http-error.js';
+import { HttpError } from '../../libs/rest/error/http-error.js';
 import { StatusCodes } from 'http-status-codes';
 import { CheckUserStatusDTO } from './dto/check-user-status.dto.js';
 
-type RequestParams = Record<string, unknown>;
-type RequestBody = RequestParams;
 type CreateUserRequest = Request<RequestParams, RequestBody, CreateUserDTO>
 type CheckStatusRequest = Request<RequestParams, RequestBody, CheckUserStatusDTO>
 
 const MessageText = {
-  INIT_CONTROLLERS: 'UserController initialized',
+  INIT_CONTROLLER: 'UserController initialized',
 } as const;
 
 const ErrorText = {
@@ -32,7 +31,7 @@ const ErrorText = {
 @injectable()
 export class UserController extends BaseController {
   constructor(
-    @inject(Component.Logger) protected readonly logger: PinoLogger,
+    @inject(Component.Logger) protected readonly logger: Logger,
     @inject(Component.Config) protected readonly config: RestConfig,
     @inject(Component.UserService) private readonly userService: UserService
   ) {
@@ -43,14 +42,14 @@ export class UserController extends BaseController {
     this.addRoute({ path: '/login', method: HttpMethod.POST, handler: this.login });
     this.addRoute({ path: '/logout', method: HttpMethod.POST, handler: this.logout });
 
-    this.logger.info(MessageText.INIT_CONTROLLERS);
+    this.logger.info(MessageText.INIT_CONTROLLER);
   }
 
   public getControllerName() {
     return 'UserController';
   }
 
-  public async create({ body }: CreateUserRequest, res: Response): Promise<UserRDO | void> {
+  public async create({ body }: CreateUserRequest, res: Response): Promise<void> {
     const isUserExists = await this.userService.findByEmail(body.email);
 
     if(isUserExists) {
@@ -65,7 +64,7 @@ export class UserController extends BaseController {
     const user = await this.userService.create(body, salt);
     const userRDO = fillDTO(UserRDO, user);
 
-    return this.created(res, userRDO);
+    this.created(res, userRDO);
   }
 
   public async checkStatus({ body }: CheckStatusRequest, res: Response): Promise<void> {

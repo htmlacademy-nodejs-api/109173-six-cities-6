@@ -1,9 +1,9 @@
+import { Logger } from '../../logger/logger.interface.js';
 import { Response, Router } from 'express';
 import { Controller } from './controller.interface.js';
 import { Route } from '../route/route.interface.js';
-import { PinoLogger } from '../../logger/pino.logger.js';
-import { inject, injectable } from 'inversify';
-import { Component } from '../../../types/component.enum.js';
+import { injectable } from 'inversify';
+import asyncHandler from 'express-async-handler';
 import { StatusCodes } from 'http-status-codes';
 
 const DEFAULT_CONTENT_TYPE = 'application/json';
@@ -17,7 +17,7 @@ export class BaseController implements Controller {
   private readonly _router: Router;
 
   constructor(
-    protected readonly logger: PinoLogger
+    protected readonly logger: Logger
   ) {
     this._router = Router();
   }
@@ -27,9 +27,13 @@ export class BaseController implements Controller {
     return this._router;
   }
 
-  public addRoute(route: Route): void {
-    this.router[route.method](route.path, route.handler.bind(this));
+  public getControllerName(): string {
+    return 'BaseController';
+  }
 
+  public addRoute(route: Route): void {
+    const wrappedAsyncHandler = asyncHandler(route.handler.bind(this));
+    this.router[route.method](route.path, wrappedAsyncHandler);
     this.logger.info(`${MessageText.ROUTE_REGISTERED}: ${route.method.toUpperCase()} ${route.path}`);
   }
 

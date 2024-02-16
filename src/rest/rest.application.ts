@@ -8,7 +8,8 @@ import { Rest } from './rest.interface.js';
 import { DatabaseClient } from '../shared/libs/database-client/database-client.interface.js';
 import { getMongoURI } from '../utils/database.js';
 import { UserController } from '../shared/modules/user/user.controller.js';
-import { AppExceptionFilter } from '../shared/libs/rest/exceprion-filter/app-exceprion-filter.js';
+import { AppExceptionFilter } from '../shared/libs/rest/exception-filter/app-exception-filter.js';
+import { OfferController } from '../shared/modules/offer/offer.controller.js';
 
 const MessageText = {
   INIT: 'Rest application is initialized',
@@ -29,13 +30,14 @@ export class RestApplication implements Rest{
     @inject(Component.Config) private readonly config: Config<RestSchema>,
     @inject(Component.DatabaseClient) private readonly database: DatabaseClient,
     @inject(Component.UserController) private readonly userController: UserController,
+    @inject(Component.OfferController) private readonly offerController: OfferController,
     @inject(Component.AppExceptionFilter) private readonly appExceptionFilter: AppExceptionFilter,
   ) {
     this.server = express();
   }
 
   private async initDb(): Promise<void> {
-    const dburi = getMongoURI(
+    const dbUri = getMongoURI(
       this.config.get('DB_USER'),
       this.config.get('DB_PASSWORD'),
       this.config.get('DB_HOST'),
@@ -43,7 +45,7 @@ export class RestApplication implements Rest{
       this.config.get('DB_NAME'),
     );
 
-    return await this.database.connect(dburi);
+    return await this.database.connect(dbUri);
   }
 
   private async initMiddleware() {
@@ -52,6 +54,7 @@ export class RestApplication implements Rest{
 
   private async initControllers() {
     this.server.use('/users', this.userController.router);
+    this.server.use('/offers', this.offerController.router);
   }
 
   private async initExceptionFilters() {

@@ -3,6 +3,7 @@ import { Route } from '../route/route.interface.js';
 
 export interface Controller {
   readonly router: Router;
+  getControllerName(): string;
   addRoute(route: Route): void;
   send<T>(res: Response, statusCode: number, data: T): void; // 200 - Данные отправлены
   created<T>(res: Response, data: T): void; // 201 - Успшеный ответ на Post запрос

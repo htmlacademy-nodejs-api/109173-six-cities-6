@@ -128,4 +128,10 @@ export class DefaultUserService implements UserService {
 
     return userWithFavorites.favoriteOffers ?? null;
   }
+
+  public async exists(userId: string): Promise<boolean> {
+    const user = await this.userModel.exists({ _id: userId });
+
+    return user !== null;
+  }
 }

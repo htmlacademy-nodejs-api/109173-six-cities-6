@@ -191,6 +191,7 @@ paths: #API
                 $ref: '#/components/schemas/user'
         '400':
           description: Регистрироваться в системе могут только неавторизованные пользователи
+
   /users/login:
     post:
       tags:
