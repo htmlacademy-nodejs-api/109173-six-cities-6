@@ -72,8 +72,13 @@ export class OfferController extends BaseController {
     return 'OfferController';
   }
 
-  public async getList(req: Request, res: Response): Promise<void> {
-    const offers = await this.offerService.find();
+  public async getList({ query }: Request, res: Response): Promise<void> {
+    const { limit } = query;
+
+    const offercsLimit = limit ? Number(limit) : undefined;
+
+    console.log(' LIMIT: ', limit, Number(limit));
+    const offers = await this.offerService.find(offercsLimit);
 
     this.ok(res, fillDTO(OffersListItemRDO, offers));
   }
