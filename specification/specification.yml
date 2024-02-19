@@ -14,14 +14,6 @@ tags: #Сущности приложения
     description: Действия с пользователями
   - name: comments
     description: Действия с комментариями
-  - name: login
-    description: Действия с авторизацией на сервере
-  - name: logout
-    description: Действия со сбросом авторизации на сервере
-  - name: premium
-    description: Действия с премиальными предложениями
-  - name: favorites
-    description: Действия с избранными предложениями
 paths: #API
   /offers:
     post:
@@ -78,7 +70,7 @@ paths: #API
                 $ref: '#/components/schemas/offers'
 
   /offers/{offerId}:
-    put:
+    patch:
       tags:
         - offers
       summary: Редактирование предолжения
@@ -135,10 +127,10 @@ paths: #API
         '404':
           description: Предложение с указанным ID не найдено
 
-  /comments/{offerId}:
+  /offers/{offerId}/comments/:
     get:
       tags:
-        - comments
+        - offers
       summary: Получение списка комментариев
       description: Возвращает список из 50 последних комментариев для определенного предложения, отсортированных по дате публикации (по убыванию)
 
@@ -153,7 +145,7 @@ paths: #API
           description: Предложение с указанным ID не найдено
     post:
       tags:
-        - comments
+        - offers
       summary: Добавление комментария
       description: Добавляет новый комментарий к предложению
 
@@ -179,89 +171,11 @@ paths: #API
         '401':
           description: Вы не можете оставлять комментарии, т.к. не авторизованы
 
-  /users:
-    post:
-      tags:
-        - users
-      summary: Создание пользователя
-      description: Регистрирует нового пользователя в системе
-
-      responses:
-        '200':
-          description: Пользователь успешно зарегистрирован на сервере
-          content:
-            application-json:
-              schema:
-                $ref: '#/components/schemas/user'
-        '400':
-          description: Регистрироваться в системе могут только неавторизованные пользователи
-
-  /login:
-    post:
-      tags:
-        - login
-      summary: Авторизация пользователя
-      description: Авторизует зарегистрированного пользователя на сервере
-
-      requestBody:
-        content:
-          application-json:
-            schema:
-              $ref: '#/components/schemas/login'
-
-      responses:
-        '200':
-          description: Пользователь успешно авторизован на сервере
-          content:
-            application-json:
-              schema:
-                $ref: '#/components/schemas/token'
-        '400':
-          description: Не удалось авторизовать пользователя. Ошибка в теле запроса.
+  /offers//premium/{cityId}:
     get:
       tags:
-        - login
-      summary: Проверка статуса авторизации пользоавтеля
-      description: Проверяет, авторизован ли пользователь на сервере
-
-      requestBody:
-        content:
-          application-json:
-            schema:
-              $ref: '#/components/schemas/token'
-
-      responses:
-        '200':
-          description: Пользователь авторизован на сервере
-          content:
-            application-json:
-              schema:
-                $ref: '#/components/schemas/user'
-        '401':
-          description: Пользователь не авторизован на сервере
-
-  /logout:
-    post:
-      tags:
-        - logout
-      summary: Сброс авторизации пользователя
-      description: Разавторизует авторизованного пользователя на сервере
-
-      requestBody:
-        content:
-          application-json:
-            schema:
-              $ref: '#/components/schemas/token'
-
-      responses:
-        '204':
-          description: Пользователь успешно разавторизован
-
-  /premium/{cityId}:
-    get:
-      tags:
-        - premium
-      summary: Получение премиальных предложений
+        - offers
+      summary: Получение премиальных предложений города
       description: Возвращает список из 3 педложений с флагом isPremium для города с переданным ID, отсортированных по дате (по убыванию)
 
       responses:
@@ -272,11 +186,11 @@ paths: #API
               schema:
                 $ref: '#/components/schemas/offers'
 
-  /favorites/:
+  /offers/favorites/{userId}:
     get:
       tags:
-        - favorites
-      summary: Получение списки избранных предложений
+        - offers
+      summary: Получение списки избранных предложений пользователя
       description: Возвращает список педложений с флагом isFavorite (только для авторизованных пользователей)
 
       requestBody:
@@ -294,10 +208,10 @@ paths: #API
         '401':
           description: Список избранных предложений доступен только авторизованным пользователям
 
-  /favorites/{offerId}/{status}:
+  /offers/favorites/{offerId}/{status}:
     post:
       tags:
-        - favorites
+        - offers
       summary: Изменение статуса избранного
       description: Изменяет статус избранного у переданного предложения
 
@@ -328,6 +242,85 @@ paths: #API
           description: Предолжение с указанным ID не найдено
         '409':
           description: Предолжение уже добавлено в избранное
+
+  /users/register:
+    post:
+      tags:
+        - users
+      summary: Создание пользователя
+      description: Регистрирует нового пользователя в системе
+
+      responses:
+        '200':
+          description: Пользователь успешно зарегистрирован на сервере
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/user'
+        '400':
+          description: Регистрироваться в системе могут только неавторизованные пользователи
+
+  /users/login:
+    post:
+      tags:
+        - users
+      summary: Авторизация пользователя
+      description: Авторизует зарегистрированного пользователя на сервере
+
+      requestBody:
+        content:
+          application-json:
+            schema:
+              $ref: '#/components/schemas/login'
+
+      responses:
+        '200':
+          description: Пользователь успешно авторизован на сервере
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/token'
+        '400':
+          description: Не удалось авторизовать пользователя. Ошибка в теле запроса.
+    get:
+      tags:
+        - users
+      summary: Проверка статуса авторизации пользоавтеля
+      description: Проверяет, авторизован ли пользователь на сервере
+
+      requestBody:
+        content:
+          application-json:
+            schema:
+              $ref: '#/components/schemas/token'
+
+      responses:
+        '200':
+          description: Пользователь авторизован на сервере
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/user'
+        '401':
+          description: Пользователь не авторизован на сервере
+
+  /users/logout:
+    post:
+      tags:
+        - users
+      summary: Сброс авторизации пользователя
+      description: Разавторизует авторизованного пользователя на сервере
+
+      requestBody:
+        content:
+          application-json:
+            schema:
+              $ref: '#/components/schemas/token'
+
+      responses:
+        '204':
+          description: Пользователь успешно разавторизован
+
 
 
 components:

@@ -1,3 +1,5 @@
+import { ClassConstructor, plainToClass } from 'class-transformer';
+
 function upperCaseFirst(value: string) {
   return `${value.charAt(0).toUpperCase()}${value.slice(1)}`;
 }
@@ -22,10 +24,15 @@ function getRandomElements<T>(array: T[], elementsCount?: number): T[] {
   return Array.from({length: elemsCount}, () => getRandomElement(array));
 }
 
+function fillDTO<D, O>(dto: ClassConstructor<D>, plainObject: O) {
+  return plainToClass(dto, plainObject, { excludeExtraneousValues: true });
+}
+
 export {
   upperCaseFirst,
   getRandomInRange,
   getRandomBoolean,
   getRandomElement,
   getRandomElements,
+  fillDTO
 };

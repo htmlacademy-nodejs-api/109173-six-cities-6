@@ -11,6 +11,7 @@ export type RestSchema = {
   DB_NAME_EXPRESS: string,
   DB_USER: string,
   DB_PASSWORD: string,
+  SERVER_HOST: string,
   SALT: string,
 }
 
@@ -56,6 +57,12 @@ export const configRestSchema = convict<RestSchema>({
     format: String,
     default: 'six-cities_mongo_express',
     env: 'DB_NAME_EXPRESS',
+  },
+  SERVER_HOST: {
+    doc: 'REST Servers host',
+    format: String,
+    default: 'http://localhost',
+    env: 'SERVER_HOST',
   },
   SALT: {
     doc: 'Special string to encoding user password',

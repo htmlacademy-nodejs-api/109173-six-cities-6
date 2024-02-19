@@ -6,6 +6,11 @@ import { PinoLogger } from '../shared/libs/logger/pino.logger.js';
 import { RestApplication } from './rest.application.js';
 import { DatabaseClient } from '../shared/libs/database-client/database-client.interface.js';
 import { MongoDatabaseClient } from '../shared/libs/database-client/mongo.database-client.js';
+import { Controller } from '../shared/libs/rest/controller/controller.interface.js';
+import { UserController } from '../shared/modules/user/user.controller.js';
+import { ExceptionFilter } from '../shared/libs/rest/exception-filter/exception-filter.interface.js';
+import { AppExceptionFilter } from '../shared/libs/rest/exception-filter/app-exception-filter.js';
+import { OfferController } from '../shared/modules/offer/offer.controller.js';
 
 export function createRestContainer(): Container {
   const container = new Container();
@@ -14,6 +19,9 @@ export function createRestContainer(): Container {
   container.bind<RestConfig>(Component.Config).to(RestConfig).inSingletonScope();
   container.bind<Logger>(Component.Logger).to(PinoLogger).inSingletonScope();
   container.bind<DatabaseClient>(Component.DatabaseClient).to(MongoDatabaseClient).inSingletonScope();
+  container.bind<Controller>(Component.UserController).to(UserController).inSingletonScope();
+  container.bind<Controller>(Component.OfferController).to(OfferController).inSingletonScope();
+  container.bind<ExceptionFilter>(Component.AppExceptionFilter).to(AppExceptionFilter).inSingletonScope();
 
   return container;
 }

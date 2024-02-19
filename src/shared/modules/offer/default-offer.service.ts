@@ -9,9 +9,7 @@ import { Logger } from '../../libs/logger/logger.interface.js';
 import { UpdateOfferDTO } from './dto/update-offer.dto.js';
 import { City } from '../../types/city-type.enum.js';
 import { SortType } from '../../types/sort-type.enum.js';
-
-const DEFAULT_OFFERS_COUNT = 60;
-const DEFAULT_PREMIUM_OFFERS_COUNT = 3;
+import { MAX_OFFERS_COUNT, PREMIUM_OFFERS_COUNT } from './offer.constant.js';
 
 const MessageText = {
   ADDED: 'New offer successfully added. Offer ID:',
@@ -44,7 +42,7 @@ export class DefaultOfferService implements OfferService {
       .exec();
   }
 
-  public async find(offersCount: number = DEFAULT_OFFERS_COUNT): FoundOffers {
+  public async find(offersCount: number = MAX_OFFERS_COUNT): FoundOffers {
     return await this.offerModel
       .find()
       .limit(offersCount)
@@ -54,7 +52,7 @@ export class DefaultOfferService implements OfferService {
 
   public async findById(id: string): FoundOffer {
     return await this.offerModel
-      .findById({ id })
+      .findById(id)
       .populate('userId')
       .exec();
   }
@@ -70,14 +68,25 @@ export class DefaultOfferService implements OfferService {
     return this.create(dto);
   }
 
-  public async getPremiumByCity(city: City, offersCount: number = DEFAULT_PREMIUM_OFFERS_COUNT): FoundOffers {
+  public async exists(docId: string): Promise<boolean> {
+    const offer = await this.offerModel.exists({ _id: docId });
+
+    return offer !== null;
+  }
+
+  public async getPremiumByCity(city: City, offersCount: number = PREMIUM_OFFERS_COUNT): FoundOffers {
     return await this.offerModel
       .find({ city })
       .limit(offersCount)
       .exec();
   }
 
-  public async changeFavoriteStatus(offerId: string, status: boolean): FoundOffer {
+  public async changeFavoriteStatus(offerId: string, status: number): FoundOffer {
+
+    if(![1, 0].includes(status)) {
+      return null;
+    }
+
     return await this.offerModel
       .findByIdAndUpdate(offerId, { isFavorite: status }, { new: true })
       .exec();
@@ -120,9 +129,9 @@ export class DefaultOfferService implements OfferService {
       return;
     }
 
-    const offerRatingAverate = offer.rating / offer.commentCount; // Получаем среднее значение рейтинга
+    const offerRatingAverage = offer.rating / offer.commentCount; // Получаем среднее значение рейтинга
 
-    return { rating: offerRatingAverate, commentCount: offer.commentCount };
+    return { rating: offerRatingAverage, commentCount: offer.commentCount };
   }
 
   public async updateRatingAndComments(id: string): FoundOffer {

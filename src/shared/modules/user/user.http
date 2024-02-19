@@ -1,0 +1,26 @@
+# Пользователь
+
+## Проверка статуса авторизации
+GET http://localhost:8000/users/login HTTP/1.1
+Content-Type: application/json
+
+{
+   "email": "pro_user@test.loc"
+}
+
+###
+
+## Создание нового пользователя
+POST http://localhost:8000/users/register HTTP/1.1
+Content-Type: application/json
+
+{
+   "name": "Test User RDO",
+   "email": "pro_user@test.loc",
+   "avatarUrl": "/some/user/avatar.jpg",
+   "password": "12848123",
+   "isPro": true,
+   "favoriteOffers": []
+}
+
+###

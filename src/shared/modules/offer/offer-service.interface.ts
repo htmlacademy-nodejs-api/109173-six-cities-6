@@ -12,15 +12,16 @@ export type OfferRatingComments = {
   commentCount: number
 };
 export interface OfferService {
-  create(dto: CreateOfferDTO): Promise<OfferDoc>
-  updateById(id: string, dto: UpdateOfferDTO): FoundOffer
-  deleteById(id: string): FoundOffer
-  find(offersCount: number): FoundOffers
-  findById(id: string): FoundOffer
-  findOrCreate(dto: CreateOfferDTO): FoundOffer
-  getPremiumByCity(cityName: City, offersCount: number): FoundOffers
-  changeFavoriteStatus(offerId: string, status: boolean): FoundOffer
-  incCommentsCount(id: string): FoundOffer
-  countRatingAndComments(id: string): Promise<OfferRatingComments | void>
-  updateRatingAndComments(id: string): FoundOffer
+  create(dto: CreateOfferDTO): Promise<OfferDoc>;
+  updateById(id: string, dto: UpdateOfferDTO): FoundOffer;
+  deleteById(id: string): FoundOffer;
+  find(offersCount?: number): FoundOffers;
+  findById(id: string): FoundOffer;
+  findOrCreate(dto: CreateOfferDTO): FoundOffer;
+  exists(docId: string): Promise<boolean>;
+  getPremiumByCity(cityName: City, offersCount?: number): FoundOffers;
+  changeFavoriteStatus(offerId: string, status: number): FoundOffer;
+  incCommentsCount(id: string): FoundOffer;
+  countRatingAndComments(id: string): Promise<OfferRatingComments | void>;
+  updateRatingAndComments(id: string): FoundOffer;
 }

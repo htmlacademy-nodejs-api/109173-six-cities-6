@@ -22,7 +22,7 @@ export class DefaultUserService implements UserService {
 
   public async create(dto: CreateUserDTO, salt: string): Promise<UserDoc> {
     const user = new UserEntity(dto);
-    user.setPassword(dto.password, salt);
+    user.password = user.getPasswordHash(dto.password, salt);
 
     const addedUser = await this.userModel.create(user);
 
@@ -66,9 +66,9 @@ export class DefaultUserService implements UserService {
     }
   }
 
-  public async checkAuthStatus(id: string):FoundUser {
+  public async checkAuthStatus(email: string): FoundUser {
     return await this.userModel
-      .findOne({ userId: id, token: { $ne: '' } })
+      .findOne({ email, token: { $ne: '' } })
       .exec();
   }
 
@@ -76,7 +76,7 @@ export class DefaultUserService implements UserService {
     return await this.userModel.findById({ id }).exec();
   }
 
-  public async findByEmail(email: string):FoundUser {
+  public async findByEmail(email: string): FoundUser {
     return await this.userModel.findOne({ email }).exec();
   }
 
@@ -127,5 +127,11 @@ export class DefaultUserService implements UserService {
       .exec();
 
     return userWithFavorites.favoriteOffers ?? null;
+  }
+
+  public async exists(userId: string): Promise<boolean> {
+    const user = await this.userModel.exists({ _id: userId });
+
+    return user !== null;
   }
 }
