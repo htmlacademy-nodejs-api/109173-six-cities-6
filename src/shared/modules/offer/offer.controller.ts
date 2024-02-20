@@ -29,6 +29,7 @@ import { UpdateOfferDTO } from './dto/update-offer.dto.js';
 
 import { ValidateObjectIdMiddleware } from '../../libs/rest/middleware/validate-objectid.middleware.js';
 import { ControllerAdditionalInterface } from '../../libs/rest/controller/controller-additional.interface.js';
+import { ValidateDTOMiddleware } from '../../libs/rest/middleware/validate-dto.middleware.js';
 
 
 const MessageText = {
@@ -76,19 +77,26 @@ export class OfferController extends BaseController implements ControllerAdditio
     this.addRoute({
       path: '/',
       method: HttpMethod.POST,
-      handler: this.create
+      handler: this.create,
+      middlewares: [
+        new ValidateDTOMiddleware(CreateOfferDTO)
+      ]
     });
     this.addRoute({
       path: '/favorites/:userId',
       method: HttpMethod.GET,
       handler: this.getFavoritesByUserId,
-      middlewares: [ new ValidateObjectIdMiddleware('userId') ]
+      middlewares: [
+        new ValidateObjectIdMiddleware('userId')
+      ]
     });
     this.addRoute({
       path: '/favorites/:offerId/:status',
       method: HttpMethod.PATCH,
       handler: this.changeFavoriteStatus,
-      middlewares: [ new ValidateObjectIdMiddleware('offerId') ]
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId')
+      ]
     });
     this.addRoute({
       path: '/premium/:cityName',
@@ -99,7 +107,9 @@ export class OfferController extends BaseController implements ControllerAdditio
       path: '/:offerId',
       method: HttpMethod.GET,
       handler: this.getItem,
-      middlewares: [ new ValidateObjectIdMiddleware('offerId') ]
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId')
+      ]
     });
     this.addRoute({
       path: '/:offerId',
@@ -111,7 +121,9 @@ export class OfferController extends BaseController implements ControllerAdditio
       path: '/:offerId',
       method: HttpMethod.DELETE,
       handler: this.deleteWithComments,
-      middlewares: [ new ValidateObjectIdMiddleware('offerId') ]
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId')
+      ]
     });
   }
 
