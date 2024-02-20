@@ -33,8 +33,12 @@ export class BaseController implements Controller {
 
   public addRoute(route: Route): void {
     const wrappedAsyncHandler = asyncHandler(route.handler.bind(this));
-    this.router[route.method](route.path, wrappedAsyncHandler);
+    const middlewares = route.middlewares?.map((middleware) => asyncHandler(middleware.execute.bind(middleware)));
+    const routeHandlers = middlewares ? [ ...middlewares, wrappedAsyncHandler ] : [ wrappedAsyncHandler ];
+
+    this.router[route.method](route.path, routeHandlers);
     this.logger.info(`${MessageText.ROUTE_REGISTERED}: ${route.method.toUpperCase()} ${route.path}`);
+
   }
 
   public send<T>(res: Response, statusCode: number, data: T): void {
