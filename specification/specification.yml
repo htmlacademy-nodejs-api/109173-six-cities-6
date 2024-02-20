@@ -200,26 +200,9 @@ paths: #API
           description: Предолжение уже добавлено в избранное
 
   /comments/{offerId}:
-    get:
-      tags:
-        - comments
-      summary: Получение списка комментариев
-      description: Возвращает список из 50 последних комментариев для определенного предложения, отсортированных по дате публикации (по убыванию)
-
-      responses:
-        '200':
-          description: Список комментариев успешно загружен
-          content:
-            application-json:
-              schema:
-                $ref: '#/components/schemas/comments'
-        '404':
-          description: Предложение с указанным ID не найдено
-
-  /comments:
     post:
       tags:
-        - offers
+        - comments
       summary: Добавление комментария
       description: Добавляет новый комментарий к предложению
 
@@ -244,6 +227,21 @@ paths: #API
           description: Ошибка валидации. Переданы не все, необходимые для создания предложения, данные
         '401':
           description: Вы не можете оставлять комментарии, т.к. не авторизованы
+    get:
+      tags:
+        - comments
+      summary: Получение списка комментариев
+      description: Возвращает список из 50 последних комментариев для определенного предложения, отсортированных по дате публикации (по убыванию)
+
+      responses:
+        '200':
+          description: Список комментариев успешно загружен
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/comments'
+        '404':
+          description: Предложение с указанным ID не найдено
 
   /users/register:
     post:
