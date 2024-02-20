@@ -26,6 +26,8 @@ import { OfferDetailRDO } from './rdo/offer-detail.rdo.js';
 import { UpdateOfferDTO } from './dto/update-offer.dto.js';
 import { OfferCommentsRDO } from './rdo/offer-comments.rdo.js';
 
+import { ValidateObjectIdMiddleware } from '../../libs/rest/middleware/validate-objectid.middleware.js';
+
 
 const MessageText = {
   INIT_CONTROLLER: 'OfferController initialized',
@@ -55,15 +57,57 @@ export class OfferController extends BaseController {
   ) {
     super(logger);
 
-    this.addRoute({ path: '/', method: HttpMethod.GET, handler: this.getList });
-    this.addRoute({ path: '/', method: HttpMethod.POST, handler: this.create });
-    this.addRoute({ path: '/favorites/:userId', method: HttpMethod.GET, handler: this.getFavorites });
-    this.addRoute({ path: '/favorites/:offerId/:status', method: HttpMethod.PATCH, handler: this.changeFavoriteStatus });
-    this.addRoute({ path: '/premium/:cityName', method: HttpMethod.GET, handler: this.getPremium });
-    this.addRoute({ path: '/:offerId', method: HttpMethod.GET, handler: this.getItem });
-    this.addRoute({ path: '/:offerId', method: HttpMethod.PATCH, handler: this.update });
-    this.addRoute({ path: '/:offerId', method: HttpMethod.DELETE, handler: this.deleteWithComments });
-    this.addRoute({ path: '/:offerId/comments', method: HttpMethod.GET, handler: this.getComments });
+    this.addRoute({
+      path: '/',
+      method: HttpMethod.GET,
+      handler: this.getList
+    });
+    this.addRoute({
+      path: '/',
+      method: HttpMethod.POST,
+      handler: this.create
+    });
+    this.addRoute({
+      path: '/favorites/:userId',
+      method: HttpMethod.GET,
+      handler: this.getFavorites,
+      middlewares: [ new ValidateObjectIdMiddleware('userId') ]
+    });
+    this.addRoute({
+      path: '/favorites/:offerId/:status',
+      method: HttpMethod.PATCH,
+      handler: this.changeFavoriteStatus,
+      middlewares: [ new ValidateObjectIdMiddleware('offerId') ]
+    });
+    this.addRoute({
+      path: '/premium/:cityName',
+      method: HttpMethod.GET,
+      handler: this.getPremium
+    });
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.GET,
+      handler: this.getItem,
+      middlewares: [ new ValidateObjectIdMiddleware('offerId') ]
+    });
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.PATCH,
+      handler: this.update,
+      middlewares: [ new ValidateObjectIdMiddleware('offerId') ]
+    });
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.DELETE,
+      handler: this.deleteWithComments,
+      middlewares: [ new ValidateObjectIdMiddleware('offerId') ]
+    });
+    this.addRoute({
+      path: '/:offerId/comments',
+      method: HttpMethod.GET,
+      handler: this.getComments,
+      middlewares: [ new ValidateObjectIdMiddleware('offerId') ]
+    });
 
     this.logger.info(MessageText.INIT_CONTROLLER);
   }
@@ -74,8 +118,8 @@ export class OfferController extends BaseController {
 
   public async getList({ query }: Request, res: Response): Promise<void> {
     const { limit } = query;
-    const offercsLimit = limit ? Number(limit) : undefined;
-    const offers = await this.offerService.find(offercsLimit);
+    const offersLimit = limit ? Number(limit) : undefined;
+    const offers = await this.offerService.find(offersLimit);
 
     this.ok(res, fillDTO(OffersListItemRDO, offers));
   }

@@ -11,7 +11,7 @@ GET http://localhost:8000/offers/?limit=2 HTTP/1.1
 ###
 
 ## Детальная информация о конкретном предолжении
-GET http://localhost:8000/offers/65c3539f177a2ad3d529f002 HTTP/1.1
+GET http://localhost:8000/offers/65c3539f177a2ad3d529f01c HTTP/1.1
 
 ###
 
