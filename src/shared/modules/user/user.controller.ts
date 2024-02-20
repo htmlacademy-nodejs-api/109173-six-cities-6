@@ -13,12 +13,13 @@ import { RestConfig } from '../../libs/config/rest.config.js';
 import { HttpError } from '../../libs/rest/error/http-error.js';
 import { StatusCodes } from 'http-status-codes';
 import { CheckUserStatusDTO } from './dto/check-user-status.dto.js';
+import { ControllerAdditionalInterface } from '../../libs/rest/controller/controller-additional.interface.js';
 
 type CreateUserRequest = Request<RequestParams, RequestBody, CreateUserDTO>
 type CheckStatusRequest = Request<RequestParams, RequestBody, CheckUserStatusDTO>
 
 const MessageText = {
-  INIT_CONTROLLER: 'UserController initialized',
+  INIT_CONTROLLER: 'Controller initialized'
 } as const;
 
 const ErrorText = {
@@ -29,7 +30,7 @@ const ErrorText = {
 } as const;
 
 @injectable()
-export class UserController extends BaseController {
+export class UserController extends BaseController implements ControllerAdditionalInterface {
   constructor(
     @inject(Component.Logger) protected readonly logger: Logger,
     @inject(Component.Config) protected readonly config: RestConfig,
@@ -37,16 +38,19 @@ export class UserController extends BaseController {
   ) {
     super(logger);
 
-    this.addRoute({ path: '/register', method: HttpMethod.POST, handler: this.create });
-    this.addRoute({ path: '/login', method: HttpMethod.GET, handler: this.checkStatus });
-    this.addRoute({ path: '/login', method: HttpMethod.POST, handler: this.login });
-    this.addRoute({ path: '/logout', method: HttpMethod.POST, handler: this.logout });
-
-    this.logger.info(MessageText.INIT_CONTROLLER);
+    this.registerRoutes();
+    this.logger.info(`${MessageText.INIT_CONTROLLER}: ${this.getControllerName()}`);
   }
 
   public getControllerName() {
     return 'UserController';
+  }
+
+  public async registerRoutes() {
+    this.addRoute({ path: '/register', method: HttpMethod.POST, handler: this.create });
+    this.addRoute({ path: '/login', method: HttpMethod.GET, handler: this.checkStatus });
+    this.addRoute({ path: '/login', method: HttpMethod.POST, handler: this.login });
+    this.addRoute({ path: '/logout', method: HttpMethod.POST, handler: this.logout });
   }
 
   public async create({ body }: CreateUserRequest, res: Response): Promise<void> {

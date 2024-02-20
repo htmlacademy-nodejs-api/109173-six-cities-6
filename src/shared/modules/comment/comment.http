@@ -1,3 +1,19 @@
 # Комментарии
 
 ## Созодание нового комментария
+POST http://localhost:8000/comments/ HTTP/1.1
+Content-Type: application/json
+
+{
+  "text": " Comment text. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+  "rating": "3",
+  "userId": "65c3539f177a2ad3d529f005",
+  "offerId": "65c3539f177a2ad3d529f01c"
+}
+
+###
+
+## Получение списка комментариев для предложения
+GET http://localhost:8000/comments/65c3539f177a2ad3d529f012/ HTTP/1.1
+
+###

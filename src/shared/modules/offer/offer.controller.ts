@@ -1,6 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { Component } from '../../types/component.enum.js';
 import { Logger } from '../../libs/logger/logger.interface.js';
+
 import { BaseController } from '../../libs/rest/controller/base-controller.abstract.js';
 import { FoundOffer, OfferService } from './offer-service.interface.js';
 import { CommentService } from '../comment/comment-service.interface.js';
@@ -9,13 +10,14 @@ import { UserService } from '../user/user-service.interface.js';
 import { StatusCodes } from 'http-status-codes';
 import { HttpMethod } from '../../libs/rest/types/http-method.enum.js';
 import { HttpError } from '../../libs/rest/error/http-error.js';
-import { City } from '../../types/city-type.enum.js';
-import { ParamsCityName } from '../../libs/rest/types/params-cityName.type.js';
-import { ParamsUserId } from '../../libs/rest/types/params-userid.type .js';
-import { ParamsFavoriteStatus } from '../../libs/rest/types/params-favorite-status.type.js';
-import { ParamsOfferId } from '../../libs/rest/types/params-offerid.type.js';
 import { Request, Response } from 'express';
 import { RequestBody, RequestParams } from '../../libs/rest/types/request.type.js';
+
+import { City } from '../../types/city-type.enum.js';
+import { ParamsCityName } from '../../libs/rest/types/params-cityName.type.js';
+import { ParamsFavoriteStatus } from '../../libs/rest/types/params-favorite-status.type.js';
+import { ParamsUserId } from '../../libs/rest/types/params-userid.type .js';
+import { ParamsOfferId } from '../../libs/rest/types/params-offerid.type.js';
 
 import { CreateOfferDTO } from './dto/create-offer.dto.js';
 import { fillDTO } from '../../../utils/common.js';
@@ -24,13 +26,13 @@ import { OffersListItemRDO } from './rdo/offers-list-item.rdo.js';
 import { GetOfferDTO } from './dto/get-offer.dto.js';
 import { OfferDetailRDO } from './rdo/offer-detail.rdo.js';
 import { UpdateOfferDTO } from './dto/update-offer.dto.js';
-import { CommentRDO } from '../comment/rdo/comment.rdo.js';
 
 import { ValidateObjectIdMiddleware } from '../../libs/rest/middleware/validate-objectid.middleware.js';
+import { ControllerAdditionalInterface } from '../../libs/rest/controller/controller-additional.interface.js';
 
 
 const MessageText = {
-  INIT_CONTROLLER: 'OfferController initialized',
+  INIT_CONTROLLER: 'Controller initialized'
 } as const;
 
 const ErrorText = {
@@ -48,7 +50,7 @@ type GetFavoriteOffers = Request<ParamsUserId, RequestBody, GetOfferDTO>
 type ChangeFavoriteStatus = Request<ParamsFavoriteStatus, RequestBody, GetOfferDTO>
 
 @injectable()
-export class OfferController extends BaseController {
+export class OfferController extends BaseController implements ControllerAdditionalInterface {
   constructor(
     @inject(Component.Logger) protected readonly logger: Logger,
     @inject(Component.OfferService) protected readonly offerService: OfferService,
@@ -57,6 +59,15 @@ export class OfferController extends BaseController {
   ) {
     super(logger);
 
+    this.registerRoutes();
+    this.logger.info(`${MessageText.INIT_CONTROLLER}: ${this.getControllerName()}`);
+  }
+
+  public getControllerName(): string {
+    return 'OfferController';
+  }
+
+  public registerRoutes() {
     this.addRoute({
       path: '/',
       method: HttpMethod.GET,
@@ -102,18 +113,6 @@ export class OfferController extends BaseController {
       handler: this.deleteWithComments,
       middlewares: [ new ValidateObjectIdMiddleware('offerId') ]
     });
-    this.addRoute({
-      path: '/:offerId/comments',
-      method: HttpMethod.GET,
-      handler: this.getCommentsByOfferId,
-      middlewares: [ new ValidateObjectIdMiddleware('offerId') ]
-    });
-
-    this.logger.info(MessageText.INIT_CONTROLLER);
-  }
-
-  public getControllerName(): string {
-    return 'OfferController';
   }
 
   public async getList({ query }: Request, res: Response): Promise<void> {
@@ -162,13 +161,6 @@ export class OfferController extends BaseController {
     await this.commentService.deleteByOfferId(offerId);
 
     this.ok(res, offer);
-  }
-
-  public async getCommentsByOfferId({ params }: GetOfferRequest, res: Response): Promise<void> {
-    const { offerId } = params;
-    const comments = await this.commentService.find(offerId);
-
-    this.ok(res, fillDTO(CommentRDO, comments));
   }
 
   public async getFavoritesByUserId({ params }: GetFavoriteOffers, res: Response): Promise<void> {
