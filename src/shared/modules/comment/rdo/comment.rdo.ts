@@ -1,6 +1,6 @@
 import { Expose } from 'class-transformer';
 
-export class OfferCommentsRDO {
+export class CommentRDO {
   @Expose() public text!: string;
   @Expose() public rating!: number;
   @Expose() public userId!: string;

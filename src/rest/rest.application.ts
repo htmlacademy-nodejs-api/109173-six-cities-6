@@ -1,15 +1,21 @@
 import { inject, injectable } from 'inversify';
 import express, { Express } from 'express';
+
 import { Config } from '../shared/libs/config/config.interface.js';
 import { RestSchema } from '../shared/libs/config/rest.schema.js';
+
 import { Component } from '../shared/types/component.enum.js';
 import { Logger } from '../shared/libs/logger/logger.interface.js';
 import { Rest } from './rest.interface.js';
+
 import { DatabaseClient } from '../shared/libs/database-client/database-client.interface.js';
 import { getMongoURI } from '../utils/database.js';
-import { UserController } from '../shared/modules/user/user.controller.js';
+
 import { AppExceptionFilter } from '../shared/libs/rest/exception-filter/app-exception-filter.js';
+
+import { UserController } from '../shared/modules/user/user.controller.js';
 import { OfferController } from '../shared/modules/offer/offer.controller.js';
+import { CommentController } from '../shared/modules/comment/comment.controller.js';
 
 const MessageText = {
   INIT: 'Rest application is initialized',
@@ -31,6 +37,7 @@ export class RestApplication implements Rest{
     @inject(Component.DatabaseClient) private readonly database: DatabaseClient,
     @inject(Component.UserController) private readonly userController: UserController,
     @inject(Component.OfferController) private readonly offerController: OfferController,
+    @inject(Component.CommentController) private readonly commentController: CommentController,
     @inject(Component.AppExceptionFilter) private readonly appExceptionFilter: AppExceptionFilter,
   ) {
     this.server = express();
@@ -55,6 +62,7 @@ export class RestApplication implements Rest{
   private async initControllers() {
     this.server.use('/users', this.userController.router);
     this.server.use('/offers', this.offerController.router);
+    this.server.use('/comments', this.commentController.router);
   }
 
   private async initExceptionFilters() {

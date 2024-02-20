@@ -24,7 +24,7 @@ import { OffersListItemRDO } from './rdo/offers-list-item.rdo.js';
 import { GetOfferDTO } from './dto/get-offer.dto.js';
 import { OfferDetailRDO } from './rdo/offer-detail.rdo.js';
 import { UpdateOfferDTO } from './dto/update-offer.dto.js';
-import { OfferCommentsRDO } from './rdo/offer-comments.rdo.js';
+import { CommentRDO } from '../comment/rdo/comment.rdo.js';
 
 import { ValidateObjectIdMiddleware } from '../../libs/rest/middleware/validate-objectid.middleware.js';
 
@@ -70,7 +70,7 @@ export class OfferController extends BaseController {
     this.addRoute({
       path: '/favorites/:userId',
       method: HttpMethod.GET,
-      handler: this.getFavorites,
+      handler: this.getFavoritesByUserId,
       middlewares: [ new ValidateObjectIdMiddleware('userId') ]
     });
     this.addRoute({
@@ -82,7 +82,7 @@ export class OfferController extends BaseController {
     this.addRoute({
       path: '/premium/:cityName',
       method: HttpMethod.GET,
-      handler: this.getPremium
+      handler: this.getPremiumByCityName
     });
     this.addRoute({
       path: '/:offerId',
@@ -105,7 +105,7 @@ export class OfferController extends BaseController {
     this.addRoute({
       path: '/:offerId/comments',
       method: HttpMethod.GET,
-      handler: this.getComments,
+      handler: this.getCommentsByOfferId,
       middlewares: [ new ValidateObjectIdMiddleware('offerId') ]
     });
 
@@ -153,7 +153,7 @@ export class OfferController extends BaseController {
     this.noContent(res, fillDTO(GetOfferDTO, offer));
   }
 
-  public async deleteWithComments(req: Request, res: Response): Promise<void> {
+  public async deleteWithComments(req: GetOfferRequest, res: Response): Promise<void> {
     const { params }: GetOfferRequest = req;
     const { offerId } = params;
     const offer = await this.getItem(req, res);
@@ -164,17 +164,14 @@ export class OfferController extends BaseController {
     this.ok(res, offer);
   }
 
-  public async getComments({ params }: GetOfferRequest, res: Response): Promise<void> {
+  public async getCommentsByOfferId({ params }: GetOfferRequest, res: Response): Promise<void> {
     const { offerId } = params;
     const comments = await this.commentService.find(offerId);
 
-    await this.offerService.deleteById(offerId);
-    await this.commentService.deleteByOfferId(offerId);
-
-    this.ok(res, fillDTO(OfferCommentsRDO, comments));
+    this.ok(res, fillDTO(CommentRDO, comments));
   }
 
-  public async getFavorites({ params }: GetFavoriteOffers, res: Response): Promise<void> {
+  public async getFavoritesByUserId({ params }: GetFavoriteOffers, res: Response): Promise<void> {
     const { userId } = params;
     const user = await this.userService.exists(userId);
 
@@ -191,17 +188,7 @@ export class OfferController extends BaseController {
     this.ok(res, fillDTO(OfferRDO, offers));
   }
 
-  public async changeFavoriteStatus({ params }: ChangeFavoriteStatus, res: Response): Promise<void> {
-    const { offerId, status } = params;
-
-    await this.exists(offerId);
-
-    const updatedOffer = await this.offerService.changeFavoriteStatus(offerId, Number(status));
-
-    this.ok(res, fillDTO(OfferDetailRDO, updatedOffer));
-  }
-
-  public async getPremium({ params }: GetPremiumOffers, res: Response): Promise<void> {
+  public async getPremiumByCityName({ params }: GetPremiumOffers, res: Response): Promise<void> {
     const { cityName } = params;
     const offers = await this.offerService.getPremiumByCity(cityName as City);
 
@@ -214,6 +201,16 @@ export class OfferController extends BaseController {
     }
 
     this.ok(res, fillDTO(OfferRDO, offers));
+  }
+
+  public async changeFavoriteStatus({ params }: ChangeFavoriteStatus, res: Response): Promise<void> {
+    const { offerId, status } = params;
+
+    await this.exists(offerId);
+
+    const updatedOffer = await this.offerService.changeFavoriteStatus(offerId, Number(status));
+
+    this.ok(res, fillDTO(OfferDetailRDO, updatedOffer));
   }
 
   private async exists(offerId: string): FoundOffer {
