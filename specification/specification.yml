@@ -199,7 +199,7 @@ paths: #API
         '409':
           description: Предолжение уже добавлено в избранное
 
-  /comments/{offerId}:
+  /comments:
     post:
       tags:
         - comments
@@ -227,6 +227,8 @@ paths: #API
           description: Ошибка валидации. Переданы не все, необходимые для создания предложения, данные
         '401':
           description: Вы не можете оставлять комментарии, т.к. не авторизованы
+
+  /comments/{offerId}:
     get:
       tags:
         - comments
