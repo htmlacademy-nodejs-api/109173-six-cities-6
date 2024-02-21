@@ -28,7 +28,7 @@ export class RestConfig implements Config<RestSchema> {
     }
 
     configRestSchema.load({});
-    configRestSchema.validate({allowed: 'strict', output: logger.info});
+    configRestSchema.validate({ allowed: 'strict', output: logger.info });
 
     this.config = configRestSchema.getProperties();
 

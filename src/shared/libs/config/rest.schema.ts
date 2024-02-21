@@ -13,6 +13,7 @@ export type RestSchema = {
   DB_PASSWORD: string,
   SERVER_HOST: string,
   SALT: string,
+  UPLOAD_FILES_DIRECTORY: string
 }
 
 export const configRestSchema = convict<RestSchema>({
@@ -69,5 +70,11 @@ export const configRestSchema = convict<RestSchema>({
     format: String,
     default: null,
     env: 'SALT',
+  },
+  UPLOAD_FILES_DIRECTORY: {
+    doc: 'Directory for users files',
+    format: String,
+    default: null,
+    env: 'UPLOAD_FILES_DIRECTORY',
   }
 });
