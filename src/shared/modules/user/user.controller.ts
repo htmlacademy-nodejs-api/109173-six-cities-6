@@ -14,6 +14,8 @@ import { HttpError } from '../../libs/rest/error/http-error.js';
 import { StatusCodes } from 'http-status-codes';
 import { CheckUserStatusDTO } from './dto/check-user-status.dto.js';
 import { ControllerAdditionalInterface } from '../../libs/rest/controller/controller-additional.interface.js';
+import { ValidateDTOMiddleware } from '../../libs/rest/middleware/validate-dto.middleware.js';
+import { LoginUserDTO } from './dto/login-user.dto.js';
 
 type CreateUserRequest = Request<RequestParams, RequestBody, CreateUserDTO>
 type CheckStatusRequest = Request<RequestParams, RequestBody, CheckUserStatusDTO>
@@ -47,10 +49,28 @@ export class UserController extends BaseController implements ControllerAddition
   }
 
   public async registerRoutes() {
-    this.addRoute({ path: '/register', method: HttpMethod.POST, handler: this.create });
-    this.addRoute({ path: '/login', method: HttpMethod.GET, handler: this.checkStatus });
-    this.addRoute({ path: '/login', method: HttpMethod.POST, handler: this.login });
-    this.addRoute({ path: '/logout', method: HttpMethod.POST, handler: this.logout });
+    this.addRoute({
+      path: '/register',
+      method: HttpMethod.POST,
+      handler: this.create,
+      middlewares: [ new ValidateDTOMiddleware(CreateUserDTO) ]
+    });
+    this.addRoute({
+      path: '/login',
+      method: HttpMethod.GET,
+      handler: this.checkStatus
+    });
+    this.addRoute({
+      path: '/login',
+      method: HttpMethod.POST,
+      handler: this.login,
+      middlewares: [ new ValidateDTOMiddleware(LoginUserDTO) ]
+    });
+    this.addRoute({
+      path: '/logout',
+      method: HttpMethod.POST,
+      handler: this.logout
+    });
   }
 
   public async create({ body }: CreateUserRequest, res: Response): Promise<void> {

@@ -24,6 +24,8 @@ export class ValidateDTOMiddleware implements Middleware {
     if(validationErrors.length > 0) {
       const prettifiedErrors = getPrettyErrors(validationErrors);
 
+      console.log(prettifiedErrors);
+
       throw new HttpError(
         StatusCodes.BAD_REQUEST,
         `${ErrorText.INVALID_DTO}: ${prettifiedErrors}`,
