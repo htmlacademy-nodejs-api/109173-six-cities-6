@@ -29,6 +29,7 @@ import { UpdateOfferDTO } from './dto/update-offer.dto.js';
 
 import { ValidateObjectIdMiddleware } from '../../libs/rest/middleware/validate-objectid.middleware.js';
 import { ControllerAdditionalInterface } from '../../libs/rest/controller/controller-additional.interface.js';
+import { ValidateDTOMiddleware } from '../../libs/rest/middleware/validate-dto.middleware.js';
 
 const MessageText = {
   INIT_CONTROLLER: 'Controller initialized'
@@ -75,7 +76,10 @@ export class OfferController extends BaseController implements ControllerAdditio
     this.addRoute({
       path: '/',
       method: HttpMethod.POST,
-      handler: this.create
+      handler: this.create,
+      middlewares: [
+        new ValidateDTOMiddleware(CreateOfferDTO)
+      ]
     });
     this.addRoute({
       path: '/favorites/:userId',

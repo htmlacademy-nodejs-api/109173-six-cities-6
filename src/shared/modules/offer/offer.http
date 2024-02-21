@@ -36,11 +36,11 @@ POST http://localhost:8000/offers/ HTTP/1.1
 Content-Type: application/json
 
 {
-  "name": "Comfortable A-frame in mountines",
+  "name": "A-frame in mountines",
   "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam enim quam, mollis vel suscipit et, venenatis a nulla. Integer vitae aliquam lacus. Vivamus semper leo nec bibendum malesuada. Morbi ligula velit, facilisis a vulputate vitae, malesuada sit amet massa. Praesent sed molestie lectus, vitae dignissim nulla. Maecenas sollicitudin in justo sed venenatis. Duis congue arcu quis iaculis molestie. Mauris lobortis imperdiet sem facilisis elementum. Proin ullamcorper leo in ultrices pretium. Curabitur ultricies vel nulla eu laoreet. Pellentesque id lectus nec justo tempus bibendum. Nulla facilisi. Phasellus scelerisque est at est varius bibendum. Vestibulum eget mauris gravida, imperdiet sapien a, bibendum.",
   "date": "2024-02-07T09:55:28.801Z",
   "city": "Dusseldorf",
-  "previewImage": "/some/photo/preview1.jpg;",
+  "previewImage": "C:/some/photo/preview1.jpg;",
   "images": [
     "photo4.jpg",
     "photo5.jpg",
@@ -53,7 +53,7 @@ Content-Type: application/json
   "isFavorite": true,
   "rating": 1,
   "type": "house",
-  "rooms": 0,
+  "rooms": 1,
   "guests": 10,
   "price": 99999,
   "facilities": [
@@ -65,8 +65,8 @@ Content-Type: application/json
   "userId": "65c3539f177a2ad3d529f005",
   "commentCount": 0,
   "coordinates": {
-    "latitude": "52.370216",
-    "longitude": "4.895168"
+    "latitude": 12345,
+    "longitude": "170.52722928703474"
   }
 }
 

@@ -1,66 +1,66 @@
-import { citiesList } from '../../../types/city-type.enum.js';
-import { facilitiesTypeList } from '../../../types/facilities-type.enum.js';
-import { offersTypeList } from '../../../types/offer-type.enum.js';
-import { OfferProps } from '../offer.constant.js';
-
 export const OfferErrorText = {
   name: {
-    MIN: `Offer name must contain at least ${OfferProps.name.MIN_LENGTH} symbol`,
-    MAX: `Offer name length mustn't be more than ${OfferProps.name.MAX_LENGTH} symbols`,
+    MIN: '$property must contain at least $constraint1 symbol',
+    MAX: '$property length mustn`t be more than $constraint1 symbols',
   },
   description: {
-    MIN: `Description must contain at least ${OfferProps.description.MIN_LENGTH} symbols`,
-    MAX: `Description mustn't contain more than ${OfferProps.description.MAX_LENGTH} symbols`
+    MIN: '$property must contain at least $constraint1 symbols',
+    MAX: '$property mustn`t contain more than $constraint1 symbols'
   },
   date: {
-    INVALID: 'date - must be a valid ISO date',
+    INVALID: '$property - must be a valid ISO date',
   },
   city: {
-    INVALID: `City name must be one of next values: ${citiesList}`,
+    INVALID: '$property name must be one of next values: $constraint1',
   },
   previewImage: {
-    INVALID_URL: 'previewImage must contain a correct image URL',
+    INVALID_URL: '$property must contain a correct image URL',
   },
   images: {
-    MIN_COUNT: `Offer must contain ${OfferProps.images.MIN_COUNT} or more images`
+    MIN_COUNT: 'Offer must contain $constraint1 or more images'
   },
   isPremium: {
-    INVALID_BOOL: 'isPremium must be a valid Boolean value (true / false)'
+    INVALID_BOOL: '$property must be a valid Boolean value (true / false)'
   },
   isFavorite: {
-    INVALID_BOOL: 'isFavorite must be a valid Boolean value (true / false)'
+    INVALID_BOOL: '$property must be a valid Boolean value (true / false)'
   },
   rating: {
-    NOT_INTEGER: 'Rating must be an integer',
-    MIN: `Rating must be not less than ${OfferProps.rating.MIN}`,
-    MAX: `Rating must be not more than ${OfferProps.rating.MIN}`,
+    NOT_INTEGER: '$property must be an integer',
+    MIN: '$property must be not less than $constraint1',
+    MAX: '$property must be not more than $constraint1',
   },
   type: {
-    INVALID: `Offer Type must be one of next values: ${offersTypeList}`,
+    INVALID: '$property Type must be one of next values: $constraint1',
   },
   rooms: {
-    NOT_INTEGER: 'Rooms must be an integer',
-    MIN: `Offer must contain at least ${OfferProps.rooms.MIN} room`,
-    MAX: `Offer mustn't contain more than ${OfferProps.rooms.MAX} rooms`,
+    NOT_INTEGER: '$property must be an integer',
+    MIN: 'Offer must contain at least $constraint1 room',
+    MAX: 'Offer mustn`t contain more than $constraint1 rooms',
   },
   guests: {
     NOT_INTEGER: 'Guests must be an integer',
-    MIN: `Offer must receive at least ${OfferProps.guests.MIN} guest`,
-    MAX: `Offer mustn't receive more than ${OfferProps.guests.MAX} guests`,
+    MIN: 'Offer must receive at least $constraint1 guest',
+    MAX: 'Offer mustn`t receive more than $constraint1 guests',
   },
   price: {
     NOT_INTEGER: 'Price must be an integer',
-    MIN: `Price value mustn't be less than ${OfferProps.price.MIN}`,
-    MAX: `Price value mustn't be more than ${OfferProps.price.MAX}`,
+    MIN: '$property value must be >= than $constraint1',
+    MAX: '$property value must be be <= than $constraint1',
   },
   facilities: {
-    INVALID: `Facilities can contain only next values: ${facilitiesTypeList}`,
+    INVALID: '$property can contain only next values: $constraint1',
   },
   userId: {
-    INVALID_ID: 'UserId must contain a valid id',
+    INVALID_ID: '$property must contain a valid id',
   },
   commentCount: {
-    NOT_INTEGER: 'Price must be an integer'
+    NOT_INTEGER: '$property must be an integer'
+  },
+  coordinates: {
+    NOT_OBJECT: '$property must be an Coordinates-object',
+    NOT_LATITUDE: '$property must contain a correct latitude string',
+    NOT_LONGTITUDE: '$property must contain a correct longtitude string'
   },
   enum: {
     INVALID: '{VALUE} is not supported'

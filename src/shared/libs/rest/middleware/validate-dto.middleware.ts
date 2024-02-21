@@ -4,6 +4,7 @@ import { ClassConstructor, plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
 import { HttpError } from '../error/http-error.js';
 import { StatusCodes } from 'http-status-codes';
+import { getPrettyErrors } from '../../../../utils/error.js';
 
 const ErrorText = {
   INVALID_DTO: 'Invalid DTO data'
@@ -21,9 +22,11 @@ export class ValidateDTOMiddleware implements Middleware {
     const validationErrors = await validate(dtoInstance);
 
     if(validationErrors.length > 0) {
+      console.log(getPrettyErrors(validationErrors));
+
       throw new HttpError(
         StatusCodes.BAD_REQUEST,
-        `${ErrorText.INVALID_DTO}: ${validationErrors}`,
+        `${ErrorText.INVALID_DTO} -> ${getPrettyErrors(validationErrors)}`,
         this.getName()
       );
     }
