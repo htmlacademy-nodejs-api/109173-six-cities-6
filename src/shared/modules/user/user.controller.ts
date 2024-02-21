@@ -58,7 +58,8 @@ export class UserController extends BaseController implements ControllerAddition
     this.addRoute({
       path: '/login',
       method: HttpMethod.GET,
-      handler: this.checkStatus
+      handler: this.checkStatus,
+      middlewares: [ new ValidateDTOMiddleware(CheckUserStatusDTO) ]
     });
     this.addRoute({
       path: '/login',
