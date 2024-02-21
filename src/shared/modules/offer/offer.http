@@ -65,7 +65,7 @@ Content-Type: application/json
   "userId": "65c3539f177a2ad3d529f005",
   "commentCount": 0,
   "coordinates": {
-    "latitude": 12345,
+    "latitude": "-45.85385926781092",
     "longitude": "170.52722928703474"
   }
 }

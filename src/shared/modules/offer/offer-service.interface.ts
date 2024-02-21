@@ -3,6 +3,7 @@ import { CreateOfferDTO } from './dto/create-offer.dto.js';
 import { OfferEntity } from './offer.entity.js';
 import { UpdateOfferDTO } from './dto/update-offer.dto.js';
 import { City } from '../../types/city-type.enum.js';
+import { ServiceEntityName } from '../../types/service-entity-name.interface.js';
 
 export type OfferDoc = DocumentType<OfferEntity>;
 export type FoundOffer = Promise<OfferDoc | null>;
@@ -11,7 +12,7 @@ export type OfferRatingComments = {
   rating: number,
   commentCount: number
 };
-export interface OfferService {
+export interface OfferService extends ServiceEntityName {
   create(dto: CreateOfferDTO): Promise<OfferDoc>;
   updateById(id: string, dto: UpdateOfferDTO): FoundOffer;
   deleteById(id: string): FoundOffer;

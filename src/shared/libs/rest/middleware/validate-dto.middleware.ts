@@ -22,11 +22,11 @@ export class ValidateDTOMiddleware implements Middleware {
     const validationErrors = await validate(dtoInstance);
 
     if(validationErrors.length > 0) {
-      console.log(getPrettyErrors(validationErrors));
+      const prettifiedErrors = getPrettyErrors(validationErrors);
 
       throw new HttpError(
         StatusCodes.BAD_REQUEST,
-        `${ErrorText.INVALID_DTO} -> ${getPrettyErrors(validationErrors)}`,
+        `${ErrorText.INVALID_DTO}: ${prettifiedErrors}`,
         this.getName()
       );
     }

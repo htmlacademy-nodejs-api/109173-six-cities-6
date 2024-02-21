@@ -30,6 +30,7 @@ import { UpdateOfferDTO } from './dto/update-offer.dto.js';
 import { ValidateObjectIdMiddleware } from '../../libs/rest/middleware/validate-objectid.middleware.js';
 import { ControllerAdditionalInterface } from '../../libs/rest/controller/controller-additional.interface.js';
 import { ValidateDTOMiddleware } from '../../libs/rest/middleware/validate-dto.middleware.js';
+import { DocumentExistsMiddleware } from '../../libs/rest/middleware/document-exists.middleware.js';
 
 const MessageText = {
   INIT_CONTROLLER: 'Controller initialized'
@@ -86,7 +87,8 @@ export class OfferController extends BaseController implements ControllerAdditio
       method: HttpMethod.GET,
       handler: this.getFavoritesByUserId,
       middlewares: [
-        new ValidateObjectIdMiddleware('userId')
+        new ValidateObjectIdMiddleware('userId'),
+        new DocumentExistsMiddleware('userId', this.userService)
       ]
     });
     this.addRoute({
@@ -94,7 +96,8 @@ export class OfferController extends BaseController implements ControllerAdditio
       method: HttpMethod.PATCH,
       handler: this.changeFavoriteStatus,
       middlewares: [
-        new ValidateObjectIdMiddleware('offerId')
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware('offerId', this.offerService)
       ]
     });
     this.addRoute({
@@ -107,21 +110,27 @@ export class OfferController extends BaseController implements ControllerAdditio
       method: HttpMethod.GET,
       handler: this.getItem,
       middlewares: [
-        new ValidateObjectIdMiddleware('offerId')
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware('offerId', this.offerService)
       ]
     });
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.PATCH,
       handler: this.update,
-      middlewares: [ new ValidateObjectIdMiddleware('offerId') ]
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware('offerId', this.offerService),
+        new ValidateDTOMiddleware(UpdateOfferDTO)
+      ]
     });
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.DELETE,
       handler: this.deleteWithComments,
       middlewares: [
-        new ValidateObjectIdMiddleware('offerId')
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware('offerId', this.offerService)
       ]
     });
   }

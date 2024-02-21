@@ -6,12 +6,16 @@ import { CommentEntity } from './comment.entity.js';
 import { types } from '@typegoose/typegoose';
 import { SortType } from '../../types/sort-type.enum.js';
 import { COMMENTS_COUNT } from './comment.constants.js';
-
+import { DocumentExists } from '../../types/document-exista.interface.js';
 @injectable()
-export class DefaultCommentService implements CommentService {
+export class DefaultCommentService implements CommentService, DocumentExists {
   constructor(
     @inject(Component.CommentModel) private readonly commentModel: types.ModelType<CommentEntity>
   ){}
+
+  public getEntityName(): string {
+    return 'Comments';
+  }
 
   public async create(dto: CreateCommentDTO): Promise<CommentDoc> {
     return await this.commentModel.create(dto);
@@ -46,5 +50,11 @@ export class DefaultCommentService implements CommentService {
     return await this.commentModel
       .findById({ id })
       .exec();
+  }
+
+  public async exists(commentId: string): Promise<boolean> {
+    const comment = await this.commentModel.exists({ _id: commentId });
+
+    return comment !== null;
   }
 }

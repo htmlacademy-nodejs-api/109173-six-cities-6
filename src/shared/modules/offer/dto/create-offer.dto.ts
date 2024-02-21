@@ -90,6 +90,6 @@ export class CreateOfferDTO {
   public commentCount!: number;
 
   @IsObject({ message: OfferErrorText.coordinates.NOT_OBJECT })
-  @IsString({ each: true })
+  // TODO: Не работает @ValidateNested() - разобрать позже
   public coordinates!: Coordinate;
 }

@@ -10,17 +10,22 @@ import { UpdateOfferDTO } from './dto/update-offer.dto.js';
 import { City } from '../../types/city-type.enum.js';
 import { SortType } from '../../types/sort-type.enum.js';
 import { MAX_OFFERS_COUNT, PREMIUM_OFFERS_COUNT } from './offer.constant.js';
+import { DocumentExists } from '../../types/document-exista.interface.js';
 
 const MessageText = {
   ADDED: 'New offer successfully added. Offer ID:',
   EXISTS: 'Offer already exists in database:',
 } as const;
 @injectable()
-export class DefaultOfferService implements OfferService {
+export class DefaultOfferService implements OfferService, DocumentExists {
   constructor(
     @inject(Component.OfferModel) private readonly offerModel: types.ModelType<OfferEntity>,
     @inject(Component.Logger) private readonly logger: Logger
   ){}
+
+  public getEntityName(): string {
+    return 'Offer';
+  }
 
   public async create(dto: CreateOfferDTO): Promise<OfferDoc> {
     const offer = await this.offerModel.create(dto);
@@ -40,6 +45,12 @@ export class DefaultOfferService implements OfferService {
     return await this.offerModel
       .findByIdAndDelete(id)
       .exec();
+  }
+
+  public async exists(docId: string): Promise<boolean> {
+    const offer = await this.offerModel.exists({ _id: docId });
+
+    return offer !== null;
   }
 
   public async find(offersCount: number = MAX_OFFERS_COUNT): FoundOffers {
@@ -66,12 +77,6 @@ export class DefaultOfferService implements OfferService {
     }
 
     return this.create(dto);
-  }
-
-  public async exists(docId: string): Promise<boolean> {
-    const offer = await this.offerModel.exists({ _id: docId });
-
-    return offer !== null;
   }
 
   public async getPremiumByCity(city: City, offersCount: number = PREMIUM_OFFERS_COUNT): FoundOffers {
