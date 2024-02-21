@@ -11,10 +11,10 @@ import {
   MinLength,
 } from 'class-validator';
 
-import { _cities, City } from '../../../types/city-type.enum.js';
+import { citiesList, City } from '../../../types/city-type.enum.js';
 import { Coordinate } from '../../../types/coordinate.type.js';
-import { _facilities, FacilitiesType } from '../../../types/facilities-type.enum.js';
-import { OfferType, _offerTypes } from '../../../types/offer-type.enum.js';
+import { facilitiesTypeList, FacilitiesType } from '../../../types/facilities-type.enum.js';
+import { OfferType, offersTypeList } from '../../../types/offer-type.enum.js';
 import { Images } from '../../../types/offer.type.js';
 import { OfferProps } from '../offer.constant.js';
 import { OfferErrorText } from './create-offer.messages.js';
@@ -31,7 +31,7 @@ export class CreateOfferDTO {
   @IsDateString({}, { message: OfferErrorText.date.INVALID })
   public date!: string;
 
-  @IsIn(_cities, { message: OfferErrorText.city.INVALID })
+  @IsIn(citiesList, { message: OfferErrorText.city.INVALID })
   public city!: City;
 
   @IsUrl({}, { message: OfferErrorText.previewImage.INVALID_URL })
@@ -51,7 +51,7 @@ export class CreateOfferDTO {
   @MaxLength(OfferProps.rating.MAX, { message: OfferErrorText.rating.MAX })
   public rating!: number;
 
-  @IsIn(_offerTypes, { message: OfferErrorText.type.INVALID })
+  @IsIn(offersTypeList, { message: OfferErrorText.type.INVALID })
   public type!: OfferType;
 
   @IsInt({ message: OfferErrorText.rooms.NOT_INTEGER })
@@ -69,7 +69,7 @@ export class CreateOfferDTO {
   @MaxLength(OfferProps.price.MAX, { message: OfferErrorText.price.MAX })
   public price!: number;
 
-  @IsIn(_facilities, { each: true, message: OfferErrorText.facilities.INVALID })
+  @IsIn(facilitiesTypeList, { each: true, message: OfferErrorText.facilities.INVALID })
   public facilities!: FacilitiesType[];
 
   @IsMongoId({ message: OfferErrorText.userId.INVALID_ID })

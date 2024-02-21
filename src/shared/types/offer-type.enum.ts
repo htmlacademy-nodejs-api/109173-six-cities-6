@@ -7,4 +7,4 @@ export const OfferTypes = {
 
 type OfferTypeKeys = keyof typeof OfferTypes
 export type OfferType = (typeof OfferTypes)[OfferTypeKeys];
-export const _offerTypes: OfferType[] = ['apartment', 'house', 'room', 'hotel'] as const;
+export const offersTypeList: OfferType[] = ['apartment', 'house', 'room', 'hotel'];

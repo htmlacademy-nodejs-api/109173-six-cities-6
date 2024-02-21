@@ -12,5 +12,13 @@ export const FacilitiesTypes = {
 type facilitiesTypeKeys = keyof typeof FacilitiesTypes
 export type FacilitiesType = (typeof FacilitiesTypes)[facilitiesTypeKeys];
 
-export const _facilities: FacilitiesType[] =
-  ['Breakfast', 'Air conditioning', 'Laptop', 'friendly workspace', 'Baby seat', 'Washer', 'Towels', 'Fridge'] as const;
+export const facilitiesTypeList: FacilitiesType[] = [
+  'Breakfast',
+  'Air conditioning',
+  'Laptop',
+  'friendly workspace',
+  'Baby seat',
+  'Washer',
+  'Towels',
+  'Fridge'
+];

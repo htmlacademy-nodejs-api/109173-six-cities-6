@@ -9,4 +9,4 @@ export const Cities = {
 
 export type City = keyof typeof Cities;
 
-export const _cities: City[] = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'] as const;
+export const citiesList: City[] = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'];

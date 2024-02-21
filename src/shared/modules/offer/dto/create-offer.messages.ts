@@ -1,6 +1,6 @@
-import { _cities } from '../../../types/city-type.enum.js';
-import { _facilities } from '../../../types/facilities-type.enum.js';
-import { _offerTypes } from '../../../types/offer-type.enum.js';
+import { citiesList } from '../../../types/city-type.enum.js';
+import { facilitiesTypeList } from '../../../types/facilities-type.enum.js';
+import { offersTypeList } from '../../../types/offer-type.enum.js';
 import { OfferProps } from '../offer.constant.js';
 
 export const OfferErrorText = {
@@ -16,7 +16,7 @@ export const OfferErrorText = {
     INVALID: 'date - must be a valid ISO date',
   },
   city: {
-    INVALID: `City name must be one of next values: ${_cities}`,
+    INVALID: `City name must be one of next values: ${citiesList}`,
   },
   previewImage: {
     INVALID_URL: 'previewImage must contain a correct image URL',
@@ -36,7 +36,7 @@ export const OfferErrorText = {
     MAX: `Rating must be not more than ${OfferProps.rating.MIN}`,
   },
   type: {
-    INVALID: `Offer Type must be one of next values: ${_offerTypes}`,
+    INVALID: `Offer Type must be one of next values: ${offersTypeList}`,
   },
   rooms: {
     NOT_INTEGER: 'Rooms must be an integer',
@@ -54,7 +54,7 @@ export const OfferErrorText = {
     MAX: `Price value mustn't be more than ${OfferProps.price.MAX}`,
   },
   facilities: {
-    INVALID: `Facilities can contain only next values: ${_facilities}`,
+    INVALID: `Facilities can contain only next values: ${facilitiesTypeList}`,
   },
   userId: {
     INVALID_ID: 'UserId must contain a valid id',

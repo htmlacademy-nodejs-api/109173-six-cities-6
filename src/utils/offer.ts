@@ -56,6 +56,7 @@ export function makeOffer(fileRow: string): Offer {
       avatarUrl: userAvatar,
       password: userPassword,
       isPro: !!userIsPro,
+      favoriteOffers: [],
     },
     commentCount: comments.split(DELIMITER.VALUES).length ?? 0,
     coordinates: {latitude, longitude}
