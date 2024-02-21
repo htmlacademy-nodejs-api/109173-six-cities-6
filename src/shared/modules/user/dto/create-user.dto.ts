@@ -20,7 +20,6 @@ export class CreateUserDTO implements User {
   public name!: string;
 
   @IsEmail()
-  @IsString()
   public email!: string;
 
   @IsString()
@@ -35,7 +34,6 @@ export class CreateUserDTO implements User {
   public isPro!: boolean;
 
   @IsMongoId({ each: true })
-  @IsString({ each: true })
   @IsArray()
   public favoriteOffers!: string[];
 }

@@ -18,6 +18,8 @@ import { CommentRDO } from './rdo/comment.rdo.js';
 
 import { ValidateObjectIdMiddleware } from '../../libs/rest/middleware/validate-objectid.middleware.js';
 import { ControllerAdditionalInterface } from '../../libs/rest/controller/controller-additional.interface.js';
+import { ValidateDTOMiddleware } from '../../libs/rest/middleware/validate-dto.middleware.js';
+import { DocumentExistsMiddleware } from '../../libs/rest/middleware/document-exists.middleware.js';
 
 const MessageText = {
   INIT_CONTROLLER: 'Controller initialized'
@@ -44,12 +46,20 @@ export class CommentController extends BaseController implements ControllerAddit
   }
 
   public registerRoutes() {
-    this.addRoute({ path: '/', method: HttpMethod.POST, handler: this.create});
+    this.addRoute({
+      path: '/',
+      method: HttpMethod.POST,
+      handler: this.create,
+      middlewares: [ new ValidateDTOMiddleware(CreateCommentDTO) ]
+    });
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.GET,
       handler: this.getCommentsByOfferId,
-      middlewares: [ new ValidateObjectIdMiddleware('offerId') ]
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware('offerId', this.offerService)
+      ]
     });
   }
 
@@ -58,7 +68,7 @@ export class CommentController extends BaseController implements ControllerAddit
     const offerId = String(newComment.offerId);
 
     await this.offerService.incCommentsCount(offerId);
-    await this.offerService.countRatingAndComments(offerId);
+    await this.offerService.updateRatingAndComments(offerId);
 
     this.ok(res, fillDTO(CommentRDO, newComment));
   }
