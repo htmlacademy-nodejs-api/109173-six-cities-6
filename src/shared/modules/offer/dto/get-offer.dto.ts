@@ -1,3 +1,3 @@
 export class GetOfferDTO {
-  public id!: string;
+  public offerId!: string;
 }

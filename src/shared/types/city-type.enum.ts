@@ -7,5 +7,6 @@ export const Cities = {
   Dusseldorf: 'Dusseldorf',
 } as const;
 
-
 export type City = keyof typeof Cities;
+
+export const citiesList: City[] = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'];

@@ -127,64 +127,20 @@ paths: #API
         '404':
           description: Предложение с указанным ID не найдено
 
-  /offers/{offerId}/comments/:
-    get:
-      tags:
-        - offers
-      summary: Получение списка комментариев
-      description: Возвращает список из 50 последних комментариев для определенного предложения, отсортированных по дате публикации (по убыванию)
+  /offers/{cityId}:
+      get:
+        tags:
+          - offers
+        summary: Получение премиальных предложений города
+        description: Возвращает список из 3 педложений с флагом isPremium для города с переданным ID, отсортированных по дате (по убыванию)
 
-      responses:
-        '200':
-          description: Список комментариев успешно загружен
-          content:
-            application-json:
-              schema:
-                $ref: '#/components/schemas/comments'
-        '404':
-          description: Предложение с указанным ID не найдено
-    post:
-      tags:
-        - offers
-      summary: Добавление комментария
-      description: Добавляет новый комментарий к предложению
-
-      requestBody:
-        description: Информация о добавляемом комментарии
-
-        content:
-          application-json:
-            schema:
-              $ref: '#/components/schemas/newComment'
-
-      responses:
-        '200':
-          description: Список комментариев успешно загружен
-          content:
-            application-json:
-              schema:
-                $ref: '#/components/schemas/comments'
-        '404':
-          description: Предложение с указанным ID не найдено
-        '400':
-          description: Ошибка валидации. Переданы не все, необходимые для создания предложения, данные
-        '401':
-          description: Вы не можете оставлять комментарии, т.к. не авторизованы
-
-  /offers//premium/{cityId}:
-    get:
-      tags:
-        - offers
-      summary: Получение премиальных предложений города
-      description: Возвращает список из 3 педложений с флагом isPremium для города с переданным ID, отсортированных по дате (по убыванию)
-
-      responses:
-        '200':
-          description: Список предложений успешно загружен
-          content:
-            application-json:
-              schema:
-                $ref: '#/components/schemas/offers'
+        responses:
+          '200':
+            description: Список предложений успешно загружен
+            content:
+              application-json:
+                schema:
+                  $ref: '#/components/schemas/offers'
 
   /offers/favorites/{userId}:
     get:
@@ -242,6 +198,52 @@ paths: #API
           description: Предолжение с указанным ID не найдено
         '409':
           description: Предолжение уже добавлено в избранное
+
+  /comments:
+    post:
+      tags:
+        - comments
+      summary: Добавление комментария
+      description: Добавляет новый комментарий к предложению
+
+      requestBody:
+        description: Информация о добавляемом комментарии
+
+        content:
+          application-json:
+            schema:
+              $ref: '#/components/schemas/newComment'
+
+      responses:
+        '200':
+          description: Список комментариев успешно загружен
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/comments'
+        '404':
+          description: Предложение с указанным ID не найдено
+        '400':
+          description: Ошибка валидации. Переданы не все, необходимые для создания предложения, данные
+        '401':
+          description: Вы не можете оставлять комментарии, т.к. не авторизованы
+
+  /comments/{offerId}:
+    get:
+      tags:
+        - comments
+      summary: Получение списка комментариев
+      description: Возвращает список из 50 последних комментариев для определенного предложения, отсортированных по дате публикации (по убыванию)
+
+      responses:
+        '200':
+          description: Список комментариев успешно загружен
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/comments'
+        '404':
+          description: Предложение с указанным ID не найдено
 
   /users/register:
     post:

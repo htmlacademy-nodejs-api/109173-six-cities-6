@@ -9,16 +9,21 @@ import { LoginUserDTO } from './dto/login-user.dto.js';
 import { UpdateUserDTO } from './dto/update-user.dto.js';
 import { FoundOffers } from '../offer/offer-service.interface.js';
 import mongoose from 'mongoose';
+import { DocumentExists } from '../../types/document-exista.interface.js';
 
 const MessageText = {
   ADDED: 'New user successfully added. Email:',
 } as const;
 @injectable()
-export class DefaultUserService implements UserService {
+export class DefaultUserService implements UserService, DocumentExists {
   constructor(
     @inject(Component.UserModel) private readonly userModel: types.ModelType<UserEntity>,
     @inject(Component.Logger) private readonly logger: Logger
   ){}
+
+  public getEntityName(): string {
+    return 'User';
+  }
 
   public async create(dto: CreateUserDTO, salt: string): Promise<UserDoc> {
     const user = new UserEntity(dto);
@@ -35,6 +40,12 @@ export class DefaultUserService implements UserService {
     return await this.userModel
       .findByIdAndUpdate(id, dto, {new: true})
       .exec();
+  }
+
+  public async exists(userId: string): Promise<boolean> {
+    const user = await this.userModel.exists({ _id: userId });
+
+    return user !== null;
   }
 
   public async login(dto: LoginUserDTO, salt: string): Promise<UserToken | null> {
@@ -127,11 +138,5 @@ export class DefaultUserService implements UserService {
       .exec();
 
     return userWithFavorites.favoriteOffers ?? null;
-  }
-
-  public async exists(userId: string): Promise<boolean> {
-    const user = await this.userModel.exists({ _id: userId });
-
-    return user !== null;
   }
 }

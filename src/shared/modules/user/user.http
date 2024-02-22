@@ -15,12 +15,15 @@ POST http://localhost:8000/users/register HTTP/1.1
 Content-Type: application/json
 
 {
-   "name": "Test User RDO",
-   "email": "pro_user@test.loc",
+   "name": "Robert Downey",
+   "email": "ironman@stark-industries.loc",
    "avatarUrl": "/some/user/avatar.jpg",
-   "password": "12848123",
+   "password": "IlonMask123",
    "isPro": true,
-   "favoriteOffers": []
+   "favoriteOffers": [
+      "65c3539f177a2ad3d529f00c",
+      "65c3539f177a2ad3d529f01c"
+    ]
 }
 
 ###

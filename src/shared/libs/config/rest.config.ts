@@ -1,8 +1,8 @@
 import { inject, injectable } from 'inversify';
 import { Component } from '../../types/component.enum.js';
 import { config } from 'dotenv';
-import { Logger } from '../logger/index.js';
 import { Config } from './config.interface.js';
+import { Logger } from '../logger/logger.interface.js';
 import { RestSchema, configRestSchema } from './rest.schema.js';
 
 const MessageText = {
