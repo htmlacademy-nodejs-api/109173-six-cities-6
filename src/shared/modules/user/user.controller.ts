@@ -16,9 +16,14 @@ import { CheckUserStatusDTO } from './dto/check-user-status.dto.js';
 import { ControllerAdditionalInterface } from '../../libs/rest/controller/controller-additional.interface.js';
 import { ValidateDTOMiddleware } from '../../libs/rest/middleware/validate-dto.middleware.js';
 import { LoginUserDTO } from './dto/login-user.dto.js';
+import { ParamsUserId } from '../../libs/rest/types/params-userid.type .js';
+import { ValidateObjectIdMiddleware } from '../../libs/rest/middleware/validate-objectid.middleware.js';
+import { DocumentExistsMiddleware } from '../../libs/rest/middleware/document-exists.middleware.js';
+import { UploadFilesMiddleware } from '../../libs/rest/middleware/upload-files.middleware.js';
 
 type CreateUserRequest = Request<RequestParams, RequestBody, CreateUserDTO>
 type CheckStatusRequest = Request<RequestParams, RequestBody, CheckUserStatusDTO>
+type UploadAvatarRequest = Request<ParamsUserId, RequestBody, undefined>
 
 const MessageText = {
   INIT_CONTROLLER: 'Controller initialized'
@@ -28,7 +33,8 @@ const ErrorText = {
   EXISTS: 'User is already exists',
   NOT_AUTHORIZED: 'User isn`t authorized',
   NOT_FOUND: 'User not found',
-  NOT_IMPLEMENTED: 'Method hasn`t implemented yet'
+  NOT_IMPLEMENTED: 'Method hasn`t implemented yet',
+  UPLOAD_AVATAR: 'Cant upload avatar for user'
 } as const;
 
 @injectable()
@@ -71,6 +77,16 @@ export class UserController extends BaseController implements ControllerAddition
       path: '/logout',
       method: HttpMethod.POST,
       handler: this.logout
+    });
+    this.addRoute({
+      path: '/:userId/avatar',
+      method: HttpMethod.POST,
+      handler: this.uploadAvatar,
+      middlewares: [
+        new ValidateObjectIdMiddleware('userId'),
+        new DocumentExistsMiddleware('userId', this.userService),
+        new UploadFilesMiddleware(this.config.get('UPLOAD_FILES_DIRECTORY'), 'user-avatar')
+      ]
     });
   }
 
@@ -142,5 +158,20 @@ export class UserController extends BaseController implements ControllerAddition
       ErrorText.NOT_IMPLEMENTED,
       this.getControllerName()
     );
+  }
+
+  public async uploadAvatar(req: UploadAvatarRequest, res: Response): Promise<void > {
+    const { userId } = req.params;
+
+    if(!req.file?.path) {
+      throw new HttpError(
+        StatusCodes.BAD_GATEWAY,
+        `${ErrorText.UPLOAD_AVATAR}: ${userId}`,
+        this.getControllerName()
+      );
+    }
+
+    await this.userService.updateById(userId, { avatarUrl: req.file.path});
+    return this.created(res, req.file?.path);
   }
 }
