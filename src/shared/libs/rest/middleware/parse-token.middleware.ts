@@ -11,10 +11,6 @@ const ErrorText = {
   INVALID_TOKEN: 'Passed Token is not valid'
 } as const;
 
-type TokenPayloadRequest = Request & {
-  tokenPayload: TokenPayload
-};
-
 export class ParseTokenMiddleware implements Middleware {
   getName(): string {
     return 'ParseTokenMiddleware';
@@ -32,7 +28,7 @@ export class ParseTokenMiddleware implements Middleware {
     );
   }
 
-  async execute(req: TokenPayloadRequest, res: Response, next: NextFunction): Promise<void> {
+  async execute(req: Request, res: Response, next: NextFunction): Promise<void> {
     const { authorization } = req.headers;
 
     if(!authorization) {
