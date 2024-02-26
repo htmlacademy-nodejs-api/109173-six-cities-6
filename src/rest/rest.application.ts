@@ -16,6 +16,7 @@ import { AppExceptionFilter } from '../shared/libs/rest/exception-filter/app-exc
 import { UserController } from '../shared/modules/user/user.controller.js';
 import { OfferController } from '../shared/modules/offer/offer.controller.js';
 import { CommentController } from '../shared/modules/comment/comment.controller.js';
+import { AuthExceptionFilter } from '../shared/modules/auth/exception-filter/auth-exception-filter.js';
 
 const MessageText = {
   INIT: 'Rest application is initialized',
@@ -39,6 +40,7 @@ export class RestApplication implements Rest{
     @inject(Component.OfferController) private readonly offerController: OfferController,
     @inject(Component.CommentController) private readonly commentController: CommentController,
     @inject(Component.AppExceptionFilter) private readonly appExceptionFilter: AppExceptionFilter,
+    @inject(Component.AuthExceptionFilter) private readonly authExceptionFilter: AuthExceptionFilter,
   ) {
     this.server = express();
   }
@@ -70,6 +72,7 @@ export class RestApplication implements Rest{
   }
 
   private async initExceptionFilters() {
+    this.server.use(this.authExceptionFilter.catch.bind(this.authExceptionFilter));
     this.server.use(this.appExceptionFilter.catch.bind(this.appExceptionFilter));
   }
 

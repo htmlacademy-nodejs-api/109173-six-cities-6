@@ -1,7 +1,7 @@
 // Описание схемы хранения данных в БД (сущность: User)
 import { defaultClasses, getModelForClass, modelOptions, prop } from '@typegoose/typegoose';
 import { User } from '../../types/user.type.js';
-import { getSHA256Hash } from '../../../utils/hash.js';
+import { getSHA256Hash } from '../../../utils/encrypt.js';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export interface UserEntity extends defaultClasses.Base {}

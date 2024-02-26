@@ -12,6 +12,7 @@ import { HttpError } from '../../libs/rest/error/http-error.js';
 import { StatusCodes } from 'http-status-codes';
 import { UserNotFoundException } from './errors/user-not-found.exception.js';
 import { UserIncorrectPasswordException } from './errors/user-incorrect-password.exception.js';
+import { makeSecretKey } from '../../../utils/encrypt.js';
 
 const MessageText = {
   GET_TOKEN: 'Get new token for user'
@@ -65,7 +66,7 @@ export class DefaultAuthService implements AuthService {
     const JSTAlgorithm = this.config.get('JWT_ALGORITHM');
     const JSTExpirationTime = this.config.get('JWT_EXPIRED');
 
-    const secretKey = new TextEncoder().encode(JWTSecret);
+    const secretKey = makeSecretKey(JWTSecret);
 
     return await new SignJWT(payload)
       .setProtectedHeader({ alg: JSTAlgorithm })
