@@ -19,7 +19,7 @@ export class AppExceptionFilter implements ExceptionFilter {
   }
 
   private handleHttpError(error: HttpError, _req: Request, res: Response, _next: NextFunction) {
-    this.logger.error(`[${error.detail}]: ${error.statusCode} — ${error.message}`, error);
+    this.logger.error(`[${error.detail}]: ${error.statusCode} - ${error.message}`, error);
 
     res
       .status(error.statusCode)

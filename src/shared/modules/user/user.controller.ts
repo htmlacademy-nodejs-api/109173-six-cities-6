@@ -20,10 +20,13 @@ import { ParamsUserId } from '../../libs/rest/types/params-userid.type .js';
 import { ValidateObjectIdMiddleware } from '../../libs/rest/middleware/validate-objectid.middleware.js';
 import { DocumentExistsMiddleware } from '../../libs/rest/middleware/document-exists.middleware.js';
 import { UploadFilesMiddleware } from '../../libs/rest/middleware/upload-files.middleware.js';
+import { AuthService } from '../auth/auth-service.interface.js';
+import { LoggedUserRDO } from './rdo/logged-user.rdo.js';
 
 type CreateUserRequest = Request<RequestParams, RequestBody, CreateUserDTO>
 type CheckStatusRequest = Request<RequestParams, RequestBody, CheckUserStatusDTO>
 type UploadAvatarRequest = Request<ParamsUserId, RequestBody, undefined>
+type LoginUserRequest = Request<RequestParams, RequestBody, LoginUserDTO>;
 
 const MessageText = {
   INIT_CONTROLLER: 'Controller initialized'
@@ -42,7 +45,8 @@ export class UserController extends BaseController implements ControllerAddition
   constructor(
     @inject(Component.Logger) protected readonly logger: Logger,
     @inject(Component.Config) protected readonly config: RestConfig,
-    @inject(Component.UserService) private readonly userService: UserService
+    @inject(Component.UserService) private readonly userService: UserService,
+    @inject(Component.AuthService) private readonly authService: AuthService
   ) {
     super(logger);
 
@@ -108,37 +112,23 @@ export class UserController extends BaseController implements ControllerAddition
     this.created(res, userRDO);
   }
 
-  public async checkStatus({ body }: CheckStatusRequest, res: Response): Promise<void> {
-    const user = await this.userService.checkAuthStatus(body.email);
-
-    if(!user) {
-      throw new HttpError(
-        StatusCodes.UNAUTHORIZED,
-        `${ErrorText.NOT_AUTHORIZED}: ${body.email}`,
-        this.getControllerName()
-      );
-    }
-
-    this.ok(res, fillDTO(UserRDO, user));
-  }
-
-  public async login({ body }: CheckStatusRequest, _res: Response): Promise<void> {
-    const user = await this.userService.findByEmail(body.email);
-
-    if(!user) {
-      throw new HttpError(
-        StatusCodes.UNAUTHORIZED,
-        `${ErrorText.NOT_FOUND}: ${body.email}`,
-        this.getControllerName()
-      );
-    }
-
-    // Заглушка
+  public async checkStatus(_req: Request, _res: Response): Promise<void> {
     throw new HttpError(
       StatusCodes.NOT_IMPLEMENTED,
       ErrorText.NOT_IMPLEMENTED,
       this.getControllerName()
     );
+  }
+
+  public async login({ body }: LoginUserRequest, _res: Response): Promise<void> {
+    const user = await this.authService.check(body);
+    const token = await this.authService.authenticate(user);
+    const responseData = fillDTO(LoggedUserRDO, {
+      email: user.email,
+      token
+    });
+
+    this.ok(_res, responseData);
   }
 
   public async logout({ body }: CheckStatusRequest, _res: Response): Promise<void> {

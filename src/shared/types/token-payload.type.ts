@@ -6,4 +6,5 @@ export type TokenPayload = {
   email: string,
   avatarUrl: string,
   isPro: boolean,
+  favoriteOffers: string[]
 }

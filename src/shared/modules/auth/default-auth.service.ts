@@ -38,6 +38,7 @@ export class DefaultAuthService implements AuthService {
       email: user.email,
       avatarUrl: user.avatarUrl,
       isPro: user.isPro,
+      favoriteOffers: user.favoriteOffers,
     };
 
     return await this.getToken(tokenPayload);
@@ -51,7 +52,7 @@ export class DefaultAuthService implements AuthService {
     }
 
     const salt = this.config.get('SALT');
-    const checkUser = user.checkPassword(user.password, salt);
+    const checkUser = user.checkPassword(dto.password, salt);
 
     if(!checkUser) {
       throw new UserIncorrectPasswordException();

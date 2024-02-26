@@ -10,7 +10,7 @@ import { UpdateOfferDTO } from './dto/update-offer.dto.js';
 import { City } from '../../types/city-type.enum.js';
 import { SortType } from '../../types/sort-type.enum.js';
 import { MAX_OFFERS_COUNT, PREMIUM_OFFERS_COUNT } from './offer.constant.js';
-import { DocumentExists } from '../../types/document-exista.interface.js';
+import { DocumentExists } from '../../types/document-exists.interface.js';
 
 const MessageText = {
   ADDED: 'New offer successfully added. Offer ID:',
