@@ -55,9 +55,11 @@ export class DefaultOfferService implements OfferService, DocumentExists {
 
   public async find(offersCount: number = MAX_OFFERS_COUNT): FoundOffers {
     return await this.offerModel
-      .find()
-      .limit(offersCount)
-      .sort({ createdAt: SortType.DOWN })
+      .aggregate([
+        { $limit: offersCount },
+        { $sort: { createdAt: SortType.DOWN } },
+        { $set: { 'isFavorite': false } }
+      ])
       .exec();
   }
 

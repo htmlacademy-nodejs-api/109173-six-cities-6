@@ -137,10 +137,18 @@ export class OfferController extends BaseController implements ControllerAdditio
     });
   }
 
-  public async getList({ query }: Request, res: Response): Promise<void> {
+  public async getList({ query, tokenPayload }: Request, res: Response): Promise<void> {
     const { limit } = query;
     const offersLimit = limit ? Number(limit) : undefined;
-    const offers = await this.offerService.find(offersLimit);
+
+    let offers = null;
+
+    if(tokenPayload) {
+      const { userId } = tokenPayload;
+      offers = await this.userService.getFavoriteOffers(userId);
+    } else {
+      offers = await this.offerService.find(offersLimit);
+    }
 
     this.ok(res, fillDTO(OffersListItemRDO, offers));
   }

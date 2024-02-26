@@ -113,7 +113,8 @@ export class DefaultUserService implements UserService, DocumentExists {
           $lookup: {
             from: 'offers',
             pipeline: [
-              { $match: { $expr: { $in: ['$_id', userFavoritesObjectIds] } } }
+              { $match: { $expr: { $in: ['$_id', userFavoritesObjectIds] } } },
+              { $set: { 'isFavorite': true } }
             ],
             as: 'favoriteOffers'
           }
