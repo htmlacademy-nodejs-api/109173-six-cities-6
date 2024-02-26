@@ -11,11 +11,9 @@ const ErrorText = {
   INVALID_TOKEN: 'Passed Token is not valid'
 } as const;
 
-type TokenPayloadRequest = Request & {
-  tokenPayload: TokenPayload
-};
-
 export class ParseTokenMiddleware implements Middleware {
+  constructor(private readonly JWTSecret: string){}
+
   getName(): string {
     return 'ParseTokenMiddleware';
   }
@@ -32,7 +30,7 @@ export class ParseTokenMiddleware implements Middleware {
     );
   }
 
-  async execute(req: TokenPayloadRequest, res: Response, next: NextFunction): Promise<void> {
+  public async execute(req: Request, res: Response, next: NextFunction): Promise<void> {
     const { authorization } = req.headers;
 
     if(!authorization) {
@@ -46,7 +44,7 @@ export class ParseTokenMiddleware implements Middleware {
     }
 
     try {
-      const { payload } = await jwtVerify(token, makeSecretKey(token));
+      const { payload } = await jwtVerify(token, makeSecretKey(this.JWTSecret));
 
       if(!this.isTokenPayload(payload)) {
         throw new Error(ErrorText.INVALID_TOKEN);

@@ -17,6 +17,7 @@ import { UserController } from '../shared/modules/user/user.controller.js';
 import { OfferController } from '../shared/modules/offer/offer.controller.js';
 import { CommentController } from '../shared/modules/comment/comment.controller.js';
 import { AuthExceptionFilter } from '../shared/modules/auth/exception-filter/auth-exception-filter.js';
+import { ParseTokenMiddleware } from '../shared/libs/rest/middleware/parse-token.middleware.js';
 
 const MessageText = {
   INIT: 'Rest application is initialized',
@@ -58,11 +59,14 @@ export class RestApplication implements Rest{
   }
 
   private async initMiddleware() {
+    const authMiddleware = new ParseTokenMiddleware(this.config.get('JWT_SECRET'));
+
     this.server.use(express.json());
     this.server.use(
       '/upload',
       express.static(this.config.get('UPLOAD_FILES_DIRECTORY'))
     );
+    this.server.use(authMiddleware.execute.bind(authMiddleware));
   }
 
   private async initControllers() {
