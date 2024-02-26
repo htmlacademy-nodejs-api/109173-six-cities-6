@@ -20,6 +20,7 @@ import { ValidateObjectIdMiddleware } from '../../libs/rest/middleware/validate-
 import { ControllerAdditionalInterface } from '../../libs/rest/controller/controller-additional.interface.js';
 import { ValidateDTOMiddleware } from '../../libs/rest/middleware/validate-dto.middleware.js';
 import { DocumentExistsMiddleware } from '../../libs/rest/middleware/document-exists.middleware.js';
+import { PrivateRouteMiddleware } from '../../libs/rest/middleware/private-route.middleware.js';
 
 const MessageText = {
   INIT_CONTROLLER: 'Controller initialized'
@@ -50,7 +51,10 @@ export class CommentController extends BaseController implements ControllerAddit
       path: '/',
       method: HttpMethod.POST,
       handler: this.create,
-      middlewares: [ new ValidateDTOMiddleware(CreateCommentDTO) ]
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateDTOMiddleware(CreateCommentDTO)
+      ]
     });
     this.addRoute({
       path: '/:offerId',

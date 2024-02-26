@@ -1,15 +1,5 @@
 # Пользователь
 
-## Проверка статуса авторизации
-GET http://localhost:8000/users/login HTTP/1.1
-Content-Type: application/json
-
-{
-   "email": "pro_user@test.loc"
-}
-
-###
-
 ## Авторизация пользователя
 POST http://localhost:8000/users/login HTTP/1.1
 Content-Type: application/json
@@ -17,6 +7,16 @@ Content-Type: application/json
 {
    "email": "ironman@stark-industries.loc",
    "password": "IlonMask123"
+}
+
+###
+
+## Проверка статуса авторизации
+GET http://localhost:8000/users/login HTTP/1.1
+Content-Type: application/json
+
+{
+   "email": "pro_user@test.loc"
 }
 
 ###

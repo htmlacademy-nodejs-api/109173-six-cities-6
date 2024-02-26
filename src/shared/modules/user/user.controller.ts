@@ -69,7 +69,10 @@ export class UserController extends BaseController implements ControllerAddition
       path: '/login',
       method: HttpMethod.GET,
       handler: this.checkStatus,
-      middlewares: [ new ValidateDTOMiddleware(CheckUserStatusDTO) ]
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateDTOMiddleware(CheckUserStatusDTO)
+      ]
     });
     this.addRoute({
       path: '/login',
@@ -112,12 +115,19 @@ export class UserController extends BaseController implements ControllerAddition
     this.created(res, userRDO);
   }
 
-  public async checkStatus(_req: Request, _res: Response): Promise<void> {
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      ErrorText.NOT_IMPLEMENTED,
-      this.getControllerName()
-    );
+  public async checkStatus({ tokenPayload }: Request, _res: Response): Promise<void> {
+    const { email } = tokenPayload;
+    const user = await this.userService.findByEmail(email);
+
+    if(!user) {
+      throw new HttpError(
+        StatusCodes.UNAUTHORIZED,
+        `${ErrorText.NOT_AUTHORIZED}: ${email}`,
+        this.getControllerName()
+      );
+    }
+
+    this.ok(_res, fillDTO(LoggedUserRDO, user));
   }
 
   public async login({ body }: LoginUserRequest, _res: Response): Promise<void> {
