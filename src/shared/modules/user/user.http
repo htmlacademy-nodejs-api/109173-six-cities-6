@@ -40,7 +40,7 @@ Content-Type: application/json
 ###
 
 ## Загрузка аватарки для пользоваетля
-POST http://localhost:8000/users/65d873b334fd77cd329cdc5b/avatar HTTP/1.1
+POST http://localhost:8000/users/avatar HTTP/1.1
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI2NWQ4NzM1MTM0ZmQ3N2NkMzI5Y2RjNTgiLCJuYW1lIjoiUm9iZXJ0IERvd25leSIsImVtYWlsIjoiaXJvbm1hbkBzdGFyay1pbmR1c3RyaWVzLmxvYyIsImF2YXRhclVybCI6IkQ6XFxPcGVuU2VydmVyXFxkb21haW5zXFxzaXgtY2l0aWVzLm5vZGUubG9jXFx1cGxvYWRcXHVzZXItYXZhdGFyLmNKZDlkQ1U3MHB2VU56aUQ2Z0tJNy5qcGVnIiwiaXNQcm8iOnRydWUsImZhdm9yaXRlT2ZmZXJzIjpbXSwiZXhwIjoxNzA5MTQ1ODI0LCJpYXQiOjE3MDg5NzMwMjR9.Q6j2hHrHiJFozXhk8qwmvQfwBGib2t0RSDldEfUqm9I
 

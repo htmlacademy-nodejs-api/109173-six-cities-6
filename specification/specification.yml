@@ -76,6 +76,9 @@ paths: #API
       summary: Редактирование предолжения
       description: Редактирует предложение, существующее на сервере и принадлежащее конкретному пользователю
 
+      parameters:
+        - $ref: '#/components/parameters/authorizationParam'
+
       requestBody:
         description: Информация для обновления предложения
 
@@ -142,18 +145,16 @@ paths: #API
                 schema:
                   $ref: '#/components/schemas/offers'
 
-  /offers/favorites/{userId}:
+  /offers/favorites/:
     get:
       tags:
         - offers
       summary: Получение списки избранных предложений пользователя
       description: Возвращает список педложений с флагом isFavorite (только для авторизованных пользователей)
 
-      requestBody:
-        content:
-          application-json:
-            schema:
-              $ref: '#/components/schemas/token'
+      parameters:
+        - $ref: '#/components/parameters/authorizationParam'
+
       responses:
         '200':
           description: Список предложений успешно загружен
@@ -170,6 +171,23 @@ paths: #API
         - offers
       summary: Изменение статуса избранного
       description: Изменяет статус избранного у переданного предложения
+
+      parameters:
+        - $ref: '#/components/parameters/authorizationParam'
+        - name: offerId
+          description: Идентификатор предложения
+          in: path
+          required: true
+          schema:
+            type: string
+
+        - name: status
+          description: Статус предложения (1 - в избранном. 0 - не в избранном)
+          in: path
+          required: true
+          schema:
+            type: number
+
 
       requestBody:
         content:
@@ -234,6 +252,14 @@ paths: #API
         - comments
       summary: Получение списка комментариев
       description: Возвращает список из 50 последних комментариев для определенного предложения, отсортированных по дате публикации (по убыванию)
+
+      parameters:
+        - name: offerId
+          description: Идентификатор предложения
+          in: path
+          required: true
+          schema:
+            type: string
 
       responses:
         '200':
@@ -313,16 +339,26 @@ paths: #API
       summary: Сброс авторизации пользователя
       description: Разавторизует авторизованного пользователя на сервере
 
-      requestBody:
-        content:
-          application-json:
-            schema:
-              $ref: '#/components/schemas/token'
+      parameters:
+        - $ref: '#/components/parameters/authorizationParam'
 
       responses:
         '204':
           description: Пользователь успешно разавторизован
 
+  /users/avatar:
+    post:
+      tags:
+        - users
+      summary: Загрузка аватара для пользователя
+      description: Разавторизует авторизованного пользователя на сервере
+
+      parameters:
+        - $ref: '#/components/parameters/authorizationParam'
+
+      responses:
+        '201':
+          description: Аватар успешно загружен
 
 
 components:
@@ -614,3 +650,14 @@ components:
           type: string
           description: Авторизационный токен пользователя
           example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+
+  parameters:
+    authorizationParam:
+      name: Authorization
+      in: header
+      description: Валидный авторизационный JWT-Токен пользователя
+      required: true
+      schema:
+        type: string
+      example: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI2NWQ4NzM1MTM0ZmQ3N2NkMzI5Y2RjNTgiLCJuYW1lIjoiUm9iZXJ0IERvd25leSIsImVtYWlsIjoiaXJvbm1hbkBzdGFyay1pbmR1c3RyaWVzLmxvYyIsImF2YXRhclVybCI6IkQ6XFxPcGVuU2VydmVyXFxkb21haW5zXFxzaXgtY2l0aWVzLm5vZGUubG9jXFx1cGxvYWRcXHVzZXItYXZhdGFyLmNKZDlkQ1U3MHB2VU56aUQ2Z0tJNy5qcGVnIiwiaXNQcm8iOnRydWUsImZhdm9yaXRlT2ZmZXJzIjpbXSwiZXhwIjoxNzA5MTQ1ODI0LCJpYXQiOjE3MDg5NzMwMjR9.Q6j2hHrHiJFozXhk8qwmvQfwBGib2t0RSDldEfUqm9I
+

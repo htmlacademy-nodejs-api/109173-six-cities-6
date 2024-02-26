@@ -22,6 +22,7 @@ import { DocumentExistsMiddleware } from '../../libs/rest/middleware/document-ex
 import { UploadFilesMiddleware } from '../../libs/rest/middleware/upload-files.middleware.js';
 import { AuthService } from '../auth/auth-service.interface.js';
 import { LoggedUserRDO } from './rdo/logged-user.rdo.js';
+import { PrivateRouteMiddleware } from '../../libs/rest/middleware/private-route.middleware.js';
 
 type CreateUserRequest = Request<RequestParams, RequestBody, CreateUserDTO>
 type CheckStatusRequest = Request<RequestParams, RequestBody, CheckUserStatusDTO>
@@ -79,15 +80,15 @@ export class UserController extends BaseController implements ControllerAddition
     this.addRoute({
       path: '/logout',
       method: HttpMethod.POST,
-      handler: this.logout
+      handler: this.logout,
+      middlewares: [ new PrivateRouteMiddleware() ]
     });
     this.addRoute({
-      path: '/:userId/avatar',
+      path: '/avatar',
       method: HttpMethod.POST,
       handler: this.uploadAvatar,
       middlewares: [
-        new ValidateObjectIdMiddleware('userId'),
-        new DocumentExistsMiddleware('userId', this.userService),
+        new PrivateRouteMiddleware(),
         new UploadFilesMiddleware(this.config.get('UPLOAD_FILES_DIRECTORY'), 'user-avatar')
       ]
     });
