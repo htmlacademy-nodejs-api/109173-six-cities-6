@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { Middleware } from './middleware.interface.js';
-import { UserUnauthorizedException } from '../../../modules/auth/errors/user-unauthorized.exceprion.js';
+import { UserUnauthorizedException } from '../../../modules/auth/errors/user-unauthorized.exception.js';
 import { HttpError } from '../error/http-error.js';
 import { StatusCodes } from 'http-status-codes';
 import { jwtVerify } from 'jose';
@@ -37,7 +37,7 @@ export class ParseTokenMiddleware implements Middleware {
       return next();
     }
 
-    const [_, token] = authorization.split(' ');
+    const token = authorization.split(' ')[1];
 
     if(!token) {
       throw new UserUnauthorizedException();
