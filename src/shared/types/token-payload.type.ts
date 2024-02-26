@@ -1,7 +1,7 @@
 
 
 export type TokenPayload = {
-  id: string,
+  userId: string,
   name: string,
   email: string,
   avatarUrl: string,

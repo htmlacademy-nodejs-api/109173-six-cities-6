@@ -34,7 +34,7 @@ export class DefaultAuthService implements AuthService {
     this.logger.info(`${MessageText}: ${user.email}`);
 
     const tokenPayload: TokenPayload = {
-      id: user.id,
+      userId: user.id,
       name: user.name,
       email: user.email,
       avatarUrl: user.avatarUrl,

@@ -25,7 +25,6 @@ import { LoggedUserRDO } from './rdo/logged-user.rdo.js';
 
 type CreateUserRequest = Request<RequestParams, RequestBody, CreateUserDTO>
 type CheckStatusRequest = Request<RequestParams, RequestBody, CheckUserStatusDTO>
-type UploadAvatarRequest = Request<ParamsUserId, RequestBody, undefined>
 type LoginUserRequest = Request<RequestParams, RequestBody, LoginUserDTO>;
 
 const MessageText = {
@@ -150,8 +149,8 @@ export class UserController extends BaseController implements ControllerAddition
     );
   }
 
-  public async uploadAvatar(req: UploadAvatarRequest, res: Response): Promise<void > {
-    const { userId } = req.params;
+  public async uploadAvatar(req: Request, res: Response): Promise<void > {
+    const { userId } = req.tokenPayload;
 
     if(!req.file?.path) {
       throw new HttpError(
