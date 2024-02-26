@@ -10,17 +10,15 @@ import { UserService } from '../user/user-service.interface.js';
 import { TokenPayload } from '../../types/token-payload.type.js';
 import { HttpError } from '../../libs/rest/error/http-error.js';
 import { StatusCodes } from 'http-status-codes';
+import { UserNotFoundException } from './errors/user-not-found.exception.js';
+import { UserIncorrectPasswordException } from './errors/user-incorrect-password.exception.js';
 
 const MessageText = {
   GET_TOKEN: 'Get new token for user'
 } as const;
 
-const ErrorText = {
-  CHECK_USER: 'User not found or incorrect password passed',
-} as const;
-
 @injectable()
-export class DefaultUserAuthService implements AuthService {
+export class DefaultAuthService implements AuthService {
   constructor(
     @inject(Component.Logger) private readonly logger: Logger,
     @inject(Component.Config) private readonly config: RestConfig,
@@ -47,16 +45,16 @@ export class DefaultUserAuthService implements AuthService {
 
   async check(dto: LoginUserDTO): Promise<UserEntity> {
     const user = await this.userService.findByEmail(dto.email);
+
+    if(!user) {
+      throw new UserNotFoundException();
+    }
+
     const salt = this.config.get('SALT');
+    const checkUser = user.checkPassword(user.password, salt);
 
-    if(!user || user.checkPassword(user.password, salt)) {
-      this.logger.warn(`${ErrorText.CHECK_USER}: ${dto.email}`);
-
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        ErrorText.CHECK_USER,
-        this.getEntityName()
-      );
+    if(!checkUser) {
+      throw new UserIncorrectPasswordException();
     }
 
     return user;
