@@ -37,7 +37,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI2NWQ4NzM1MTM0ZmQ3N2NkM
 ## Создание предолжения
 POST http://localhost:8000/offers/ HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI2NWQ1ZjRiMzYyZDU5ZmNmZDAzY2Q4MGIiLCJuYW1lIjoiUm9iZXJ0IERvd25leSIsImVtYWlsIjoiaXJvbm1hbkBzdGFyay1pbmR1c3RyaWVzLmxvYyIsImF2YXRhclVybCI6IkQ6XFxPcGVuU2VydmVyXFxkb21haW5zXFxzaXgtY2l0aWVzLm5vZGUubG9jXFx1cGxvYWRcXHVzZXItYXZhdGFyLlpjdTRvVWR1Y2hnbUpnMnhFWlNlQi5qcGVnIiwiaXNQcm8iOnRydWUsImZhdm9yaXRlT2ZmZXJzIjpbIjY1YzM1MzlmMTc3YTJhZDNkNTI5ZjAwYyIsIjY1YzM1MzlmMTc3YTJhZDNkNTI5ZjAxYyJdLCJleHAiOjE3MDkwMzM0OTQsImlhdCI6MTcwOTAzMjg5NH0.-e5CdTTMqYRjN6bdd2t9n3ls3llU_i9JgEOMnjEU49E
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI2NWQ1ZjRiMzYyZDU5ZmNmZDAzY2Q4MGIiLCJuYW1lIjoiUm9iZXJ0IERvd25leSIsImVtYWlsIjoiaXJvbm1hbkBzdGFyay1pbmR1c3RyaWVzLmxvYyIsImF2YXRhclVybCI6IkQ6XFxPcGVuU2VydmVyXFxkb21haW5zXFxzaXgtY2l0aWVzLm5vZGUubG9jXFx1cGxvYWRcXHVzZXItYXZhdGFyLlpjdTRvVWR1Y2hnbUpnMnhFWlNlQi5qcGVnIiwiaXNQcm8iOnRydWUsImZhdm9yaXRlT2ZmZXJzIjpbIjY1YzM1MzlmMTc3YTJhZDNkNTI5ZjAwYyIsIjY1YzM1MzlmMTc3YTJhZDNkNTI5ZjAxYyJdLCJleHAiOjE3MDkyMTYxOTYsImlhdCI6MTcwOTA0MzM5Nn0.ahcAe3XW-0jtRyyHVNSvr2Ijh6XJOmxtJ_E21RXEMe0
 
 {
   "name": "A-frame in mountines",
@@ -55,7 +55,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI2NWQ1ZjRiMzYyZDU5ZmNmZ
   ],
   "isPremium": true,
   "isFavorite": true,
-  "rating": 1,
+  "rating": 1.0,
   "type": "house",
   "rooms": 1,
   "guests": 10,

@@ -29,7 +29,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   })
   public description!: string;
 
-  @prop({ required: true })
+  @prop({ required: true, default: new Date().toISOString() })
   public date!: string;
 
   @prop({
@@ -45,7 +45,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({ required: true })
   public previewImage!: string;
 
-  @prop({ type: () => [String] })
+  @prop({ type: () => [String], required: true })
   public images!: string[];
 
   @prop({ required: true })

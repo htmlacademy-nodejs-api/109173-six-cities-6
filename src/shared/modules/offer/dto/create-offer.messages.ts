@@ -26,7 +26,7 @@ export const OfferErrorText = {
     INVALID_BOOL: '$property must be a valid Boolean value (true / false)'
   },
   rating: {
-    NOT_INTEGER: '$property must be an integer',
+    INCORRECT: '$property must be an integer, or decimal with 1 number after comma ( 1 | 0.1 | 1,0 | 1.2)',
     MIN: '$property must be not less than $constraint1',
     MAX: '$property must be not more than $constraint1',
   },

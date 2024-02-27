@@ -14,6 +14,6 @@ Content-Type: application/json
 ###
 
 ## Получение списка комментариев для предложения
-GET http://localhost:8000/comments/65c3539f177a2ad3d529f012/ HTTP/1.1
+GET http://localhost:8000/comments/65cf1f6d7757251173e040c1/ HTTP/1.1
 
 ###

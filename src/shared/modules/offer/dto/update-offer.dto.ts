@@ -3,6 +3,7 @@ import {
   IsArray,
   IsBoolean,
   IsDateString,
+  IsDecimal,
   IsIn,
   IsInt,
   IsMongoId,
@@ -13,6 +14,7 @@ import {
   MaxLength,
   Min,
   MinLength,
+  ValidateNested,
 } from 'class-validator';
 
 import { City, citiesList } from '../../../types/city-type.enum.js';
@@ -22,6 +24,8 @@ import { OfferType, offersTypeList } from '../../../types/offer-type.enum.js';
 import { Images } from '../../../types/offer.type.js';
 import { OfferProps } from '../offer.constant.js';
 import { OfferErrorText } from './create-offer.messages.js';
+import { Type } from 'class-transformer';
+import { CoordinatesValidation } from './create-offer.dto.js';
 
 export class UpdateOfferDTO {
   @MaxLength(OfferProps.name.MAX_LENGTH, { message: OfferErrorText.name.MAX })
@@ -65,7 +69,7 @@ export class UpdateOfferDTO {
 
   @Max(OfferProps.rating.MAX, { message: OfferErrorText.rating.MAX })
   @Min(OfferProps.rating.MIN, { message: OfferErrorText.rating.MIN })
-  @IsInt({ message: OfferErrorText.rating.NOT_INTEGER })
+  @IsDecimal({}, { message: OfferErrorText.rating.INCORRECT })
   @IsOptional()
   public rating?: number;
 
@@ -106,7 +110,8 @@ export class UpdateOfferDTO {
   @IsOptional()
   public commentCount?: number;
 
-  @IsObject({ message: OfferErrorText.coordinates.NOT_OBJECT })
+  @ValidateNested()
+  @Type(() => CoordinatesValidation)
   @IsOptional()
   public coordinates?: Coordinate;
 }

@@ -5,6 +5,7 @@ import {
   IsBoolean,
   IsEmail,
   IsMongoId,
+  IsOptional,
   IsString,
   MaxLength,
   MinLength
@@ -23,6 +24,7 @@ export class CreateUserDTO implements User {
   public email!: string;
 
   @IsString()
+  @IsOptional()
   public avatarUrl!: string;
 
   @MaxLength(UserProps.password.MAX_LENGTH, { message: UserErrorText.password.MAX })
