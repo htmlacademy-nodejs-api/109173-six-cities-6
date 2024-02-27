@@ -120,8 +120,8 @@ export class OfferController extends BaseController implements ControllerAdditio
       handler: this.update,
       middlewares: [
         new ValidateObjectIdMiddleware('offerId'),
+        new ValidateDTOMiddleware(UpdateOfferDTO),
         new DocumentExistsMiddleware('offerId', this.offerService),
-        new ValidateDTOMiddleware(UpdateOfferDTO)
       ]
     });
     this.addRoute({

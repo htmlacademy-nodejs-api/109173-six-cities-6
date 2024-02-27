@@ -53,7 +53,7 @@ Content-Type: application/json
   "isFavorite": true,
   "rating": 1,
   "type": "house",
-  "rooms": 1,
+  "rooms": 0,
   "guests": 10,
   "price": 99999,
   "facilities": [
@@ -65,7 +65,7 @@ Content-Type: application/json
   "userId": "65c3539f177a2ad3d529f005",
   "commentCount": 0,
   "coordinates": {
-    "latitude": "-45.85385926781092",
+    "latitude": "123",
     "longitude": "170.52722928703474"
   }
 }

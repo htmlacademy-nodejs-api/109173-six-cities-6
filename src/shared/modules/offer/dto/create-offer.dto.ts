@@ -5,15 +5,18 @@ import {
   IsDateString,
   IsIn,
   IsInt,
+  IsLatitude,
+  IsLongitude,
   IsMongoId,
-  IsObject,
   IsString,
   Max,
   MaxLength,
   Min,
   MinLength,
+  ValidateNested,
 } from 'class-validator';
 
+import { Type } from 'class-transformer';
 import { citiesList, City } from '../../../types/city-type.enum.js';
 import { facilitiesTypeList, FacilitiesType } from '../../../types/facilities-type.enum.js';
 import { OfferType, offersTypeList } from '../../../types/offer-type.enum.js';
@@ -21,6 +24,14 @@ import { Images } from '../../../types/offer.type.js';
 import { OfferProps } from '../offer.constant.js';
 import { OfferErrorText } from './create-offer.messages.js';
 import { Coordinate } from '../../../types/coordinate.type.js';
+
+class CoordinatesValidation {
+  @IsLatitude({ message: OfferErrorText.coordinates.NOT_LATITUDE })
+  public latitude!: string;
+
+  @IsLongitude({ message: OfferErrorText.coordinates.NOT_LONGTITUDE })
+  public longitude!: string;
+}
 
 export class CreateOfferDTO {
   @MaxLength(OfferProps.name.MAX_LENGTH, { message: OfferErrorText.name.MAX })
@@ -89,7 +100,9 @@ export class CreateOfferDTO {
   @IsInt({ message: OfferErrorText.commentCount.NOT_INTEGER })
   public commentCount!: number;
 
-  @IsObject({ message: OfferErrorText.coordinates.NOT_OBJECT })
+  // @IsObject({ message: OfferErrorText.coordinates.NOT_OBJECT })
   // TODO: Не работает @ValidateNested() - разобрать позже
+  @ValidateNested()
+  @Type(() => CoordinatesValidation)
   public coordinates!: Coordinate;
 }
