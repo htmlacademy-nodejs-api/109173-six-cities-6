@@ -32,6 +32,7 @@ import { ControllerAdditionalInterface } from '../../libs/rest/controller/contro
 import { ValidateDTOMiddleware } from '../../libs/rest/middleware/validate-dto.middleware.js';
 import { DocumentExistsMiddleware } from '../../libs/rest/middleware/document-exists.middleware.js';
 import { PrivateRouteMiddleware } from '../../libs/rest/middleware/private-route.middleware.js';
+import { CityCoordinates } from '../../types/city-coordinates.enum.js';
 
 const MessageText = {
   INIT_CONTROLLER: 'Controller initialized'
@@ -161,6 +162,8 @@ export class OfferController extends BaseController implements ControllerAdditio
   }
 
   public async create({ body }: CreateOfferRequest, res: Response): Promise<void> {
+    body.coordinates = CityCoordinates[body.city];
+
     const offer = await this.offerService.create(body);
 
     this.created(res, fillDTO(OfferRDO, offer));

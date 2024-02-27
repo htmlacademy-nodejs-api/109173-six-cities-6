@@ -8,6 +8,7 @@ import {
   IsLatitude,
   IsLongitude,
   IsMongoId,
+  IsOptional,
   IsString,
   Max,
   MaxLength,
@@ -100,8 +101,6 @@ export class CreateOfferDTO {
   @IsInt({ message: OfferErrorText.commentCount.NOT_INTEGER })
   public commentCount!: number;
 
-  // @IsObject({ message: OfferErrorText.coordinates.NOT_OBJECT })
-  // TODO: Не работает @ValidateNested() - разобрать позже
   @ValidateNested()
   @Type(() => CoordinatesValidation)
   public coordinates!: Coordinate;
