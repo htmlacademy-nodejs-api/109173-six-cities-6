@@ -3,7 +3,7 @@ import { Component } from '../../types/component.enum.js';
 import { Logger } from '../../libs/logger/logger.interface.js';
 
 import { BaseController } from '../../libs/rest/controller/base-controller.abstract.js';
-import { FoundOffer, OfferService } from './offer-service.interface.js';
+import { FoundOffer, OfferDoc, OfferService } from './offer-service.interface.js';
 import { CommentService } from '../comment/comment-service.interface.js';
 import { UserService } from '../user/user-service.interface.js';
 
@@ -142,13 +142,10 @@ export class OfferController extends BaseController implements ControllerAdditio
     const { limit } = query;
     const offersLimit = limit ? Number(limit) : undefined;
 
-    let offers = null;
+    let offers = await this.offerService.find(offersLimit);
 
-    if(tokenPayload) {
-      const { userId } = tokenPayload;
-      offers = await this.userService.getFavoriteOffers(userId);
-    } else {
-      offers = await this.offerService.find(offersLimit);
+    if(offers !== null) {
+      offers = this.setFavoriteFlags(offers, tokenPayload?.favoriteOffers ?? []);
     }
 
     this.ok(res, fillDTO(OffersListItemRDO, offers));
@@ -250,5 +247,21 @@ export class OfferController extends BaseController implements ControllerAdditio
     }
 
     return offer;
+  }
+
+  private setFavoriteFlags(offers: OfferDoc[], userFavoriteOffers: string[]): OfferDoc[] {
+    offers?.map((offer) => {
+      let isFavorite = false;
+
+      if(userFavoriteOffers.length > 0) {
+        isFavorite = userFavoriteOffers.includes(offer.id);
+      }
+
+      offer.isFavorite = isFavorite;
+
+      return offer;
+    });
+
+    return offers;
   }
 }

@@ -10,5 +10,5 @@ SALT=0945j-[sdpfoh]
 UPLOAD_FILES_DIRECTORY=D:\OpenServer\domains\six-cities.node.loc\upload
 JWT_SECRET=skgj-03948hsk
 JWT_SECRET_REFRESH=jgnso823h4lw23-0[]
-JWT_EXPIRED=10min
+JWT_EXPIRED=2d
 JWT_ALGORITHM=HS256
