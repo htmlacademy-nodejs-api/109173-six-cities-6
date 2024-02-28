@@ -70,6 +70,7 @@ export class CreateOfferDTO {
   @Max(OfferProps.rating.MAX, { message: OfferErrorText.rating.MAX })
   @Min(OfferProps.rating.MIN, { message: OfferErrorText.rating.MIN })
   @IsNumber({ maxDecimalPlaces: 1 }, { message: OfferErrorText.rating.INCORRECT })
+  @IsOptional()
   public rating!: number;
 
   @IsIn(offersTypeList, { message: OfferErrorText.type.INVALID })
@@ -105,5 +106,6 @@ export class CreateOfferDTO {
 
   @ValidateNested()
   @Type(() => CoordinatesValidation)
+  @IsOptional()
   public coordinates!: Coordinate;
 }

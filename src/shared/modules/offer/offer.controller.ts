@@ -33,6 +33,7 @@ import { ValidateDTOMiddleware } from '../../libs/rest/middleware/validate-dto.m
 import { DocumentExistsMiddleware } from '../../libs/rest/middleware/document-exists.middleware.js';
 import { PrivateRouteMiddleware } from '../../libs/rest/middleware/private-route.middleware.js';
 import { CityCoordinates } from '../../types/city-coordinates.enum.js';
+import { OfferProps } from './offer.constant.js';
 
 const MessageText = {
   INIT_CONTROLLER: 'Controller initialized'

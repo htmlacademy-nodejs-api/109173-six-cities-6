@@ -14,6 +14,7 @@ export const OfferProps = {
     MIN_COUNT: 6
   },
   rating: {
+    DEFAULT: 0,
     MIN: 1,
     MAX: 5,
   },
