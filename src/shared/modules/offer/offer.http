@@ -55,7 +55,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI2NWQ1ZjRiMzYyZDU5ZmNmZ
   ],
   "isPremium": true,
   "isFavorite": true,
-  "rating": 1.0,
+  "rating": 1.2,
   "type": "house",
   "rooms": 1,
   "guests": 10,

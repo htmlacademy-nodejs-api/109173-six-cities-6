@@ -3,15 +3,14 @@ import {
   IsArray,
   IsBoolean,
   IsDateString,
-  IsDecimal,
   IsIn,
   IsInt,
   IsLatitude,
   IsLongitude,
   IsMongoId,
+  IsNumber,
   IsOptional,
   IsString,
-  Matches,
   Max,
   MaxLength,
   Min,
@@ -70,7 +69,7 @@ export class CreateOfferDTO {
 
   @Max(OfferProps.rating.MAX, { message: OfferErrorText.rating.MAX })
   @Min(OfferProps.rating.MIN, { message: OfferErrorText.rating.MIN })
-  @Matches(/^\d([,|.]\d){0,1}$/, { message: OfferErrorText.rating.INCORRECT })
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: OfferErrorText.rating.INCORRECT })
   public rating!: number;
 
   @IsIn(offersTypeList, { message: OfferErrorText.type.INVALID })
