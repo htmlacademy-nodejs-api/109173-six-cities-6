@@ -40,6 +40,7 @@ const MessageText = {
 
 const ErrorText = {
   NOT_FOUND: 'Offer with requested ID not found',
+  CANT_EDIT: 'You haven`t permit to edit this offer as you didn`t create it',
   CITY_NOT_FOUND: 'Not found premium offers for city',
   USER_NOT_FOUND: 'User with requested ID not found '
 } as const;
@@ -71,18 +72,48 @@ export class OfferController extends BaseController implements ControllerAdditio
   }
 
   public registerRoutes() {
-    this.addRoute({
+    this.addRoute({ // Получение списка предложения
       path: '/',
       method: HttpMethod.GET,
       handler: this.getList
     });
-    this.addRoute({
+    this.addRoute({ // Создание предложения
       path: '/',
       method: HttpMethod.POST,
       handler: this.create,
       middlewares: [
-        new PrivateRouteMiddleware(),
+        new PrivateRouteMiddleware(), // (только авторизованные юзеры)
         new ValidateDTOMiddleware(CreateOfferDTO)
+      ]
+    });
+    this.addRoute({ // Получение детальной информации о предложении
+      path: '/:offerId',
+      method: HttpMethod.GET,
+      handler: this.getItem,
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware('offerId', this.offerService)
+      ]
+    });
+    this.addRoute({ // Редактирование предложения
+      path: '/:offerId',
+      method: HttpMethod.PATCH,
+      handler: this.update,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('offerId'),
+        new ValidateDTOMiddleware(UpdateOfferDTO),
+        new DocumentExistsMiddleware('offerId', this.offerService),
+      ]
+    });
+    this.addRoute({ // Удаление предложения
+      path: '/:offerId',
+      method: HttpMethod.DELETE,
+      handler: this.deleteWithComments,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware('offerId', this.offerService)
       ]
     });
     this.addRoute({
@@ -105,36 +136,6 @@ export class OfferController extends BaseController implements ControllerAdditio
       path: '/premium/:cityName',
       method: HttpMethod.GET,
       handler: this.getPremiumByCityName
-    });
-    this.addRoute({
-      path: '/:offerId',
-      method: HttpMethod.GET,
-      handler: this.getItem,
-      middlewares: [
-        new ValidateObjectIdMiddleware('offerId'),
-        new DocumentExistsMiddleware('offerId', this.offerService)
-      ]
-    });
-    this.addRoute({
-      path: '/:offerId',
-      method: HttpMethod.PATCH,
-      handler: this.update,
-      middlewares: [
-        new PrivateRouteMiddleware(),
-        new ValidateObjectIdMiddleware('offerId'),
-        new ValidateDTOMiddleware(UpdateOfferDTO),
-        new DocumentExistsMiddleware('offerId', this.offerService),
-      ]
-    });
-    this.addRoute({
-      path: '/:offerId',
-      method: HttpMethod.DELETE,
-      handler: this.deleteWithComments,
-      middlewares: [
-        new PrivateRouteMiddleware(),
-        new ValidateObjectIdMiddleware('offerId'),
-        new DocumentExistsMiddleware('offerId', this.offerService)
-      ]
     });
   }
 
@@ -166,8 +167,19 @@ export class OfferController extends BaseController implements ControllerAdditio
     this.created(res, fillDTO(OfferRDO, offer));
   }
 
-  public async update({ body, params }: UpdateOfferRequest, res: Response): Promise<void> {
+  public async update({ body, params, tokenPayload }: UpdateOfferRequest, res: Response): Promise<void> {
+    const { userId } = tokenPayload;
     const { offerId } = params;
+    const isUserCanEdit = await this.offerService.isUserCanEdit(userId, offerId);
+
+    if(!isUserCanEdit) {
+      throw new HttpError(
+        StatusCodes.FORBIDDEN,
+        `${ErrorText.CANT_EDIT}: ${offerId}`,
+        this.getControllerName()
+      );
+    }
+
     const updatedOffer = await this.offerService.updateById(offerId, body);
 
     this.ok(res, fillDTO(OfferRDO, updatedOffer));

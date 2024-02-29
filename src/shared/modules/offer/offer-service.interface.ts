@@ -25,4 +25,5 @@ export interface OfferService extends ServiceEntityName {
   incCommentsCount(id: string): FoundOffer;
   countRatingAndComments(id: string): Promise<OfferRatingComments | void>;
   updateRatingAndComments(id: string): FoundOffer;
+  isUserCanEdit(offerId: string, userId: string): Promise<boolean>
 }

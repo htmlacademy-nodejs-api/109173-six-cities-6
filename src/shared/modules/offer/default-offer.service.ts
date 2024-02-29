@@ -150,4 +150,11 @@ export class DefaultOfferService implements OfferService, DocumentExists {
 
     return await this.updateById(id, { rating, commentCount });
   }
+
+  public async isUserCanEdit(userId: string, offerId: string): Promise<boolean> {
+    const offer = await this.offerModel.findById(offerId);
+    const isUserCanEdit = (String(offer?.userId) === userId);
+
+    return isUserCanEdit;
+  }
 }
