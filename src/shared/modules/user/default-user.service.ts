@@ -3,13 +3,12 @@ import { CreateUserDTO, UserEntity } from './index.js';
 import { inject, injectable } from 'inversify';
 import { Logger } from '../../libs/logger/logger.interface.js';
 import { Component } from '../../types/component.enum.js';
-import { FoundUser, UserDoc, UserService, UserToken } from './user-service.interface.js';
+import { FoundUser, UserDoc, UserService } from './user-service.interface.js';
 import { types } from '@typegoose/typegoose';
 import { UpdateUserDTO } from './dto/update-user.dto.js';
 import { FoundOffers } from '../offer/offer-service.interface.js';
 import mongoose from 'mongoose';
 import { DocumentExists } from '../../types/document-exists.interface.js';
-
 const MessageText = {
   ADDED: 'New user successfully added. Email:',
 } as const;
@@ -45,20 +44,6 @@ export class DefaultUserService implements UserService, DocumentExists {
     const user = await this.userModel.exists({ _id: userId });
 
     return user !== null;
-  }
-
-  public async logout(token: UserToken): Promise<void> {
-    const user = await this.userModel
-      .findOne({ token })
-      .exec();
-
-    if(user) {
-      const dto: UpdateUserDTO = {
-        token: ''
-      };
-
-      this.updateById(user.id, dto);
-    }
   }
 
   public async checkAuthStatus(email: string): FoundUser {

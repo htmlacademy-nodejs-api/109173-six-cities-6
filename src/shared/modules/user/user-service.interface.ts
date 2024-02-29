@@ -13,7 +13,6 @@ export type FoundUser = Promise<UserDoc | null>
 export interface UserService extends ServiceEntityName {
   create(dto: CreateUserDTO, salt: string): Promise<UserDoc>;
   updateById(id: string, dto: UpdateUserDTO): FoundUser;
-  logout(token: UserToken): void;
   checkAuthStatus(email: string): FoundUser;
   findById(id: string): FoundUser;
   findByEmail(email: string): FoundUser;
