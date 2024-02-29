@@ -84,7 +84,7 @@ npm run json-server
 
 В процессе запуска проекта будет создан тесовый json-server, который будет отдавать моковые данные при обращении по адресу `http://localhost:3000/api`  
 Офферы: `http://localhost:3000/api/offers/`  
-Пользователя: `http://localhost:3000/api/users`  
+Пользователи: `http://localhost:3000/api/users`  
 Данные для сервера находятся в директории `/src/mocks/`, файл `mock-server-data.json`
 
 
@@ -130,10 +130,10 @@ npm run ts ./src/main.cli.ts -- --help
 npm run ts ./src/main.cli.ts -- --version
 ```
 
-#### Генерация моковых данных (должен быть предварительно-запущен моковый json-сервер):
+#### Генерация моковых данных (должен быть предварительно запущен [моковый json-сервер](#запустить-тестовый-json-сервер)):
 
 ```bash
-npm run ts ./src/main.cli.ts — —generate <mocks-count> <tsv-file-path> <json-server-address>
+npm run ts ./src/main.cli.ts — —generate **<mocks-count>** **<tsv-file-path>** **<json-server-address>**
 ```
 
 ***Пример:***
@@ -145,7 +145,7 @@ npm run ts ./src/main.cli.ts — —generate 10 ./src/mocks/mocks-data.tsv http:
 #### Парсинг файла с моковыми данными, сгенерированными командой —generate с дальнейшим занемением их в БД:
 
 ```bash
-npm run ts ./src/main.cli.ts — —import <tsv-file-path> <mongodb-connection-str>
+npm run ts ./src/main.cli.ts — —import **<tsv-file-path>** **<mongodb-connection-str>**
 ```
 
 ***Пример:***
@@ -154,11 +154,12 @@ npm run ts ./src/main.cli.ts — —import <tsv-file-path> <mongodb-connection-s
 npm run ts ./src/main.cli.ts — —import ./src/mocks/mocks-data.tsv mongodb://admin:test@127.0.0.1:27017/six-cities_mongodb?authSource=admin
 ```
 
-***Параметры команд:***
-- <mocks-count> (число) - Количество генерируемых комлектов данных  
-- <tsv-file-path> - Путь к .tsv файлу, в который будет происходить запись сгенерированных данных  
-- <json-server-address> - URL-адрес, на котором запущен тестовый json-server  
-- <mongodb-connection-str> - Корректная строка для подключения к mongodb  
+***Параметры команд:***  
+***(при указании параметров угловые скобки опускаются)***
+- `<mocks-count>`(число) - Количество генерируемых комлектов данных  
+- `<tsv-file-path>` - Путь к .tsv файлу, в который будет происходить запись сгенерированных данных  
+- `<json-server-address>` - URL-адрес, на котором запущен тестовый json-server  
+- `<mongodb-connection-str>` - Корректная строка для подключения к mongodb  
 
 
 
