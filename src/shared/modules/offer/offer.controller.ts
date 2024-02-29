@@ -40,7 +40,7 @@ const MessageText = {
 
 const ErrorText = {
   NOT_FOUND: 'Offer with requested ID not found',
-  CANT_EDIT: 'You haven`t permit to edit this offer as you didn`t create it',
+  CANT_EDIT: 'You haven`t permit to edit/delete this offer as you didn`t create it',
   CITY_NOT_FOUND: 'Not found premium offers for city',
   USER_NOT_FOUND: 'User with requested ID not found '
 } as const;
@@ -167,28 +167,22 @@ export class OfferController extends BaseController implements ControllerAdditio
     this.created(res, fillDTO(OfferRDO, offer));
   }
 
-  public async update({ body, params, tokenPayload }: UpdateOfferRequest, res: Response): Promise<void> {
-    const { userId } = tokenPayload;
-    const { offerId } = params;
-    const isUserCanEdit = await this.offerService.isUserCanEdit(userId, offerId);
+  public async update(req: UpdateOfferRequest, res: Response): Promise<void> {
+    const { offerId } = req.params;
+    const { body } = req;
 
-    if(!isUserCanEdit) {
-      throw new HttpError(
-        StatusCodes.FORBIDDEN,
-        `${ErrorText.CANT_EDIT}: ${offerId}`,
-        this.getControllerName()
-      );
-    }
+    await this.checkUserRights(req);
 
     const updatedOffer = await this.offerService.updateById(offerId, body);
 
     this.ok(res, fillDTO(OfferRDO, updatedOffer));
   }
 
-  public async delete({ params }: DeleteOfferRequest, res: Response): Promise<void> {
-    const { offerId } = params;
+  public async delete(req: DeleteOfferRequest, res: Response): Promise<void> {
+    const { offerId } = req.params;
     const offer = await this.exists(offerId as string);
 
+    await this.checkUserRights(req);
     await this.offerService.deleteById(offerId);
 
     this.noContent(res, fillDTO(GetOfferDTO, offer));
@@ -199,6 +193,7 @@ export class OfferController extends BaseController implements ControllerAdditio
     const { offerId } = params;
     const offer = await this.getItem(req, res);
 
+    await this.checkUserRights(req);
     await this.offerService.deleteById(offerId);
     await this.commentService.deleteByOfferId(offerId);
 
@@ -275,5 +270,21 @@ export class OfferController extends BaseController implements ControllerAdditio
     });
 
     return offers;
+  }
+
+  private async checkUserRights({ params, tokenPayload }: UpdateOfferRequest | DeleteOfferRequest): Promise<boolean> {
+    const { userId } = tokenPayload;
+    const { offerId } = params;
+    const isUserCanEdit = await this.offerService.isUserCanEdit(userId, offerId);
+
+    if(!isUserCanEdit) {
+      throw new HttpError(
+        StatusCodes.FORBIDDEN,
+        `${ErrorText.CANT_EDIT}: ${offerId}`,
+        this.getControllerName()
+      );
+    }
+
+    return true;
   }
 }
