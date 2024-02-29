@@ -6,7 +6,6 @@ import { FacilitiesType, FacilitiesTypes } from '../../types/facilities-type.enu
 import { UserEntity } from '../user/user.entity.js';
 import { OfferErrorText } from './dto/create-offer.messages.js';
 import { OfferProps } from './offer.constant.js';
-import { CityCoordinates } from '../../types/city-coordinates.enum.js';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export interface OfferEntity extends defaultClasses.Base {}

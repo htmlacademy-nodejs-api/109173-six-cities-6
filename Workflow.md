@@ -82,9 +82,9 @@ npm run start:dev
 npm run json-server
 ```
 
-В процессе запуска проекта будет создан тесовый json-server, который будет отдавать моковые данные при обращении по адресу http://localhost:3000/api
-Офферы: http://localhost:3000/api/offers/
-Пользователя: http://localhost:3000/api/users
+В процессе запуска проекта будет создан тесовый json-server, который будет отдавать моковые данные при обращении по адресу `http://localhost:3000/api`  
+Офферы: `http://localhost:3000/api/offers/`  
+Пользователя: `http://localhost:3000/api/users`  
 Данные для сервера находятся в директории `/src/mocks/`, файл `mock-server-data.json`
 
 
@@ -94,58 +94,71 @@ npm run json-server
 docker compose --file ./docker-compose.dev.yml --env-file ./.env --project-name "six-cities" up -d
 ```
 
-Данная команда сконфигурирует Docker-контейнер для приложения, а также развернет в нем образ mongodb и mongo-express для работы с базой данных.
+Данная команда сконфигурирует Docker-контейнер для приложения, а также развернет в нем образ mongodb и mongo-express для работы с базой данных.  
 Конфигурационный файл docker-compose.dev-yml расположен в корне проекта.
 
 #### Переменные окружения
 
-PORT=8000 - Порт, на котором запускается сервер приложения
-SERVER_HOST=http://localhost - Хост, на котором запускается сервер
-DB_HOST=127.0.0.1 - Хост, на котором развернута база данных
-DB_PORT=27017 - Порт, на котором развернута база данных
-DB_NAME=six-cities_mongodb - Название БД в MondoDB
-DB_NAME_EXPRESS=six-cities_mongo_express - Наименовение UI, используемого для доступа к БД через браузер
-DB_USER=admin - Логин пользователя к используемой базе данных (MongoDB)
-DB_PASSWORD=test - Пароль пользователя к используемой базе данных (MongoDB)
-SALT=[ogj=-2049jt] - Соль, используемая для формирования хэша паролей пользователей
-UPLOAD_FILES_DIRECTORY=С:\some\path\six-cities.loc\upload - Директория загрузки пользовательских файлов
-JWT_SECRET=ih-034thf0p9it43 - Секрет для формирования JWT-токенов
-JWT_SECRET_REFRESH=dpojfg-045j9g0 - Секрет для обновления JWT-токенов
-JWT_EXPIRED=2d - Время жизни сформированных токенов
-JWT_ALGORITHM=HS256 - Алгоритм, используемый для шифрования JWT-токенов
+PORT=8000 - Порт, на котором запускается сервер приложения  
+SERVER_HOST=http://localhost - Хост, на котором запускается сервер  
+DB_HOST=127.0.0.1 - Хост, на котором развернута база данных  
+DB_PORT=27017 - Порт, на котором развернута база данных  
+DB_NAME=six-cities_mongodb - Название БД в MondoDB  
+DB_NAME_EXPRESS=six-cities_mongo_express - Наименовение UI, используемого для доступа к БД через браузер  
+DB_USER=admin - Логин пользователя к используемой базе данных (MongoDB)  
+DB_PASSWORD=test - Пароль пользователя к используемой базе данных (MongoDB)  
+SALT=[ogj=-2049jt] - Соль, используемая для формирования хэша паролей пользователей  
+UPLOAD_FILES_DIRECTORY=С:\some\path\six-cities.loc\upload - Директория загрузки пользовательских файлов  
+JWT_SECRET=ih-034thf0p9it43 - Секрет для формирования JWT-токенов  
+JWT_SECRET_REFRESH=dpojfg-045j9g0 - Секрет для обновления JWT-токенов  
+JWT_EXPIRED=2d - Время жизни сформированных токенов  
+JWT_ALGORITHM=HS256 - Алгоритм, используемый для шифрования JWT-токенов  
 
 Примеры переменных окружения также представлены в файле .env.example
 
 ## Работа с CLI-приложением
 
-* Список доступных команд:
+#### Список доступных команд:
 
+```bash
 npm run ts ./src/main.cli.ts -- --help
+```
 
+#### Версия приложения:
 
-* Версия приложения:
-
+```bash
 npm run ts ./src/main.cli.ts -- --version
+```
 
+#### Генерация моковых данных (должен быть предварительно-запущен моковый json-сервер):
 
-* Генерация моковых данных (должен быть предварительно-запущен моковый json-сервер):
-
+```bash
 npm run ts ./src/main.cli.ts — —generate <mocks-count> <tsv-file-path> <json-server-address>
+```
 
-Пример: npm run ts ./src/main.cli.ts — —generate 10 ./src/mocks/mocks-data.tsv http://localhost:3000/api
+***Пример:***
 
+```bash
+npm run ts ./src/main.cli.ts — —generate 10 ./src/mocks/mocks-data.tsv http://localhost:3000/api
+```
 
-* Парсинг файла с моковыми данными, сгенерированными командой —generate с дальнейшим занемением их в БД:
+#### Парсинг файла с моковыми данными, сгенерированными командой —generate с дальнейшим занемением их в БД:
 
+```bash
 npm run ts ./src/main.cli.ts — —import <tsv-file-path> <mongodb-connection-str>
+```
 
-Пример: npm run ts ./src/main.cli.ts — —import ./src/mocks/mocks-data.tsv mongodb://admin:test@127.0.0.1:27017/six-cities_mongodb?authSource=admin
+***Пример:***
 
-Параметры команд:
-<mocks-count> (число) - Количество генерируемых комлектов данных
-<tsv-file-path> - Путь к .tsv файлу, в который будет происходить запись сгенерированных данных
-<json-server-address> - URL-адрес, на котором запущен тестовый json-server
-<mongodb-connection-str> - Корректная строка для подключения к mongodb
+```bash
+npm run ts ./src/main.cli.ts — —import ./src/mocks/mocks-data.tsv mongodb://admin:test@127.0.0.1:27017/six-cities_mongodb?authSource=admin
+```
+
+***Параметры команд:***
+- <mocks-count> (число) - Количество генерируемых комлектов данных  
+- <tsv-file-path> - Путь к .tsv файлу, в который будет происходить запись сгенерированных данных  
+- <json-server-address> - URL-адрес, на котором запущен тестовый json-server  
+- <mongodb-connection-str> - Корректная строка для подключения к mongodb  
 
 
 
