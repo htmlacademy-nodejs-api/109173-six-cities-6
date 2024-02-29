@@ -16,7 +16,7 @@
     "compile": "tsc -p tsconfig.json",
     "clean": "rimraf dist",
     "ts": "node --loader ts-node/esm",
-    "mock:json-server": "json-server ./src/mocks/mocks-server-data.json"
+    "json-server": "json-server ./src/mocks/mocks-server-data.json"
   },
   "devDependencies": {
     "@types/convict": "6.1.6",
