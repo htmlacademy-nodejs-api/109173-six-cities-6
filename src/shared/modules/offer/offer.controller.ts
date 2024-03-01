@@ -179,21 +179,23 @@ export class OfferController extends BaseController implements ControllerAdditio
   }
 
   public async delete(req: DeleteOfferRequest, res: Response): Promise<void> {
+    await this.checkUserRights(req);
+
     const { offerId } = req.params;
     const offer = await this.exists(offerId as string);
 
-    await this.checkUserRights(req);
     await this.offerService.deleteById(offerId);
 
     this.noContent(res, fillDTO(GetOfferDTO, offer));
   }
 
   public async deleteWithComments(req: GetOfferRequest, res: Response): Promise<void> {
+    await this.checkUserRights(req);
+
     const { params }: GetOfferRequest = req;
     const { offerId } = params;
-    const offer = await this.getItem(req, res);
+    const offer = await this.offerService.findById(offerId);
 
-    await this.checkUserRights(req);
     await this.offerService.deleteById(offerId);
     await this.commentService.deleteByOfferId(offerId);
 
@@ -279,12 +281,12 @@ export class OfferController extends BaseController implements ControllerAdditio
 
     if(!isUserCanEdit) {
       throw new HttpError(
-        StatusCodes.FORBIDDEN,
+        StatusCodes.UNAUTHORIZED,
         `${ErrorText.CANT_EDIT}: ${offerId}`,
         this.getControllerName()
       );
     }
 
-    return true;
+    return isUserCanEdit;
   }
 }
