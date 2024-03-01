@@ -30,7 +30,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   })
   public description!: string;
 
-  @prop({ required: true, default: new Date().toISOString() })
+  @prop({ required: true})
   public date!: string;
 
   @prop({

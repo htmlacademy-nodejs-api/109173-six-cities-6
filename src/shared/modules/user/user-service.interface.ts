@@ -14,11 +14,15 @@ export interface UserService extends ServiceEntityName {
   create(dto: CreateUserDTO, salt: string): Promise<UserDoc>;
   updateById(id: string, dto: UpdateUserDTO): FoundUser;
   checkAuthStatus(email: string): FoundUser;
+
   findById(id: string): FoundUser;
   findByEmail(email: string): FoundUser;
   findOrCreate(dto: CreateUserDTO, salt: string): Promise<UserDoc>;
-  addToFavoritesIds(userId: string, offerId: string): FoundUser;
-  getFavoriteIds(userId: string): Promise<string[] | []>;
+
   getFavoriteOffers(userId: string): FoundOffers;
+  addToFavoritesIds(userId: string, offerId: string): FoundUser;
+  removeFromFavoritesIds(userId: string, offerId: string): FoundUser
+  getFavoriteIds(userId: string): Promise<string[] | []>;
+
   exists(userId: string): Promise<boolean>;
 }

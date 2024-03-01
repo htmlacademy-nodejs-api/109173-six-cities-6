@@ -75,7 +75,17 @@ export class DefaultUserService implements UserService, DocumentExists {
 
     userFavorites.push(offerId);
 
-    return await this.userModel.findByIdAndUpdate(userId, { favoriteOffers: userFavorites });
+    return await this.userModel
+      .findByIdAndUpdate(userId, { favoriteOffers: userFavorites });
+  }
+
+  public async removeFromFavoritesIds(userId: string, offerId: string): FoundUser {
+    const userFavorites: string[] = await this.getFavoriteIds(userId);
+
+    userFavorites.filter((id) => id !== offerId);
+
+    return await this.userModel
+      .findByIdAndUpdate(userId, { favoriteOffers: userFavorites });
   }
 
   public async getFavoriteIds(userId: string): Promise<string[] | []> {

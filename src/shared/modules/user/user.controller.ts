@@ -20,10 +20,18 @@ import { UploadFilesMiddleware } from '../../libs/rest/middleware/upload-files.m
 import { AuthService } from '../auth/auth-service.interface.js';
 import { LoggedUserRDO } from './rdo/logged-user.rdo.js';
 import { PrivateRouteMiddleware } from '../../libs/rest/middleware/private-route.middleware.js';
+import { OfferRDO } from '../offer/rdo/offer.rdo.js';
+import { ParamsUserId } from '../../libs/rest/types/params-userid.type .js';
+import { GetOfferDTO } from '../offer/dto/get-offer.dto.js';
+import { ValidateObjectIdMiddleware } from '../../libs/rest/middleware/validate-objectid.middleware.js';
+import { ParamsOfferId } from '../../libs/rest/types/params-offerid.type.js';
 
 type CreateUserRequest = Request<RequestParams, RequestBody, CreateUserDTO>
 type CheckStatusRequest = Request<RequestParams, RequestBody, CheckUserStatusDTO>
 type LoginUserRequest = Request<RequestParams, RequestBody, LoginUserDTO>;
+type GetFavoriteOffersRequest = Request<ParamsUserId, RequestBody, GetOfferDTO>
+type AddToFavoritesRequest = Request<ParamsOfferId, RequestBody, undefined>
+type RemoveFromFavoritesRequest = Request<ParamsOfferId, RequestBody, undefined>
 
 const MessageText = {
   INIT_CONTROLLER: 'Controller initialized'
@@ -90,6 +98,30 @@ export class UserController extends BaseController implements ControllerAddition
       middlewares: [
         new PrivateRouteMiddleware(),
         new UploadFilesMiddleware(this.config.get('UPLOAD_FILES_DIRECTORY'), 'user-avatar')
+      ]
+    });
+    this.addRoute({
+      path: '/favorites',
+      method: HttpMethod.GET,
+      handler: this.uploadAvatar,
+      middlewares: [ new PrivateRouteMiddleware() ]
+    });
+    this.addRoute({
+      path: '/favorites/:offerId',
+      method: HttpMethod.POST,
+      handler: this.uploadAvatar,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('offerId')
+      ]
+    });
+    this.addRoute({
+      path: '/favorites/:offerId',
+      method: HttpMethod.DELETE,
+      handler: this.removeFromFavorites,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('offerId')
       ]
     });
   }
@@ -170,5 +202,29 @@ export class UserController extends BaseController implements ControllerAddition
 
     await this.userService.updateById(userId, { avatarUrl: req.file.path});
     return this.created(res, req.file?.path);
+  }
+
+  public async getFavorites({ tokenPayload }: GetFavoriteOffersRequest, res: Response): Promise<void> {
+    const { userId } = tokenPayload;
+
+    const offers = await this.userService.getFavoriteOffers(userId);
+
+    this.ok(res, fillDTO(OfferRDO, offers));
+  }
+
+  public async addToFavorites({ params, tokenPayload }: AddToFavoritesRequest, res: Response): Promise<void> {
+    const { offerId } = params;
+    const { userId } = tokenPayload;
+    const updatedUser = await this.userService.addToFavoritesIds(userId, offerId);
+
+    this.ok(res, fillDTO(UserRDO, updatedUser));
+  }
+
+  public async removeFromFavorites({ params, tokenPayload }: RemoveFromFavoritesRequest, res: Response): Promise<void> {
+    const { offerId } = params;
+    const { userId } = tokenPayload;
+    const updatedUser = await this.userService.removeFromFavoritesIds(userId, offerId);
+
+    this.ok(res, fillDTO(UserRDO, updatedUser));
   }
 }

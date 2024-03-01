@@ -52,8 +52,8 @@ export class DefaultCommentService implements CommentService, DocumentExists {
   public async find(offerId: string, commentsCount: number = COMMENTS_COUNT): FoundComments {
     return await this.commentModel
       .find({ offerId })
-      .limit(commentsCount)
       .sort({ createdAt: SortType.DOWN })
+      .limit(commentsCount)
       .exec();
   }
 

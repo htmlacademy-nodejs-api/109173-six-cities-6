@@ -16,7 +16,6 @@ import { RequestBody, RequestParams } from '../../libs/rest/types/request.type.j
 import { City } from '../../types/city-type.enum.js';
 import { ParamsCityName } from '../../libs/rest/types/params-cityName.type.js';
 import { ParamsFavoriteStatus } from '../../libs/rest/types/params-favorite-status.type.js';
-import { ParamsUserId } from '../../libs/rest/types/params-userid.type .js';
 import { ParamsOfferId } from '../../libs/rest/types/params-offerid.type.js';
 
 import { CreateOfferDTO } from './dto/create-offer.dto.js';
@@ -32,7 +31,7 @@ import { ControllerAdditionalInterface } from '../../libs/rest/controller/contro
 import { ValidateDTOMiddleware } from '../../libs/rest/middleware/validate-dto.middleware.js';
 import { DocumentExistsMiddleware } from '../../libs/rest/middleware/document-exists.middleware.js';
 import { PrivateRouteMiddleware } from '../../libs/rest/middleware/private-route.middleware.js';
-import { CityCoordinates } from '../../types/city-coordinates.enum.js';
+import { getCoordinatesByCity } from '../../../utils/offer.js';
 
 const MessageText = {
   INIT_CONTROLLER: 'Controller initialized'
@@ -50,7 +49,6 @@ type CreateOfferRequest = Request<RequestParams, RequestBody, CreateOfferDTO>;
 type UpdateOfferRequest = Request<ParamsOfferId, RequestBody, UpdateOfferDTO>
 type DeleteOfferRequest = Request<ParamsOfferId, RequestBody, GetOfferDTO>
 type GetPremiumOffers = Request<ParamsCityName, RequestBody, GetOfferDTO>
-type GetFavoriteOffers = Request<ParamsUserId, RequestBody, GetOfferDTO>
 type ChangeFavoriteStatus = Request<ParamsFavoriteStatus, RequestBody, GetOfferDTO>
 
 @injectable()
@@ -86,6 +84,27 @@ export class OfferController extends BaseController implements ControllerAdditio
         new ValidateDTOMiddleware(CreateOfferDTO)
       ]
     });
+    this.addRoute({
+      path: '/favorites/',
+      method: HttpMethod.GET,
+      handler: this.getFavoritesByUserId,
+      middlewares: [ new PrivateRouteMiddleware() ]
+    });
+    this.addRoute({
+      path: '/favorites/:offerId/:status',
+      method: HttpMethod.PATCH,
+      handler: this.changeFavoriteStatus,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware('offerId', this.offerService)
+      ]
+    });
+    this.addRoute({
+      path: '/premium/:cityName',
+      method: HttpMethod.GET,
+      handler: this.getPremiumByCityName
+    });
     this.addRoute({ // Получение детальной информации о предложении
       path: '/:offerId',
       method: HttpMethod.GET,
@@ -116,27 +135,6 @@ export class OfferController extends BaseController implements ControllerAdditio
         new DocumentExistsMiddleware('offerId', this.offerService)
       ]
     });
-    this.addRoute({
-      path: '/favorites/',
-      method: HttpMethod.GET,
-      handler: this.getFavoritesByUserId,
-      middlewares: [ new PrivateRouteMiddleware() ]
-    });
-    this.addRoute({
-      path: '/favorites/:offerId/:status',
-      method: HttpMethod.PATCH,
-      handler: this.changeFavoriteStatus,
-      middlewares: [
-        new PrivateRouteMiddleware(),
-        new ValidateObjectIdMiddleware('offerId'),
-        new DocumentExistsMiddleware('offerId', this.offerService)
-      ]
-    });
-    this.addRoute({
-      path: '/premium/:cityName',
-      method: HttpMethod.GET,
-      handler: this.getPremiumByCityName
-    });
   }
 
   public async getList({ query, tokenPayload }: Request, res: Response): Promise<void> {
@@ -160,7 +158,8 @@ export class OfferController extends BaseController implements ControllerAdditio
   }
 
   public async create({ body }: CreateOfferRequest, res: Response): Promise<void> {
-    body.coordinates = CityCoordinates[body.city];
+    body.coordinates = getCoordinatesByCity(body.city);
+    body.date = new Date().toISOString();
 
     const offer = await this.offerService.create(body);
 
@@ -202,22 +201,22 @@ export class OfferController extends BaseController implements ControllerAdditio
     this.ok(res, offer);
   }
 
-  public async getFavoritesByUserId({ tokenPayload }: GetFavoriteOffers, res: Response): Promise<void> {
-    const { userId } = tokenPayload;
-    const user = await this.userService.exists(userId);
+  // public async getFavoritesByUserId({ tokenPayload }: GetFavoriteOffers, res: Response): Promise<void> {
+  //   const { userId } = tokenPayload;
+  //   const user = await this.userService.exists(userId);
 
-    if(!user) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `${ErrorText.NOT_FOUND}: ${userId}`,
-        this.getControllerName()
-      );
-    }
+  //   if(!user) {
+  //     throw new HttpError(
+  //       StatusCodes.NOT_FOUND,
+  //       `${ErrorText.NOT_FOUND}: ${userId}`,
+  //       this.getControllerName()
+  //     );
+  //   }
 
-    const offers = await this.userService.getFavoriteOffers(userId);
+  //   const offers = await this.userService.getFavoriteOffers(userId);
 
-    this.ok(res, fillDTO(OfferRDO, offers));
-  }
+  //   this.ok(res, fillDTO(OfferRDO, offers));
+  // }
 
   public async getPremiumByCityName({ params }: GetPremiumOffers, res: Response): Promise<void> {
     const { cityName } = params;
