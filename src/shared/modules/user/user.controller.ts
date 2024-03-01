@@ -1,30 +1,35 @@
 import { inject, injectable } from 'inversify';
+
 import { Logger } from '../../libs/logger/logger.interface.js';
-import { BaseController } from '../../libs/rest/controller/base-controller.abstract.js';
 import { Component } from '../../types/component.enum.js';
 import { Request, Response } from 'express';
 import { RequestBody, RequestParams } from '../../libs/rest/types/request.type.js';
 import { HttpMethod } from '../../libs/rest/types/http-method.enum.js';
-import { UserService } from './user-service.interface.js';
-import { CreateUserDTO } from './index.js';
-import { fillDTO } from '../../../utils/common.js';
-import { UserRDO } from './rdo/user.rdo.js';
-import { RestConfig } from '../../libs/config/rest.config.js';
 import { HttpError } from '../../libs/rest/error/http-error.js';
 import { StatusCodes } from 'http-status-codes';
-import { CheckUserStatusDTO } from './dto/check-user-status.dto.js';
-import { ControllerAdditionalInterface } from '../../libs/rest/controller/controller-additional.interface.js';
-import { ValidateDTOMiddleware } from '../../libs/rest/middleware/validate-dto.middleware.js';
-import { LoginUserDTO } from './dto/login-user.dto.js';
-import { UploadFilesMiddleware } from '../../libs/rest/middleware/upload-files.middleware.js';
+
+import { BaseController } from '../../libs/rest/controller/base-controller.abstract.js';
+import { UserService } from './user-service.interface.js';
+import { RestConfig } from '../../libs/config/rest.config.js';
 import { AuthService } from '../auth/auth-service.interface.js';
-import { LoggedUserRDO } from './rdo/logged-user.rdo.js';
+
+import { ControllerAdditionalInterface } from '../../libs/rest/controller/controller-additional.interface.js';
+import { UploadFilesMiddleware } from '../../libs/rest/middleware/upload-files.middleware.js';
+import { ValidateDTOMiddleware } from '../../libs/rest/middleware/validate-dto.middleware.js';
 import { PrivateRouteMiddleware } from '../../libs/rest/middleware/private-route.middleware.js';
-import { OfferRDO } from '../offer/rdo/offer.rdo.js';
-import { ParamsUserId } from '../../libs/rest/types/params-userid.type .js';
-import { GetOfferDTO } from '../offer/dto/get-offer.dto.js';
 import { ValidateObjectIdMiddleware } from '../../libs/rest/middleware/validate-objectid.middleware.js';
+
+import { ParamsUserId } from '../../libs/rest/types/params-userid.type .js';
 import { ParamsOfferId } from '../../libs/rest/types/params-offerid.type.js';
+
+import { LoggedUserRDO } from './rdo/logged-user.rdo.js';
+import { UserRDO } from './rdo/user.rdo.js';
+import { OffersListItemRDO } from '../offer/rdo/offers-list-item.rdo.js';
+import { LoginUserDTO } from './dto/login-user.dto.js';
+import { CheckUserStatusDTO } from './dto/check-user-status.dto.js';
+import { CreateUserDTO } from './index.js';
+import { fillDTO } from '../../../utils/common.js';
+import { GetOfferDTO } from '../offer/dto/get-offer.dto.js';
 
 type CreateUserRequest = Request<RequestParams, RequestBody, CreateUserDTO>
 type CheckStatusRequest = Request<RequestParams, RequestBody, CheckUserStatusDTO>
@@ -100,22 +105,22 @@ export class UserController extends BaseController implements ControllerAddition
         new UploadFilesMiddleware(this.config.get('UPLOAD_FILES_DIRECTORY'), 'user-avatar')
       ]
     });
-    this.addRoute({
+    this.addRoute({ // Получение списка избранных предложений пользователя
       path: '/favorites',
       method: HttpMethod.GET,
-      handler: this.uploadAvatar,
+      handler: this.getFavorites,
       middlewares: [ new PrivateRouteMiddleware() ]
     });
-    this.addRoute({
+    this.addRoute({ // Добавление предложения в список избранного у пользователя
       path: '/favorites/:offerId',
       method: HttpMethod.POST,
-      handler: this.uploadAvatar,
+      handler: this.addToFavorites,
       middlewares: [
         new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId')
       ]
     });
-    this.addRoute({
+    this.addRoute({ // Удаление предложения из списка избранного у пользователя
       path: '/favorites/:offerId',
       method: HttpMethod.DELETE,
       handler: this.removeFromFavorites,
@@ -209,7 +214,7 @@ export class UserController extends BaseController implements ControllerAddition
 
     const offers = await this.userService.getFavoriteOffers(userId);
 
-    this.ok(res, fillDTO(OfferRDO, offers));
+    this.ok(res, fillDTO(OffersListItemRDO, offers));
   }
 
   public async addToFavorites({ params, tokenPayload }: AddToFavoritesRequest, res: Response): Promise<void> {

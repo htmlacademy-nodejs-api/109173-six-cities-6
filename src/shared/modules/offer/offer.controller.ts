@@ -85,22 +85,6 @@ export class OfferController extends BaseController implements ControllerAdditio
       ]
     });
     this.addRoute({
-      path: '/favorites/',
-      method: HttpMethod.GET,
-      handler: this.getFavoritesByUserId,
-      middlewares: [ new PrivateRouteMiddleware() ]
-    });
-    this.addRoute({
-      path: '/favorites/:offerId/:status',
-      method: HttpMethod.PATCH,
-      handler: this.changeFavoriteStatus,
-      middlewares: [
-        new PrivateRouteMiddleware(),
-        new ValidateObjectIdMiddleware('offerId'),
-        new DocumentExistsMiddleware('offerId', this.offerService)
-      ]
-    });
-    this.addRoute({
       path: '/premium/:cityName',
       method: HttpMethod.GET,
       handler: this.getPremiumByCityName
@@ -201,23 +185,6 @@ export class OfferController extends BaseController implements ControllerAdditio
     this.ok(res, offer);
   }
 
-  // public async getFavoritesByUserId({ tokenPayload }: GetFavoriteOffers, res: Response): Promise<void> {
-  //   const { userId } = tokenPayload;
-  //   const user = await this.userService.exists(userId);
-
-  //   if(!user) {
-  //     throw new HttpError(
-  //       StatusCodes.NOT_FOUND,
-  //       `${ErrorText.NOT_FOUND}: ${userId}`,
-  //       this.getControllerName()
-  //     );
-  //   }
-
-  //   const offers = await this.userService.getFavoriteOffers(userId);
-
-  //   this.ok(res, fillDTO(OfferRDO, offers));
-  // }
-
   public async getPremiumByCityName({ params }: GetPremiumOffers, res: Response): Promise<void> {
     const { cityName } = params;
     const offers = await this.offerService.getPremiumByCity(cityName as City);
@@ -231,16 +198,6 @@ export class OfferController extends BaseController implements ControllerAdditio
     }
 
     this.ok(res, fillDTO(OfferRDO, offers));
-  }
-
-  public async changeFavoriteStatus({ params }: ChangeFavoriteStatus, res: Response): Promise<void> {
-    const { offerId, status } = params;
-
-    await this.exists(offerId);
-
-    const updatedOffer = await this.offerService.changeFavoriteStatus(offerId, Number(status));
-
-    this.ok(res, fillDTO(OfferDetailRDO, updatedOffer));
   }
 
   private async exists(offerId: string): FoundOffer {

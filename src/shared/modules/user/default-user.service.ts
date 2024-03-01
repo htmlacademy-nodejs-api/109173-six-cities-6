@@ -36,7 +36,7 @@ export class DefaultUserService implements UserService, DocumentExists {
 
   public async updateById(id: string, dto: UpdateUserDTO): FoundUser {
     return await this.userModel
-      .findByIdAndUpdate(id, dto, {new: true})
+      .findByIdAndUpdate(id, dto, { new: true })
       .exec();
   }
 
@@ -53,7 +53,7 @@ export class DefaultUserService implements UserService, DocumentExists {
   }
 
   public async findById(id: string): FoundUser {
-    return await this.userModel.findById({ id }).exec();
+    return await this.userModel.findById(id).exec();
   }
 
   public async findByEmail(email: string): FoundUser {
@@ -71,21 +71,40 @@ export class DefaultUserService implements UserService, DocumentExists {
   }
 
   public async addToFavoritesIds(userId: string, offerId: string): FoundUser {
-    const userFavorites: string[] = await this.getFavoriteIds(userId);
+    const user = await this.findById(userId);
+    const userFavorites: string[] = user?.favoriteOffers ?? [];
+
+    if(userFavorites.includes(offerId)) {
+      return user;
+    }
 
     userFavorites.push(offerId);
 
     return await this.userModel
-      .findByIdAndUpdate(userId, { favoriteOffers: userFavorites });
+      .findByIdAndUpdate(
+        userId,
+        { favoriteOffers: userFavorites },
+        { new: true }
+      );
   }
 
   public async removeFromFavoritesIds(userId: string, offerId: string): FoundUser {
-    const userFavorites: string[] = await this.getFavoriteIds(userId);
+    console.log('USER: ', userId);
+    const user = await this.findById(userId);
+    const userFavorites: string[] = user?.favoriteOffers ?? [];
 
-    userFavorites.filter((id) => id !== offerId);
+    if(!userFavorites.includes(offerId)) {
+      return user;
+    }
+
+    const updatedFavorites = userFavorites.filter((usersOfferID) => usersOfferID !== offerId);
 
     return await this.userModel
-      .findByIdAndUpdate(userId, { favoriteOffers: userFavorites });
+      .findByIdAndUpdate(
+        userId,
+        { favoriteOffers: updatedFavorites },
+        { new: true }
+      );
   }
 
   public async getFavoriteIds(userId: string): Promise<string[] | []> {
