@@ -25,6 +25,7 @@ import { ParamsOfferId } from '../../libs/rest/types/params-offerid.type.js';
 import { LoggedUserRDO } from './rdo/logged-user.rdo.js';
 import { UserRDO } from './rdo/user.rdo.js';
 import { OffersListItemRDO } from '../offer/rdo/offers-list-item.rdo.js';
+import { CheckUserStatusRDO } from './rdo/check-user-status.rdo.js';
 import { LoginUserDTO } from './dto/login-user.dto.js';
 import { CheckUserStatusDTO } from './dto/check-user-status.dto.js';
 import { CreateUserDTO } from './index.js';
@@ -92,7 +93,7 @@ export class UserController extends BaseController implements ControllerAddition
     });
     this.addRoute({
       path: '/logout',
-      method: HttpMethod.POST,
+      method: HttpMethod.GET,
       handler: this.logout,
       middlewares: [ new PrivateRouteMiddleware() ]
     });
@@ -161,7 +162,7 @@ export class UserController extends BaseController implements ControllerAddition
       );
     }
 
-    this.ok(_res, fillDTO(LoggedUserRDO, user));
+    this.ok(_res, fillDTO(CheckUserStatusRDO, user));
   }
 
   public async login({ body }: LoginUserRequest, _res: Response): Promise<void> {
@@ -175,13 +176,14 @@ export class UserController extends BaseController implements ControllerAddition
     this.ok(_res, responseData);
   }
 
-  public async logout({ body }: CheckStatusRequest, _res: Response): Promise<void> {
-    const user = await this.userService.findByEmail(body.email);
+  public async logout({ tokenPayload }: Request, _res: Response): Promise<void> {
+    const { email } = tokenPayload;
+    const user = await this.userService.findByEmail(email);
 
     if(!user) {
       throw new HttpError(
         StatusCodes.UNAUTHORIZED,
-        `${ErrorText.NOT_FOUND}: ${body.email}`,
+        `${ErrorText.NOT_FOUND}: ${email}`,
         this.getControllerName()
       );
     }
