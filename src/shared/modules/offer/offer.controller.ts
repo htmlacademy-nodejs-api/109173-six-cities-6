@@ -141,8 +141,6 @@ export class OfferController extends BaseController implements ControllerAdditio
   }
 
   public async create({ body }: CreateOfferRequest, res: Response): Promise<void> {
-    // body.coordinates = getCoordinatesByCity(body.city);
-
     const offer = await this.offerService.create(body);
 
     this.created(res, fillDTO(OfferRDO, offer));

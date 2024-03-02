@@ -79,10 +79,10 @@ paths: #API
 
       parameters:
         - $ref: '#/components/parameters/authorizationParam'
+        - $ref: '#/components/parameters/offerId'
 
       requestBody:
         description: Информация для обновления предложения
-
         content:
           application-json:
             schema:
@@ -110,6 +110,10 @@ paths: #API
       summary: Удаление предолжения
       description: Удаляет предложение, существующее на сервере и принадлежащее конкретному пользователю
 
+      parameters:
+        - $ref: '#/components/parameters/authorizationParam'
+        - $ref: '#/components/parameters/offerId'
+
       responses:
         '204':
           description: Предложение успешно удалено
@@ -123,6 +127,9 @@ paths: #API
       summary: Информация о предложении
       description: Предоставляет детальную информацию о предложении
 
+      parameters:
+        - $ref: '#/components/parameters/offerId'
+
       responses:
         '200':
           description: Информация о предложении успешно загружена
@@ -133,12 +140,16 @@ paths: #API
         '404':
           description: Предложение с указанным ID не найдено
 
-  /offers/{cityId}:
+  /offers/{cityName}:
       get:
         tags:
           - offers
         summary: Получение премиальных предложений города
-        description: Возвращает список из 3 педложений с флагом isPremium для города с переданным ID, отсортированных по дате (по убыванию)
+        description: Возвращает список из 3 педложений с флагом isPremium для города, отсортированных по дате (по убыванию)
+
+        parameters:
+        - $ref: '#/components/parameters/cityName'
+
 
         responses:
           '200':
@@ -147,6 +158,8 @@ paths: #API
               application-json:
                 schema:
                   $ref: '#/components/schemas/offers'
+          '404':
+            description: Предложения для города не найдены
 
   /comments:
     post:
@@ -161,15 +174,15 @@ paths: #API
         content:
           application-json:
             schema:
-              $ref: '#/components/schemas/newComment'
+              $ref: '#/components/schemas/comment'
 
       responses:
         '200':
-          description: Список комментариев успешно загружен
+          description: Комментарий успешно добавлен
           content:
             application-json:
               schema:
-                $ref: '#/components/schemas/comments'
+                $ref: '#/components/schemas/comment'
         '404':
           description: Предложение с указанным ID не найдено
         '400':
@@ -185,12 +198,7 @@ paths: #API
       description: Возвращает список из 50 последних комментариев для определенного предложения, отсортированных по дате публикации (по убыванию)
 
       parameters:
-        - name: offerId
-          description: Идентификатор предложения
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/offerId'
 
       responses:
         '200':
@@ -324,13 +332,7 @@ paths: #API
 
       parameters:
         - $ref: '#/components/parameters/authorizationParam'
-        - name: offerId
-          description: Идентификатор предложения
-          in: path
-          required: true
-          example: 65d8741334fd77cd329cdc5f
-          schema:
-            type: string
+        - $ref: '#/components/parameters/offerId'
 
       responses:
         '200':
@@ -361,13 +363,7 @@ paths: #API
 
       parameters:
         - $ref: '#/components/parameters/authorizationParam'
-        - name: offerId
-          description: Идентификатор предложения
-          in: path
-          required: true
-          example: 65d8741334fd77cd329cdc5f
-          schema:
-            type: string
+        - $ref: '#/components/parameters/offerId'
 
       responses:
         '200':
@@ -555,20 +551,14 @@ components:
           minimum: 1
           maximum: 5
           example: 1
-        user:
-          type: object
-          description: Информация об авторе комментария
-          example: {
-            name: 'User One',
-            email: 'someEmail1@email.com',
-            avatarUrl: '/avatar/url3.jpg',
-            password: '123456',
-            isPro: true,
-            favoriteOffers: [
-              "65d873ee34fd77cd329cdc5d",
-              "65d8741334fd77cd329cdc5f"
-            ]
-          }
+        userId:
+          type: string
+          description: Идентификатор пользователя
+          example: 65d5f4b362d59fcfd03cd80b}
+        offerId:
+          type: string
+          description: Идентификатор предложения
+          example: 65cf1f6d7757251173e040c1}
 
     newComment:
       type: object
@@ -577,11 +567,9 @@ components:
       required:
         - date
         - rating
-        - user
+        - userId
+        - offerId
       properties:
-        id:
-          type: string
-          example: b67ddfd5-b953-4a30-8c8d-bd083cd6b62a
         date:
           type: string
           description: Дата публикации комментария в формате ISO
@@ -701,4 +689,19 @@ components:
       schema:
         type: string
       example: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI2NWQ4NzM1MTM0ZmQ3N2NkMzI5Y2RjNTgiLCJuYW1lIjoiUm9iZXJ0IERvd25leSIsImVtYWlsIjoiaXJvbm1hbkBzdGFyay1pbmR1c3RyaWVzLmxvYyIsImF2YXRhclVybCI6IkQ6XFxPcGVuU2VydmVyXFxkb21haW5zXFxzaXgtY2l0aWVzLm5vZGUubG9jXFx1cGxvYWRcXHVzZXItYXZhdGFyLmNKZDlkQ1U3MHB2VU56aUQ2Z0tJNy5qcGVnIiwiaXNQcm8iOnRydWUsImZhdm9yaXRlT2ZmZXJzIjpbXSwiZXhwIjoxNzA5MTQ1ODI0LCJpYXQiOjE3MDg5NzMwMjR9.Q6j2hHrHiJFozXhk8qwmvQfwBGib2t0RSDldEfUqm9I
-
+    offerId:
+      name: offerId
+      description: Идентификатор предложения
+      in: path
+      required: true
+      example: 65d8741334fd77cd329cdc5f
+      schema:
+        type: string
+    cityName:
+      name: cityName
+      description: Название города
+      in: path
+      required: true
+      example: Amsterdam
+      schema:
+        type: string
