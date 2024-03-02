@@ -49,7 +49,6 @@ type CreateOfferRequest = Request<RequestParams, RequestBody, CreateOfferDTO>;
 type UpdateOfferRequest = Request<ParamsOfferId, RequestBody, UpdateOfferDTO>
 type DeleteOfferRequest = Request<ParamsOfferId, RequestBody, GetOfferDTO>
 type GetPremiumOffers = Request<ParamsCityName, RequestBody, GetOfferDTO>
-type ChangeFavoriteStatus = Request<ParamsFavoriteStatus, RequestBody, GetOfferDTO>
 
 @injectable()
 export class OfferController extends BaseController implements ControllerAdditionalInterface {
@@ -142,8 +141,7 @@ export class OfferController extends BaseController implements ControllerAdditio
   }
 
   public async create({ body }: CreateOfferRequest, res: Response): Promise<void> {
-    body.coordinates = getCoordinatesByCity(body.city);
-    body.date = new Date().toISOString();
+    // body.coordinates = getCoordinatesByCity(body.city);
 
     const offer = await this.offerService.create(body);
 

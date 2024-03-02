@@ -106,6 +106,5 @@ export class CreateOfferDTO {
 
   @ValidateNested()
   @Type(() => CoordinatesValidation)
-  @IsOptional()
   public coordinates!: Coordinate;
 }

@@ -58,6 +58,7 @@ paths: #API
           in: query
           required: false
           description: Количество офферов, которое необходимо вернуть (если их > 60)
+          example: 70
           schema:
             type: string
 
@@ -147,78 +148,6 @@ paths: #API
                 schema:
                   $ref: '#/components/schemas/offers'
 
-  /offers/favorites/:
-    get:
-      tags:
-        - offers
-      summary: Получение списки избранных предложений пользователя
-      description: Возвращает список педложений с флагом isFavorite (только для авторизованных пользователей)
-
-      parameters:
-        - $ref: '#/components/parameters/authorizationParam'
-
-      responses:
-        '200':
-          description: Список предложений успешно загружен
-          content:
-            application-json:
-              schema:
-                $ref: '#/components/schemas/offers'
-        '401':
-          description: Список избранных предложений доступен только авторизованным пользователям
-
-  /offers/favorites/{offerId}/{status}:
-    post:
-      tags:
-        - offers
-      summary: Изменение статуса избранного
-      description: Изменяет статус избранного у переданного предложения
-
-      parameters:
-        - $ref: '#/components/parameters/authorizationParam'
-        - name: offerId
-          description: Идентификатор предложения
-          in: path
-          required: true
-          schema:
-            type: string
-
-        - name: status
-          description: Статус предложения (1 - в избранном. 0 - не в избранном)
-          in: path
-          required: true
-          schema:
-            type: number
-
-
-      requestBody:
-        content:
-          application-json:
-            schema:
-              $ref: '#/components/schemas/token'
-
-      responses:
-        '200':
-          description: Статус избранного у предложения успешно изменен
-          content:
-            application-json:
-              schema:
-                $ref: '#/components/schemas/offer'
-        '201':
-          description: Статус избранного у предложения успешно изменен
-          content:
-            application-json:
-              schema:
-                $ref: '#/components/schemas/offer'
-        '401':
-          description: Список избранных предложений доступен только авторизованным пользователям
-        '400':
-          description: Ошибка в теле запроса. Переданы не все необходимые поля
-        '404':
-          description: Предолжение с указанным ID не найдено
-        '409':
-          description: Предолжение уже добавлено в избранное
-
   /comments:
     post:
       tags:
@@ -280,13 +209,20 @@ paths: #API
       summary: Создание пользователя
       description: Регистрирует нового пользователя в системе
 
+      requestBody:
+        description: Информация для создания нового пользователя
+        content:
+          application-json:
+            schema:
+              $ref: '#/components/schemas/createUser'
+
       responses:
         '200':
           description: Пользователь успешно зарегистрирован на сервере
           content:
             application-json:
               schema:
-                $ref: '#/components/schemas/user'
+                $ref: '#/components/schemas/createdUser'
         '400':
           description: Регистрироваться в системе могут только неавторизованные пользователи
 
@@ -309,7 +245,7 @@ paths: #API
           content:
             application-json:
               schema:
-                $ref: '#/components/schemas/token'
+                $ref: '#/components/schemas/loggedUser'
         '400':
           description: Не удалось авторизовать пользователя. Ошибка в теле запроса.
     get:
@@ -318,11 +254,8 @@ paths: #API
       summary: Проверка статуса авторизации пользоавтеля
       description: Проверяет, авторизован ли пользователь на сервере
 
-      requestBody:
-        content:
-          application-json:
-            schema:
-              $ref: '#/components/schemas/token'
+      parameters:
+        - $ref: '#/components/parameters/authorizationParam'
 
       responses:
         '200':
@@ -330,7 +263,7 @@ paths: #API
           content:
             application-json:
               schema:
-                $ref: '#/components/schemas/user'
+                $ref: '#/components/schemas/createdUser'
         '401':
           description: Пользователь не авторизован на сервере
 
@@ -362,6 +295,101 @@ paths: #API
         '201':
           description: Аватар успешно загружен
 
+  /users/favorites/:
+    get:
+      tags:
+        - users
+      summary: Получение списки избранных предложений пользователя
+      description: Возвращает список педложений с флагом isFavorite (только для авторизованных пользователей)
+
+      parameters:
+        - $ref: '#/components/parameters/authorizationParam'
+
+      responses:
+        '200':
+          description: Список предложений успешно загружен
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/offers'
+        '401':
+          description: Список избранных предложений доступен только авторизованным пользователям
+
+  /users/favorites/{offerId}/:
+    post:
+      tags:
+        - users
+      summary: Добавление предложения в избранное
+      description: Добавляет переданное предложение в список избранного у пользователя
+
+      parameters:
+        - $ref: '#/components/parameters/authorizationParam'
+        - name: offerId
+          description: Идентификатор предложения
+          in: path
+          required: true
+          example: 65d8741334fd77cd329cdc5f
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Предложение успешно добавлено в список избранного у пользователя
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/userChangeFavorites'
+        '201':
+          description: Статус избранного у предложения успешно изменен
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/userChangeFavorites'
+        '401':
+          description: Список избранных предложений доступен только авторизованным пользователям
+        '400':
+          description: Ошибка в теле запроса. Переданы не все необходимые поля
+        '404':
+          description: Предолжение с указанным ID не найдено
+        '409':
+          description: Предолжение уже добавлено в избранное
+    delete:
+      tags:
+        - users
+      summary: Удаление предложения из избранного
+      description: Удаляет переданное предложение из списка избранного у пользователя
+
+      parameters:
+        - $ref: '#/components/parameters/authorizationParam'
+        - name: offerId
+          description: Идентификатор предложения
+          in: path
+          required: true
+          example: 65d8741334fd77cd329cdc5f
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Предложение успешно удалено из избранного
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/userChangeFavorites'
+        '201':
+          description: Статус избранного у предложения успешно изменен
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/userChangeFavorites'
+        '401':
+          description: Список избранных предложений доступен только авторизованным пользователям
+        '400':
+          description: Ошибка в теле запроса. Переданы не все необходимые поля
+        '404':
+          description: Предолжение с указанным ID не найдено
+        '409':
+          description: Предолжение не найдено в списке избранных
 
 components:
   schemas:
@@ -375,12 +403,10 @@ components:
           minimum: 10
           maximum: 100
           example: President`s apartament
-
         date:
           type: string
           description: Дата размещения предложения в формате ISO
           example: 2024-02-07T09:55:28.799Z
-
         city:
           type: string
           description: Город, в котором размещено предолжение
@@ -392,29 +418,24 @@ components:
             - 'Hamburg'
             - 'Dusseldorf'
           example: Amsterdam
-
         previewImage:
           type: array
           description: Превью изображения предложения
           example: [/some/photo/preview4.jpg; /some/photo/preview.jpg]
-
         isPremium:
           type: boolean
           description: Флаг, указывающий, является ли предложение премиальным
           example: true
-
         isFavorite:
           type: boolean
           description: Флаг, указывающий, находится ли предложение в избранном
           example: true
-
         rating:
           type: number
           minimum: 1
           maximum: 5
           description: Рейтинг предложения
           example: 3
-
         type:
           type: string
           description: Тип предложения. Представлен одним из 4 вариантов - apartment | house | room | hotel
@@ -424,14 +445,12 @@ components:
             - room
             - hotel
           example: apartment
-
         price:
           type: number
           minimum: 100
           maximum: 100000
           description: Стоимость предложения
           example: 84680
-
         commentCount:
           type: number
           description: Количество комментариев у предложения
@@ -442,7 +461,6 @@ components:
       type: object
       allOf:
         - $ref: '#/components/schemas/offerItem'
-
       required:
         - name
         - description
@@ -460,7 +478,6 @@ components:
         - facilities
         - user
         - coordinates
-
       properties:
         description:
           type: string
@@ -468,26 +485,22 @@ components:
           maximum: 1024
           description: Описание предложения
           example: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam enim quam, mollis vel suscipit
-
         images:
           type: array
           description: Детальные фотографии предложения
           example: [ 'photo11.jpg', 'photo5.jpg', 'photo4.jpg', 'photo10.jpg', 'photo6.jpg', 'photo8.jpg' ]
-
         rooms:
           type: number
           minimum: 1
           maximum: 8
           description: Количество номеров в предложении
           example: 6
-
         guests:
           type: number
           minimum: 1
           maximum: 10
           description: Максимальное количество гостей
           example: 3
-
         facilities:
           type: array
           description: Удобства, представленные в предложении (6 типов)
@@ -500,7 +513,6 @@ components:
             - Towels
             - Fridge
           example: [ 'Baby seat', 'Breakfast' ]
-
         user:
           type: object
           description: Пользователь, разместивший предложение
@@ -511,7 +523,6 @@ components:
             password: '123456',
             isPro: true
           }
-
         coordinates:
           type: object
           description: Координаты предложения
@@ -521,7 +532,6 @@ components:
       type: object
       allOf:
         - $ref: '#/components/schemas/createOffer'
-
       properties:
         id:
           type: string
@@ -529,13 +539,11 @@ components:
 
     offers:
       type: array
-
       items:
         $ref: "#/components/schemas/offerItem"
 
     comment:
       type: object
-
       properties:
         text:
           type: string
@@ -555,7 +563,11 @@ components:
             email: 'someEmail1@email.com',
             avatarUrl: '/avatar/url3.jpg',
             password: '123456',
-            isPro: true
+            isPro: true,
+            favoriteOffers: [
+              "65d873ee34fd77cd329cdc5d",
+              "65d8741334fd77cd329cdc5f"
+            ]
           }
 
     newComment:
@@ -566,7 +578,6 @@ components:
         - date
         - rating
         - user
-
       properties:
         id:
           type: string
@@ -578,13 +589,11 @@ components:
 
     comments:
       type: array
-
       items:
         $ref: '#/components/schemas/newComment'
 
     userBase:
       type: object
-
       properties:
         name:
           type: string
@@ -596,44 +605,75 @@ components:
           type: string
           description: Email-адрес пользователя
           example: ironman@stark-industries.com
-        avatarUrl:
-          type: string
-          description: Ссылка на аватар пользователя
-          example: /tony/stark/images/best_photo,jpg
-        isPro:
-          type: boolean
-          description: Тип пользователя
-          example: true
 
-    user:
+    createUser:
       type: object
       allOf:
         - $ref: '#/components/schemas/userBase'
-        - $ref: '#/components/schemas/token'
-
-    newUser:
-      type: object
-      allOf:
-        - $ref: '#/components/schemas/userBase'
+        - $ref: '#/components/schemas/userAvatar'
+        - $ref: '#/components/schemas/userIsPro'
+        - $ref: '#/components/schemas/userFavorites'
       required:
         - name
         - email
         - password
         - isPro
-
       properties:
         password:
           type: string
           description: Пароль пользователя
-          example: 1qazXSW@3edc
+
+    createdUser:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/userBase'
+        - $ref: '#/components/schemas/userAvatar'
+        - $ref: '#/components/schemas/userIsPro'
+        - $ref: '#/components/schemas/userFavorites'
+
+    loggedUser:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/userBase'
+        - $ref: '#/components/schemas/token'
+
+    userAvatar:
+      type: object
+      properties:
+        avatarUrl:
+            type: string
+            description: Ссылка на аватар пользователя
+            example: /tony/stark/images/best_photo,jpg
+
+    userIsPro:
+      type: object
+      properties:
+        isPro:
+          type: boolean
+          description: Тип пользователя
+          example: true
+
+    userFavorites:
+      type: object
+      properties:
+        favoriteOffers:
+            type: array
+            description: Массив ID избранных предложение пользователя
+            example:
+              - "65d873ee34fd77cd329cdc5d"
+              - "65d8741334fd77cd329cdc5f"
+
+    userChangeFavorites:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/userBase'
+        - $ref: '#/components/schemas/userFavorites'
 
     login:
       type: object
-
       required:
         - email
         - password
-
       properties:
         email:
           type: string
@@ -646,7 +686,6 @@ components:
 
     token:
       type: object
-
       properties:
         token:
           type: string

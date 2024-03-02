@@ -31,9 +31,9 @@ import { CheckUserStatusDTO } from './dto/check-user-status.dto.js';
 import { CreateUserDTO } from './index.js';
 import { fillDTO } from '../../../utils/common.js';
 import { GetOfferDTO } from '../offer/dto/get-offer.dto.js';
+import { UserFavoritesRDO } from './rdo/user-favorites.rdo..js';
 
 type CreateUserRequest = Request<RequestParams, RequestBody, CreateUserDTO>
-type CheckStatusRequest = Request<RequestParams, RequestBody, CheckUserStatusDTO>
 type LoginUserRequest = Request<RequestParams, RequestBody, LoginUserDTO>;
 type GetFavoriteOffersRequest = Request<ParamsUserId, RequestBody, GetOfferDTO>
 type AddToFavoritesRequest = Request<ParamsOfferId, RequestBody, undefined>
@@ -224,7 +224,7 @@ export class UserController extends BaseController implements ControllerAddition
     const { userId } = tokenPayload;
     const updatedUser = await this.userService.addToFavoritesIds(userId, offerId);
 
-    this.ok(res, fillDTO(UserRDO, updatedUser));
+    this.ok(res, fillDTO(UserFavoritesRDO, updatedUser));
   }
 
   public async removeFromFavorites({ params, tokenPayload }: RemoveFromFavoritesRequest, res: Response): Promise<void> {
@@ -232,6 +232,6 @@ export class UserController extends BaseController implements ControllerAddition
     const { userId } = tokenPayload;
     const updatedUser = await this.userService.removeFromFavoritesIds(userId, offerId);
 
-    this.ok(res, fillDTO(UserRDO, updatedUser));
+    this.ok(res, fillDTO(UserFavoritesRDO, updatedUser));
   }
 }
