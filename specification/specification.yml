@@ -702,6 +702,12 @@ components:
       description: Название города
       in: path
       required: true
-      example: Amsterdam
       schema:
         type: string
+        enum:
+          - 'Paris'
+          - 'Cologne'
+          - 'Brussels'
+          - 'Amsterdam'
+          - 'Hamburg'
+          - 'Dusseldorf'
