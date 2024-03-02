@@ -3,7 +3,7 @@ import { Component } from '../../types/component.enum.js';
 import { Logger } from '../../libs/logger/logger.interface.js';
 
 import { BaseController } from '../../libs/rest/controller/base-controller.abstract.js';
-import { FoundOffer, OfferService } from './offer-service.interface.js';
+import { FoundOffer, OfferDoc, OfferService } from './offer-service.interface.js';
 import { CommentService } from '../comment/comment-service.interface.js';
 import { UserService } from '../user/user-service.interface.js';
 
@@ -31,6 +31,9 @@ import { ValidateObjectIdMiddleware } from '../../libs/rest/middleware/validate-
 import { ControllerAdditionalInterface } from '../../libs/rest/controller/controller-additional.interface.js';
 import { ValidateDTOMiddleware } from '../../libs/rest/middleware/validate-dto.middleware.js';
 import { DocumentExistsMiddleware } from '../../libs/rest/middleware/document-exists.middleware.js';
+import { PrivateRouteMiddleware } from '../../libs/rest/middleware/private-route.middleware.js';
+import { CityCoordinates } from '../../types/city-coordinates.enum.js';
+import { OfferProps } from './offer.constant.js';
 
 const MessageText = {
   INIT_CONTROLLER: 'Controller initialized'
@@ -79,23 +82,22 @@ export class OfferController extends BaseController implements ControllerAdditio
       method: HttpMethod.POST,
       handler: this.create,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateDTOMiddleware(CreateOfferDTO)
       ]
     });
     this.addRoute({
-      path: '/favorites/:userId',
+      path: '/favorites/',
       method: HttpMethod.GET,
       handler: this.getFavoritesByUserId,
-      middlewares: [
-        new ValidateObjectIdMiddleware('userId'),
-        new DocumentExistsMiddleware('userId', this.userService)
-      ]
+      middlewares: [ new PrivateRouteMiddleware() ]
     });
     this.addRoute({
       path: '/favorites/:offerId/:status',
       method: HttpMethod.PATCH,
       handler: this.changeFavoriteStatus,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
         new DocumentExistsMiddleware('offerId', this.offerService)
       ]
@@ -119,6 +121,7 @@ export class OfferController extends BaseController implements ControllerAdditio
       method: HttpMethod.PATCH,
       handler: this.update,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
         new ValidateDTOMiddleware(UpdateOfferDTO),
         new DocumentExistsMiddleware('offerId', this.offerService),
@@ -129,16 +132,22 @@ export class OfferController extends BaseController implements ControllerAdditio
       method: HttpMethod.DELETE,
       handler: this.deleteWithComments,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
         new DocumentExistsMiddleware('offerId', this.offerService)
       ]
     });
   }
 
-  public async getList({ query }: Request, res: Response): Promise<void> {
+  public async getList({ query, tokenPayload }: Request, res: Response): Promise<void> {
     const { limit } = query;
     const offersLimit = limit ? Number(limit) : undefined;
-    const offers = await this.offerService.find(offersLimit);
+
+    let offers = await this.offerService.find(offersLimit);
+
+    if(offers !== null) {
+      offers = this.setFavoriteFlags(offers, tokenPayload?.favoriteOffers ?? []);
+    }
 
     this.ok(res, fillDTO(OffersListItemRDO, offers));
   }
@@ -151,6 +160,8 @@ export class OfferController extends BaseController implements ControllerAdditio
   }
 
   public async create({ body }: CreateOfferRequest, res: Response): Promise<void> {
+    body.coordinates = CityCoordinates[body.city];
+
     const offer = await this.offerService.create(body);
 
     this.created(res, fillDTO(OfferRDO, offer));
@@ -183,8 +194,8 @@ export class OfferController extends BaseController implements ControllerAdditio
     this.ok(res, offer);
   }
 
-  public async getFavoritesByUserId({ params }: GetFavoriteOffers, res: Response): Promise<void> {
-    const { userId } = params;
+  public async getFavoritesByUserId({ tokenPayload }: GetFavoriteOffers, res: Response): Promise<void> {
+    const { userId } = tokenPayload;
     const user = await this.userService.exists(userId);
 
     if(!user) {
@@ -237,5 +248,21 @@ export class OfferController extends BaseController implements ControllerAdditio
     }
 
     return offer;
+  }
+
+  private setFavoriteFlags(offers: OfferDoc[], userFavoriteOffers: string[]): OfferDoc[] {
+    offers?.map((offer) => {
+      let isFavorite = false;
+
+      if(userFavoriteOffers.length > 0) {
+        isFavorite = userFavoriteOffers.includes(offer.id);
+      }
+
+      offer.isFavorite = isFavorite;
+
+      return offer;
+    });
+
+    return offers;
   }
 }

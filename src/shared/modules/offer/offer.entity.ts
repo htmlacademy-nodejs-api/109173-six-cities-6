@@ -5,6 +5,8 @@ import { Cities, City } from '../../types/city-type.enum.js';
 import { FacilitiesType, FacilitiesTypes } from '../../types/facilities-type.enum.js';
 import { UserEntity } from '../user/user.entity.js';
 import { OfferErrorText } from './dto/create-offer.messages.js';
+import { OfferProps } from './offer.constant.js';
+import { CityCoordinates } from '../../types/city-coordinates.enum.js';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export interface OfferEntity extends defaultClasses.Base {}
@@ -29,7 +31,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   })
   public description!: string;
 
-  @prop({ required: true })
+  @prop({ required: true, default: new Date().toISOString() })
   public date!: string;
 
   @prop({
@@ -45,7 +47,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({ required: true })
   public previewImage!: string;
 
-  @prop({ type: () => [String] })
+  @prop({ type: () => [String], required: true })
   public images!: string[];
 
   @prop({ required: true })
@@ -54,7 +56,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({ required: true })
   public isFavorite!: boolean;
 
-  @prop({ required: true })
+  @prop({ default: OfferProps.rating.DEFAULT, required: true })
   public rating!: number;
 
   @prop({

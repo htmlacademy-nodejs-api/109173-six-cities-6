@@ -1,14 +1,7 @@
 // Описание схемы хранения данных в БД (сущность: User)
 import { defaultClasses, getModelForClass, modelOptions, prop } from '@typegoose/typegoose';
 import { User } from '../../types/user.type.js';
-import { getSHA256Hash } from '../../../utils/hash.js';
-
-const ErrorText = {
-  NAME_MIN: 'User name must contain at least 1 symbol. Got {VALUE}',
-  NAME_MAX: 'User name length mustn`t be more than 15 symbols. Got {VALUE}',
-  PASSWORD_MIN: 'User password must contain at least 6 symbols. Got {VALUE}',
-  PASSWORD_MAX: 'User password length mustn`t be more than 12 symbols. Got {VALUE}',
-} as const;
+import { getSHA256Hash } from '../../../utils/encrypt.js';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export interface UserEntity extends defaultClasses.Base {}
@@ -67,8 +60,9 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
     return getSHA256Hash(password, salt);
   }
 
-  public checkPassword(password: string, salt: string, hash: string) {
-    return this.getPasswordHash(password, salt) === hash;
+  public checkPassword(password: string, salt: string) {
+    const passwordHash = this.getPasswordHash(password, salt);
+    return passwordHash === this.password;
   }
 
   public createAuthToken(email: string, password: string, salt: string): string {

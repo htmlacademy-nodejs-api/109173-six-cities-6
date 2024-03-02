@@ -1,0 +1,14 @@
+PORT=8000
+DB_HOST=127.0.0.1
+DB_PORT=27017
+DB_NAME=six-cities_mongodb
+DB_NAME_EXPRESS=six-cities_mongo_express
+DB_USER=admin
+DB_PASSWORD=test
+SERVER_HOST=http://localhost
+SALT=0945j-[sdpfoh]
+UPLOAD_FILES_DIRECTORY=D:\OpenServer\domains\six-cities.node.loc\upload
+JWT_SECRET=skgj-03948hsk
+JWT_SECRET_REFRESH=jgnso823h4lw23-0[]
+JWT_EXPIRED=2d
+JWT_ALGORITHM=HS256

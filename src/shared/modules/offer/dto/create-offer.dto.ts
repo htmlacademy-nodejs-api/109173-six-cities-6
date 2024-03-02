@@ -8,6 +8,8 @@ import {
   IsLatitude,
   IsLongitude,
   IsMongoId,
+  IsNumber,
+  IsOptional,
   IsString,
   Max,
   MaxLength,
@@ -25,7 +27,7 @@ import { OfferProps } from '../offer.constant.js';
 import { OfferErrorText } from './create-offer.messages.js';
 import { Coordinate } from '../../../types/coordinate.type.js';
 
-class CoordinatesValidation {
+export class CoordinatesValidation {
   @IsLatitude({ message: OfferErrorText.coordinates.NOT_LATITUDE })
   public latitude!: string;
 
@@ -67,7 +69,8 @@ export class CreateOfferDTO {
 
   @Max(OfferProps.rating.MAX, { message: OfferErrorText.rating.MAX })
   @Min(OfferProps.rating.MIN, { message: OfferErrorText.rating.MIN })
-  @IsInt({ message: OfferErrorText.rating.NOT_INTEGER })
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: OfferErrorText.rating.INCORRECT })
+  @IsOptional()
   public rating!: number;
 
   @IsIn(offersTypeList, { message: OfferErrorText.type.INVALID })
@@ -98,11 +101,11 @@ export class CreateOfferDTO {
   public userId!: string;
 
   @IsInt({ message: OfferErrorText.commentCount.NOT_INTEGER })
+  @IsOptional()
   public commentCount!: number;
 
-  // @IsObject({ message: OfferErrorText.coordinates.NOT_OBJECT })
-  // TODO: Не работает @ValidateNested() - разобрать позже
   @ValidateNested()
   @Type(() => CoordinatesValidation)
+  @IsOptional()
   public coordinates!: Coordinate;
 }

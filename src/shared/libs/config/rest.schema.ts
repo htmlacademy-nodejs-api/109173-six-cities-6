@@ -13,7 +13,11 @@ export type RestSchema = {
   DB_PASSWORD: string,
   SERVER_HOST: string,
   SALT: string,
-  UPLOAD_FILES_DIRECTORY: string
+  UPLOAD_FILES_DIRECTORY: string,
+  JWT_SECRET: string,
+  JWT_SECRET_REFRESH: string,
+  JWT_EXPIRED: string,
+  JWT_ALGORITHM: string,
 }
 
 export const configRestSchema = convict<RestSchema>({
@@ -76,5 +80,29 @@ export const configRestSchema = convict<RestSchema>({
     format: String,
     default: null,
     env: 'UPLOAD_FILES_DIRECTORY',
+  },
+  JWT_SECRET: {
+    doc: 'Secret string to create JWT-Token',
+    format: String,
+    default: null,
+    env: 'JWT_SECRET',
+  },
+  JWT_SECRET_REFRESH: {
+    doc: 'Secret string to create JWT-Refresh-Token',
+    format: String,
+    default: null,
+    env: 'JWT_SECRET_REFRESH',
+  },
+  JWT_EXPIRED: {
+    doc: 'Token expiration time',
+    format: String,
+    default: null,
+    env: 'JWT_EXPIRED',
+  },
+  JWT_ALGORITHM: {
+    doc: 'JWT Algorithm to make encrypt token string',
+    format: String,
+    default: null,
+    env: 'JWT_ALGORITHM',
   }
 });

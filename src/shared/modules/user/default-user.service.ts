@@ -5,11 +5,10 @@ import { Logger } from '../../libs/logger/logger.interface.js';
 import { Component } from '../../types/component.enum.js';
 import { FoundUser, UserDoc, UserService, UserToken } from './user-service.interface.js';
 import { types } from '@typegoose/typegoose';
-import { LoginUserDTO } from './dto/login-user.dto.js';
 import { UpdateUserDTO } from './dto/update-user.dto.js';
 import { FoundOffers } from '../offer/offer-service.interface.js';
 import mongoose from 'mongoose';
-import { DocumentExists } from '../../types/document-exista.interface.js';
+import { DocumentExists } from '../../types/document-exists.interface.js';
 
 const MessageText = {
   ADDED: 'New user successfully added. Email:',
@@ -46,21 +45,6 @@ export class DefaultUserService implements UserService, DocumentExists {
     const user = await this.userModel.exists({ _id: userId });
 
     return user !== null;
-  }
-
-  public async login(dto: LoginUserDTO, salt: string): Promise<UserToken | null> {
-    const user = await this.findByEmail(dto.email);
-    const checkPassword = user?.checkPassword(dto.email, dto.password, user.password);
-
-    if(!user || !checkPassword) {
-      return null;
-    }
-
-    const token = user.createAuthToken(dto.email, dto.password, salt);
-
-    await this.updateById(user?.id, { token });
-
-    return token;
   }
 
   public async logout(token: UserToken): Promise<void> {
@@ -129,7 +113,8 @@ export class DefaultUserService implements UserService, DocumentExists {
           $lookup: {
             from: 'offers',
             pipeline: [
-              { $match: { $expr: { $in: ['$_id', userFavoritesObjectIds] } } }
+              { $match: { $expr: { $in: ['$_id', userFavoritesObjectIds] } } },
+              { $set: { 'isFavorite': true } }
             ],
             as: 'favoriteOffers'
           }

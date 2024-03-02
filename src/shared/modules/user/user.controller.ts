@@ -20,10 +20,13 @@ import { ParamsUserId } from '../../libs/rest/types/params-userid.type .js';
 import { ValidateObjectIdMiddleware } from '../../libs/rest/middleware/validate-objectid.middleware.js';
 import { DocumentExistsMiddleware } from '../../libs/rest/middleware/document-exists.middleware.js';
 import { UploadFilesMiddleware } from '../../libs/rest/middleware/upload-files.middleware.js';
+import { AuthService } from '../auth/auth-service.interface.js';
+import { LoggedUserRDO } from './rdo/logged-user.rdo.js';
+import { PrivateRouteMiddleware } from '../../libs/rest/middleware/private-route.middleware.js';
 
 type CreateUserRequest = Request<RequestParams, RequestBody, CreateUserDTO>
 type CheckStatusRequest = Request<RequestParams, RequestBody, CheckUserStatusDTO>
-type UploadAvatarRequest = Request<ParamsUserId, RequestBody, undefined>
+type LoginUserRequest = Request<RequestParams, RequestBody, LoginUserDTO>;
 
 const MessageText = {
   INIT_CONTROLLER: 'Controller initialized'
@@ -42,7 +45,8 @@ export class UserController extends BaseController implements ControllerAddition
   constructor(
     @inject(Component.Logger) protected readonly logger: Logger,
     @inject(Component.Config) protected readonly config: RestConfig,
-    @inject(Component.UserService) private readonly userService: UserService
+    @inject(Component.UserService) private readonly userService: UserService,
+    @inject(Component.AuthService) private readonly authService: AuthService
   ) {
     super(logger);
 
@@ -65,7 +69,10 @@ export class UserController extends BaseController implements ControllerAddition
       path: '/login',
       method: HttpMethod.GET,
       handler: this.checkStatus,
-      middlewares: [ new ValidateDTOMiddleware(CheckUserStatusDTO) ]
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateDTOMiddleware(CheckUserStatusDTO)
+      ]
     });
     this.addRoute({
       path: '/login',
@@ -76,15 +83,15 @@ export class UserController extends BaseController implements ControllerAddition
     this.addRoute({
       path: '/logout',
       method: HttpMethod.POST,
-      handler: this.logout
+      handler: this.logout,
+      middlewares: [ new PrivateRouteMiddleware() ]
     });
     this.addRoute({
-      path: '/:userId/avatar',
+      path: '/avatar',
       method: HttpMethod.POST,
       handler: this.uploadAvatar,
       middlewares: [
-        new ValidateObjectIdMiddleware('userId'),
-        new DocumentExistsMiddleware('userId', this.userService),
+        new PrivateRouteMiddleware(),
         new UploadFilesMiddleware(this.config.get('UPLOAD_FILES_DIRECTORY'), 'user-avatar')
       ]
     });
@@ -108,37 +115,30 @@ export class UserController extends BaseController implements ControllerAddition
     this.created(res, userRDO);
   }
 
-  public async checkStatus({ body }: CheckStatusRequest, res: Response): Promise<void> {
-    const user = await this.userService.checkAuthStatus(body.email);
+  public async checkStatus({ tokenPayload }: Request, _res: Response): Promise<void> {
+    const { email } = tokenPayload;
+    const user = await this.userService.findByEmail(email);
 
     if(!user) {
       throw new HttpError(
         StatusCodes.UNAUTHORIZED,
-        `${ErrorText.NOT_AUTHORIZED}: ${body.email}`,
+        `${ErrorText.NOT_AUTHORIZED}: ${email}`,
         this.getControllerName()
       );
     }
 
-    this.ok(res, fillDTO(UserRDO, user));
+    this.ok(_res, fillDTO(LoggedUserRDO, user));
   }
 
-  public async login({ body }: CheckStatusRequest, _res: Response): Promise<void> {
-    const user = await this.userService.findByEmail(body.email);
+  public async login({ body }: LoginUserRequest, _res: Response): Promise<void> {
+    const user = await this.authService.check(body);
+    const token = await this.authService.authenticate(user);
+    const responseData = fillDTO(LoggedUserRDO, {
+      email: user.email,
+      token
+    });
 
-    if(!user) {
-      throw new HttpError(
-        StatusCodes.UNAUTHORIZED,
-        `${ErrorText.NOT_FOUND}: ${body.email}`,
-        this.getControllerName()
-      );
-    }
-
-    // Заглушка
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      ErrorText.NOT_IMPLEMENTED,
-      this.getControllerName()
-    );
+    this.ok(_res, responseData);
   }
 
   public async logout({ body }: CheckStatusRequest, _res: Response): Promise<void> {
@@ -160,8 +160,8 @@ export class UserController extends BaseController implements ControllerAddition
     );
   }
 
-  public async uploadAvatar(req: UploadAvatarRequest, res: Response): Promise<void > {
-    const { userId } = req.params;
+  public async uploadAvatar(req: Request, res: Response): Promise<void > {
+    const { userId } = req.tokenPayload;
 
     if(!req.file?.path) {
       throw new HttpError(

@@ -6,7 +6,7 @@ import { CommentEntity } from './comment.entity.js';
 import { types } from '@typegoose/typegoose';
 import { SortType } from '../../types/sort-type.enum.js';
 import { COMMENTS_COUNT } from './comment.constant.js';
-import { DocumentExists } from '../../types/document-exista.interface.js';
+import { DocumentExists } from '../../types/document-exists.interface.js';
 import { Logger } from '../../libs/logger/logger.interface.js';
 
 const MessageText = {

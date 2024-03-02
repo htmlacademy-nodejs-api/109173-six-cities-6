@@ -5,3 +5,7 @@ export function getSHA256Hash(value: string, salt: string) {
 
   return HMACDigets.update(value).digest('hex');
 }
+
+export function makeSecretKey(chars: string) {
+  return new TextEncoder().encode(chars);
+}
