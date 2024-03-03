@@ -9,8 +9,8 @@ export const FacilitiesTypes = {
   Fridge: 'Fridge',
 } as const;
 
-type facilitiesTypeKeys = keyof typeof FacilitiesTypes
-export type FacilitiesType = (typeof FacilitiesTypes)[facilitiesTypeKeys];
+type FacilitiesTypeKeys = keyof typeof FacilitiesTypes
+export type FacilitiesType = (typeof FacilitiesTypes)[FacilitiesTypeKeys];
 
 export const facilitiesTypeList: FacilitiesType[] = [
   'Breakfast',

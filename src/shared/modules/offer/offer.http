@@ -37,10 +37,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI2NWQ4NzM1MTM0ZmQ3N2NkM
   "images": [
     "photo4.jpg",
     "photo5.jpg",
-    "photo6.jpg",
-    "photo7.jpg",
-    "photo8.jpg",
-    "photo9.jpg"
+    "photo6.jpg"
   ],
   "isPremium": true,
   "isFavorite": true,
@@ -58,7 +55,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI2NWQ4NzM1MTM0ZmQ3N2NkM
   "commentCount": 0,
   "coordinates": {
     "latitude": "1234",
-    "longitude": "42.351697"
+    "longitude": "3463456"
   }
 }
 

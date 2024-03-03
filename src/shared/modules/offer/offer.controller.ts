@@ -9,7 +9,7 @@ import { UserService } from '../user/user-service.interface.js';
 
 import { StatusCodes } from 'http-status-codes';
 import { HttpMethod } from '../../libs/rest/types/http-method.enum.js';
-import { HttpError } from '../../libs/rest/error/http-error.js';
+import { HttpError } from '../../libs/rest/errors/http-error.js';
 import { Request, Response } from 'express';
 import { RequestBody, RequestParams } from '../../libs/rest/types/request.type.js';
 

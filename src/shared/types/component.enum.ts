@@ -1,7 +1,6 @@
 export const Component = {
   RestApplication: Symbol.for('RestApplication'),
   CLIApplication: Symbol.for('CLIApplication'),
-  AppExceptionFilter: Symbol.for('AppExceptionFilter'),
   Logger: Symbol.for('Logger'),
   Config: Symbol.for('Config'),
   DatabaseClient: Symbol.for('DatabaseClient'),
@@ -19,5 +18,9 @@ export const Component = {
   CommentController: Symbol.for('CommentController'),
 
   AuthService: Symbol.for('AuthService'),
-  AuthExceptionFilter: Symbol.for('AuthExceptionFilter')
+
+  AppExceptionFilter: Symbol.for('AppExceptionFilter'),
+  AuthExceptionFilter: Symbol.for('AuthExceptionFilter'),
+  HttpExceptionFilter: Symbol.for('HttpExceptionFilter'),
+  ValidationExceptionFilter: Symbol.for('ValidationExceptionFilter'),
 } as const;

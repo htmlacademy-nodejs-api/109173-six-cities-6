@@ -5,7 +5,7 @@ import { Component } from '../../types/component.enum.js';
 import { Request, Response } from 'express';
 import { RequestBody, RequestParams } from '../../libs/rest/types/request.type.js';
 import { HttpMethod } from '../../libs/rest/types/http-method.enum.js';
-import { HttpError } from '../../libs/rest/error/http-error.js';
+import { HttpError } from '../../libs/rest/errors/http-error.js';
 import { StatusCodes } from 'http-status-codes';
 
 import { BaseController } from '../../libs/rest/controller/base-controller.abstract.js';

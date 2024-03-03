@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { Middleware } from './middleware.interface.js';
 import { UserUnauthorizedException } from '../../../modules/auth/errors/user-unauthorized.exception.js';
-import { HttpError } from '../error/http-error.js';
+import { HttpError } from '../errors/http-error.js';
 import { StatusCodes } from 'http-status-codes';
 import { jwtVerify } from 'jose';
 import { makeSecretKey } from '../../../../utils/encrypt.js';
