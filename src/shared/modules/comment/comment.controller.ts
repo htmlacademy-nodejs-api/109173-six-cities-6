@@ -67,7 +67,9 @@ export class CommentController extends BaseController implements ControllerAddit
     });
   }
 
-  public async create({ body }: CreateCommentRequest, res: Response) {
+  public async create({ body, tokenPayload }: CreateCommentRequest, res: Response) {
+    body.userId = tokenPayload.userId;
+
     const newComment = await this.commentService.create(body);
     const offerId = String(newComment.offerId);
 

@@ -149,7 +149,9 @@ export class OfferController extends BaseController implements ControllerAdditio
     this.ok(res, fillDTO(OfferDetailRDO, offer));
   }
 
-  public async create({ body }: CreateOfferRequest, res: Response): Promise<void> {
+  public async create({ body, tokenPayload }: CreateOfferRequest, res: Response): Promise<void> {
+    body.userId = tokenPayload.userId;
+
     const offer = await this.offerService.create(body);
 
     this.created(res, fillDTO(OfferRDO, offer));
@@ -202,7 +204,7 @@ export class OfferController extends BaseController implements ControllerAdditio
       );
     }
 
-    this.ok(res, fillDTO(OfferRDO, offers));
+    this.ok(res, fillDTO(OffersListItemRDO, offers));
   }
 
   private async exists(offerId: string): FoundOffer {

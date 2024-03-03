@@ -7,7 +7,6 @@ Content-Type: application/json
 {
   "text": "Comment text. Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
   "rating": 5,
-  "userId": "65d5f4b362d59fcfd03cd80b",
   "offerId": "65cf1f6d7757251173e040c1"
 }
 

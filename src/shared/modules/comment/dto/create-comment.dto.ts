@@ -1,4 +1,13 @@
-import { IsMongoId, IsNumber, IsString, Max, MaxLength, Min, MinLength } from 'class-validator';
+import {
+  IsMongoId,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Max,
+  MaxLength,
+  Min,
+  MinLength
+} from 'class-validator';
 import { CommentProps } from '../comment.constant.js';
 import { CommentErrorText } from './create-comment.messages.js';
 
@@ -14,6 +23,7 @@ export class CreateCommentDTO {
   public rating!: number;
 
   @IsMongoId()
+  @IsOptional()
   public userId!: string;
 
   @IsMongoId()

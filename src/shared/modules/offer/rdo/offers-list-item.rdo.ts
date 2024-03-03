@@ -3,6 +3,7 @@ import { City } from '../../../types/city-type.enum.js';
 import { OfferType } from '../../../types/offer-type.enum.js';
 
 export class OffersListItemRDO {
+  @Expose() public id!: string;
   @Expose() public name!: string;
   @Expose() public date!: string;
   @Expose() public city!: City;

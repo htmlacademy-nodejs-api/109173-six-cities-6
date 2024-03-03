@@ -19,7 +19,7 @@ GET http://localhost:8000/offers/65e4b67559b5957716e60255 HTTP/1.1
 
 
 ## Получение списка премиальных предложений для города
-GET http://localhost:8000/offers/premium/Cologne HTTP/1.1
+GET http://localhost:8000/offers/premium/Brussels HTTP/1.1
 
 ###
 
@@ -30,7 +30,7 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI2NWQ4NzM1MTM0ZmQ3N2NkMzI5Y2RjNTgiLCJuYW1lIjoiUm9iZXJ0IERvd25leSIsImVtYWlsIjoiaXJvbm1hbkBzdGFyay1pbmR1c3RyaWVzLmxvYyIsImF2YXRhclVybCI6InVzZXItYXZhdGFyLlBjYnRyZGVienkzTExCQWQ0cDFEZC5qcGVnIiwiaXNQcm8iOnRydWUsImZhdm9yaXRlT2ZmZXJzIjpbIjY1ZDg3M2VlMzRmZDc3Y2QzMjljZGM1ZCIsIjY1ZDg3NDEzMzRmZDc3Y2QzMjljZGM1ZiJdLCJleHAiOjE3MDk2NTk5NTcsImlhdCI6MTcwOTQ4NzE1N30.-ptE7zPOOo0h2OENk4AX6mv-MLXpbIEA-vWrazRT_Y8
 
 {
-  "name": "Some beautiful place",
+  "name": "Test beautiful place",
   "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam enim quam, mollis vel suscipit et, venenatis a nulla. Integer vitae aliquam lacus. Vivamus semper leo nec bibendum malesuada. Morbi ligula velit, facilisis a vulputate vitae, malesuada sit amet massa. Praesent sed molestie lectus, vitae dignissim nulla. Maecenas sollicitudin in justo sed venenatis. Duis congue arcu quis iaculis molestie. Mauris lobortis imperdiet sem facilisis elementum. Proin ullamcorper leo in ultrices pretium. Curabitur ultricies vel nulla eu laoreet. Pellentesque id lectus nec justo tempus bibendum. Nulla facilisi. Phasellus scelerisque est at est varius bibendum. Vestibulum eget mauris gravida, imperdiet sapien a, bibendum.",
   "date": "2024-03-03T09:55:28.801Z",
   "city": "Brussels",
@@ -53,7 +53,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI2NWQ4NzM1MTM0ZmQ3N2NkM
     "Air conditioning",
     "Breakfast"
   ],
-  "userId": "65c3539f177a2ad3d529f005",
   "commentCount": 0,
   "coordinates": {
     "latitude": "88.0349860",
