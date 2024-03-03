@@ -2,8 +2,8 @@ import { ReadStream, createReadStream } from 'node:fs';
 import { EventEmitter } from 'node:events';
 import { resolve as nodeResolve } from 'node:path';
 import { FileReader } from './tsv-file-reader.interface.js';
-import { GlobalSettings } from '../../../global-settings.js';
 import { ReadEvent } from '../tsv-settings.js';
+import { ENCODING } from '../../../cli/cli.constant.js';
 
 const CHUNK_SIZE = 16 * 1024; // 16 Kb
 
@@ -24,7 +24,7 @@ export class TSVFileReader extends EventEmitter implements FileReader {
     super();
 
     this.stream = createReadStream(nodeResolve(this.filePath), {
-      encoding: GlobalSettings.ENCODING,
+      encoding: ENCODING,
       highWaterMark: CHUNK_SIZE
     });
   }

@@ -1,4 +1,4 @@
-import { GlobalSettings } from '../global-settings.js';
+import { COMMAND_BEGINNING } from './cli.constant.js';
 
 type ParsedCommands = Record<string, string[]>;
 export class CommandParser {
@@ -7,7 +7,7 @@ export class CommandParser {
     let command = '';
 
     cliArguments.forEach((argument) => {
-      if(argument.startsWith(GlobalSettings.COMMAND_BEGINNING)) {
+      if(argument.startsWith(COMMAND_BEGINNING)) {
         command = argument;
         parsedCommands[argument] = [];
       } else if(command && argument && !parsedCommands[command].includes(argument)) {

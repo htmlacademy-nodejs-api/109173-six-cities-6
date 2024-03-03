@@ -1,9 +1,9 @@
 import { Command, ExecuteParameters } from './command.interface.js';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { GlobalSettings } from '../../global-settings.js';
+import { COMMAND_BEGINNING, ENCODING } from '../cli.constant.js';
 
-const COMMAND_NAME = `${GlobalSettings.COMMAND_BEGINNING}version`;
+const COMMAND_NAME = `${COMMAND_BEGINNING}version`;
 const DEFAULT_FILEPATH = './package.json';
 
 const ErrorText = {
@@ -39,7 +39,7 @@ export class VersionCommand implements Command {
   }
 
   private readVersion(): string {
-    const jsonContent = readFileSync(resolve(this.filepath), GlobalSettings.ENCODING);
+    const jsonContent = readFileSync(resolve(this.filepath), ENCODING);
     const parsedContent: unknown = JSON.parse(jsonContent);
 
     if(!this.isPackageJSONConfig(parsedContent)) {
