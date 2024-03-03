@@ -15,7 +15,6 @@ import { RequestBody, RequestParams } from '../../libs/rest/types/request.type.j
 
 import { City } from '../../types/city-type.enum.js';
 import { ParamsCityName } from '../../libs/rest/types/params-cityName.type.js';
-import { ParamsFavoriteStatus } from '../../libs/rest/types/params-favorite-status.type.js';
 import { ParamsOfferId } from '../../libs/rest/types/params-offerid.type.js';
 
 import { CreateOfferDTO } from './dto/create-offer.dto.js';
@@ -31,7 +30,6 @@ import { ControllerAdditionalInterface } from '../../libs/rest/controller/contro
 import { ValidateDTOMiddleware } from '../../libs/rest/middleware/validate-dto.middleware.js';
 import { DocumentExistsMiddleware } from '../../libs/rest/middleware/document-exists.middleware.js';
 import { PrivateRouteMiddleware } from '../../libs/rest/middleware/private-route.middleware.js';
-import { getCoordinatesByCity } from '../../../utils/offer.js';
 
 const MessageText = {
   INIT_CONTROLLER: 'Controller initialized'
@@ -133,9 +131,20 @@ export class OfferController extends BaseController implements ControllerAdditio
     this.ok(res, fillDTO(OffersListItemRDO, offers));
   }
 
-  public async getItem({ params }: GetOfferRequest, res: Response): Promise<void> {
+  public async getItem({ params, tokenPayload }: GetOfferRequest, res: Response): Promise<void> {
     const { offerId } = params;
     const offer = await this.exists(offerId);
+
+    if(offer !== null) {
+      offer.isFavorite = false;
+
+      if(tokenPayload) {
+        const { userId } = tokenPayload;
+        const userFavorites: string[] = await this.userService.getFavoriteIds(userId);
+
+        offer.isFavorite = userFavorites.includes(offerId);
+      }
+    }
 
     this.ok(res, fillDTO(OfferDetailRDO, offer));
   }

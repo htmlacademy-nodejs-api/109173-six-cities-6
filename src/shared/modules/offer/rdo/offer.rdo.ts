@@ -13,6 +13,7 @@ export class OfferRDO {
   @Expose() public previewImage!: string;
   @Expose() public images!: Images;
   @Expose() public isPremium!: boolean;
+  @Expose() public isFavorite!: boolean;
   @Expose() public rating!: number;
   @Expose() public type!: OfferType;
   @Expose() public rooms!: number;
