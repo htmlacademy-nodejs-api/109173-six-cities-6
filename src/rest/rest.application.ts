@@ -22,6 +22,7 @@ import { ParseTokenMiddleware } from '../shared/libs/rest/middleware/parse-token
 import { HttpErrorExceptionFilter } from '../shared/libs/rest/exception-filter/http-error.exceprion-filter.js';
 import { ValidationExceptionFilter } from '../shared/libs/rest/exception-filter/validation-exception-filter.js';
 import { getFullServerPath } from '../utils/common.js';
+import { Routes, StaticRoutes } from './rest.constant.js';
 
 const MessageText = {
   INIT: 'Rest application is initialized',
@@ -69,11 +70,11 @@ export class RestApplication implements Rest{
 
     this.server.use(express.json());
     this.server.use(
-      '/upload',
+      StaticRoutes.UPLOAD_FILES,
       express.static(this.config.get('UPLOAD_FILES_DIRECTORY'))
     );
     this.server.use(
-      '/static',
+      StaticRoutes.APP_FILES,
       express.static(this.config.get('STATIC_FILES_DIRECTORY'))
     );
     this.server.use(authMiddleware.execute.bind(authMiddleware));
@@ -81,9 +82,9 @@ export class RestApplication implements Rest{
   }
 
   private async initControllers() {
-    this.server.use('/users', this.userController.router);
-    this.server.use('/offers', this.offerController.router);
-    this.server.use('/comments', this.commentController.router);
+    this.server.use(Routes.USERS, this.userController.router);
+    this.server.use(Routes.OFFERS, this.offerController.router);
+    this.server.use(Routes.COMMENTS, this.commentController.router);
   }
 
   private async initExceptionFilters() {

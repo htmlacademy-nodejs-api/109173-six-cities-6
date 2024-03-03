@@ -1,3 +1,10 @@
 export const REST_LOGS = 'logs/rest.log';
-export const STATIC_UPLOAD_ROUTE = '/upload';
-export const STATIC_FILES_ROUTE = '/static';
+export const Routes = {
+  USERS: '/users',
+  OFFERS: '/offers',
+  COMMENTS: '/comments',
+} as const;
+export const StaticRoutes = {
+  APP_FILES: '/static',
+  UPLOAD_FILES: '/upload',
+} as const;
