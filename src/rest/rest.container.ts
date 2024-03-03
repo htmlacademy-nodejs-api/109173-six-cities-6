@@ -12,6 +12,7 @@ import { ExceptionFilter } from '../shared/libs/rest/exception-filter/exception-
 import { ApplicationExceptionFilter } from '../shared/libs/rest/exception-filter/application.exception-filter.js';
 import { HttpErrorExceptionFilter } from '../shared/libs/rest/exception-filter/http-error.exceprion-filter.js';
 import { ValidationExceptionFilter } from '../shared/libs/rest/exception-filter/validation-exception-filter.js';
+import { PathTransformer } from '../shared/libs/rest/transform/path-transformer.js';
 
 export function createRestContainer(): Container {
   const container = new Container();
@@ -20,6 +21,7 @@ export function createRestContainer(): Container {
   container.bind<RestConfig>(Component.Config).to(RestConfig).inSingletonScope();
   container.bind<Logger>(Component.Logger).to(PinoLogger).inSingletonScope();
   container.bind<DatabaseClient>(Component.DatabaseClient).to(MongoDatabaseClient).inSingletonScope();
+  container.bind<PathTransformer>(Component.PathTransformer).to(PathTransformer).inSingletonScope();
   container.bind<ExceptionFilter>(Component.AppExceptionFilter).to(ApplicationExceptionFilter).inSingletonScope();
   container.bind<ExceptionFilter>(Component.HttpExceptionFilter).to(HttpErrorExceptionFilter).inSingletonScope();
   container.bind<ExceptionFilter>(Component.ValidationExceptionFilter).to(ValidationExceptionFilter).inSingletonScope();

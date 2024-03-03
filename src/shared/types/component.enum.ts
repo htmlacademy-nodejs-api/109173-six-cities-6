@@ -4,6 +4,7 @@ export const Component = {
   Logger: Symbol.for('Logger'),
   Config: Symbol.for('Config'),
   DatabaseClient: Symbol.for('DatabaseClient'),
+  PathTransformer: Symbol.for('PathTransformer'),
 
   UserModel: Symbol.for('UserModel'),
   UserService: Symbol.for('UserService'),

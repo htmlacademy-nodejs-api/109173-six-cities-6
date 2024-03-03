@@ -1,3 +1,4 @@
+export const DEFAULT_USER_AVATAR_NAME = 'default-user-avatar.jpg';
 export const UserProps = {
   name: {
     MIN_LENGTH: 1,

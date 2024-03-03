@@ -207,7 +207,7 @@ export class UserController extends BaseController implements ControllerAddition
       );
     }
 
-    await this.userService.updateById(userId, { avatarUrl: req.file.path});
+    await this.userService.updateById(userId, { avatarUrl: req.file.filename});
     return this.created(res, req.file?.path);
   }
 

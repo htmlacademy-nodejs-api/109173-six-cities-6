@@ -2,6 +2,7 @@
 import { defaultClasses, getModelForClass, modelOptions, prop } from '@typegoose/typegoose';
 import { User } from '../../types/user.type.js';
 import { getSHA256Hash } from '../../../utils/encrypt.js';
+import { DEFAULT_USER_AVATAR_NAME } from './user.constant.js';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export interface UserEntity extends defaultClasses.Base {}
@@ -23,7 +24,7 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
   })
   public email: string;
 
-  @prop({ default: '' })
+  @prop({ default: DEFAULT_USER_AVATAR_NAME })
   public avatarUrl: string;
 
   @prop({ default: '', required: true })
