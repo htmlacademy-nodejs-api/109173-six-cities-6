@@ -28,11 +28,16 @@ function fillDTO<D, O>(dto: ClassConstructor<D>, plainObject: O) {
   return plainToClass(dto, plainObject, { excludeExtraneousValues: true });
 }
 
+function getFullServerPath(protocol: string, host: string, port: number) {
+  return `${protocol}://${host}:${port}`;
+}
+
 export {
   upperCaseFirst,
   getRandomInRange,
   getRandomBoolean,
   getRandomElement,
   getRandomElements,
-  fillDTO
+  fillDTO,
+  getFullServerPath
 };

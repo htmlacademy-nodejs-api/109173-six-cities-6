@@ -5,15 +5,17 @@ convict.addFormats(validator);
 
 export type RestSchema = {
   PORT: number,
+  HOST: string,
+  PROTO: string,
   DB_HOST: string,
   DB_PORT: string,
   DB_NAME: string,
   DB_NAME_EXPRESS: string,
   DB_USER: string,
   DB_PASSWORD: string,
-  SERVER_HOST: string,
   SALT: string,
   UPLOAD_FILES_DIRECTORY: string,
+  STATIC_FILES_DIRECTORY: string,
   JWT_SECRET: string,
   JWT_SECRET_REFRESH: string,
   JWT_EXPIRED: string,
@@ -26,6 +28,18 @@ export const configRestSchema = convict<RestSchema>({
     format: 'port',
     default: 4000,
     env: 'PORT',
+  },
+  HOST: {
+    doc: 'Application host, where service started',
+    format: String,
+    default: 'localhost',
+    env: 'HOST',
+  },
+  PROTO: {
+    doc: 'Application host protocol',
+    format: String,
+    default: 'http',
+    env: 'PROTO',
   },
   DB_HOST: {
     doc: 'Database`s host IP-adress (MongoDB)',
@@ -63,12 +77,6 @@ export const configRestSchema = convict<RestSchema>({
     default: 'six-cities_mongo_express',
     env: 'DB_NAME_EXPRESS',
   },
-  SERVER_HOST: {
-    doc: 'REST Servers host',
-    format: String,
-    default: 'http://localhost',
-    env: 'SERVER_HOST',
-  },
   SALT: {
     doc: 'Special string to encoding user password',
     format: String,
@@ -80,6 +88,12 @@ export const configRestSchema = convict<RestSchema>({
     format: String,
     default: null,
     env: 'UPLOAD_FILES_DIRECTORY',
+  },
+  STATIC_FILES_DIRECTORY: {
+    doc: 'Directory for static files',
+    format: String,
+    default: null,
+    env: 'STATIC_FILES_DIRECTORY',
   },
   JWT_SECRET: {
     doc: 'Secret string to create JWT-Token',

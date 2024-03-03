@@ -21,6 +21,7 @@ import { AuthExceptionFilter } from '../shared/modules/auth/exception-filter/aut
 import { ParseTokenMiddleware } from '../shared/libs/rest/middleware/parse-token.middleware.js';
 import { HttpErrorExceptionFilter } from '../shared/libs/rest/exception-filter/http-error.exceprion-filter.js';
 import { ValidationExceptionFilter } from '../shared/libs/rest/exception-filter/validation-exception-filter.js';
+import { getFullServerPath } from '../utils/common.js';
 
 const MessageText = {
   INIT: 'Rest application is initialized',
@@ -71,6 +72,10 @@ export class RestApplication implements Rest{
       '/upload',
       express.static(this.config.get('UPLOAD_FILES_DIRECTORY'))
     );
+    this.server.use(
+      '/static',
+      express.static(this.config.get('STATIC_FILES_DIRECTORY'))
+    );
     this.server.use(authMiddleware.execute.bind(authMiddleware));
     this.server.use(cors());
   }
@@ -89,10 +94,11 @@ export class RestApplication implements Rest{
   }
 
   private async initServer() {
+    const protocol = this.config.get('PROTO');
+    const host = this.config.get('HOST');
     const port = this.config.get('PORT');
-    const serverHost = this.config.get('SERVER_HOST');
 
-    this.server.listen(port, () => this.logger.info(`${MessageText.INIT_SERVER_SUCCESS}: ${serverHost}:${port}`));
+    this.server.listen(port, () => this.logger.info(`${MessageText.INIT_SERVER_SUCCESS}: ${getFullServerPath(protocol, host, port)}`));
   }
 
   public async init() {

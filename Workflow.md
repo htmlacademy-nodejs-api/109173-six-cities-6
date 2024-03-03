@@ -132,7 +132,8 @@ docker compose --file ./docker-compose.dev.yml --env-file ./.env --project-name 
 #### :page_facing_up: Переменные окружения
 
 `PORT=8000` - Порт, на котором запускается сервер приложения  
-`SERVER_HOST=http://localhost` - Хост, на котором запускается сервер  
+`HOST=localhost` - Хост, на котором запускается сервер приложения  
+`PROTO=http` - Протокол подключения к хосту  
 `DB_HOST=127.0.0.1` - Хост, на котором развернута база данных  
 `DB_PORT=27017` - Порт, на котором развернута база данных  
 `DB_NAME=six-cities_mongodb` - Название БД в MondoDB  
@@ -141,6 +142,7 @@ docker compose --file ./docker-compose.dev.yml --env-file ./.env --project-name 
 `DB_PASSWORD=test` - Пароль пользователя к используемой базе данных (MongoDB)  
 `SALT=[ogj=-2049jt]` - Соль, используемая для формирования хэша паролей пользователей  
 `UPLOAD_FILES_DIRECTORY=С:\some\path\six-cities.loc\upload` - Директория загрузки пользовательских файлов  
+`STATIC_FILES_DIRECTORY=С:\some\path\six-cities.loc\upload` - Директория хранения статичных файлов, необходимых для работы приложения
 `JWT_SECRET=ih-034thf0p9it43` - Секрет для формирования JWT-токенов  
 `JWT_SECRET_REFRESH=dpojfg-045j9g0` - Секрет для обновления JWT-токенов  
 `JWT_EXPIRED=2d` - Время жизни сформированных токенов  
