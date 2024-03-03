@@ -7,10 +7,10 @@ import { importCommands } from './utils/cli.js';
 async function bootstrap() {
   const importedCommands: Command[] = await importCommands();
 
-  const aplication = new CLIApplication();
+  const application = new CLIApplication();
 
-  aplication.registrCommands(importedCommands);
-  aplication.executeCommand(process.argv);
+  application.registrCommands(importedCommands);
+  application.executeCommand(process.argv);
 }
 
 bootstrap();

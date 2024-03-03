@@ -32,6 +32,10 @@ function getFullServerPath(protocol: string, host: string, port: number) {
   return `${protocol}://${host}:${port}`;
 }
 
+function isObject(value: unknown): value is Record<string, object> {
+  return (typeof value === 'object' && value !== null);
+}
+
 export {
   upperCaseFirst,
   getRandomInRange,
@@ -39,5 +43,6 @@ export {
   getRandomElement,
   getRandomElements,
   fillDTO,
-  getFullServerPath
+  getFullServerPath,
+  isObject
 };
