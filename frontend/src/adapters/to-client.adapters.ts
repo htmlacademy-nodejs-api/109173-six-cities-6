@@ -1,5 +1,6 @@
 import { UserType } from '../const';
-import { Offer } from '../types/types';
+import { Comment, Offer } from '../types/types';
+import { CommentRDO } from './dto/comments/rdo/comment.rdo';
 import { OfferDetailRDO } from './dto/offer/rdo/offer-detail.rdo';
 import { OffersListItemRDO } from './dto/offer/rdo/offers-list-item.rdo';
 
@@ -71,4 +72,19 @@ export function adaptOfferDetailToClient(data: OfferDetailRDO): Offer {
     images: data.images,
     maxAdults: data.guests,
   };
+}
+
+export function adaptCommentsToClient(data: CommentRDO[]): Comment[] {
+  return data.map((comment) => ({
+    id: comment.id,
+    comment: comment.text,
+    date: comment.date,
+    rating: comment.rating,
+    user: {
+      name: comment.userId,
+      avatarUrl: '',
+      type: UserType.Pro,
+      email: '',
+    },
+  }));
 }

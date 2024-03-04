@@ -7,7 +7,8 @@ import { Token } from '../utils';
 
 import { OffersListItemRDO } from '../adapters/dto/offer/rdo/offers-list-item.rdo';
 import { OfferDetailRDO } from '../adapters/dto/offer/rdo/offer-detail.rdo';
-import { adaptOfferDetailToClient, adaptOffersToClient } from '../adapters/to-client.adapters';
+import { adaptCommentsToClient, adaptOfferDetailToClient, adaptOffersToClient } from '../adapters/to-client.adapters';
+import { CommentRDO } from '../adapters/dto/comments/rdo/comment.rdo';
 
 type Extra = {
   api: AxiosInstance;
@@ -111,9 +112,9 @@ export const fetchComments = createAsyncThunk<Comment[], Offer['id'], { extra: E
   Action.FETCH_COMMENTS,
   async (id, { extra }) => {
     const { api } = extra;
-    const { data } = await api.get<Comment[]>(`${ApiRoute.Offers}/${id}${ApiRoute.Comments}`);
+    const { data } = await api.get<CommentRDO[]>(`${ApiRoute.Comments}/${id}`);
 
-    return data;
+    return adaptCommentsToClient(data);
   });
 
 export const fetchUserStatus = createAsyncThunk<UserAuth['email'], undefined, { extra: Extra }>(
