@@ -6,6 +6,7 @@ import { OfferType } from '../../../types/offer-type.enum.js';
 import { Images } from '../../../types/offer.type.js';
 
 export class OfferRDO {
+  @Expose() public id!: string;
   @Expose() public name!: string;
   @Expose() public description!: string;
   @Expose() public date!: string;
