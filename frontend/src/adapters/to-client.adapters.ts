@@ -81,10 +81,10 @@ export function adaptCommentsToClient(data: CommentRDO[]): Comment[] {
     date: comment.date,
     rating: comment.rating,
     user: {
-      name: comment.userId,
-      avatarUrl: '',
+      name: 'Test',
+      avatarUrl: 'http://localhost:8000/static/default-user-avatar.jpg',
       type: UserType.Pro,
-      email: '',
+      email: `${comment.userId}`,
     },
   }));
 }

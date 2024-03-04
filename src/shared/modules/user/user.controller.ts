@@ -94,7 +94,7 @@ export class UserController extends BaseController implements ControllerAddition
     });
     this.addRoute({
       path: '/logout',
-      method: HttpMethod.GET,
+      method: HttpMethod.DELETE,
       handler: this.logout,
       middlewares: [ new PrivateRouteMiddleware() ]
     });
