@@ -1,0 +1,4 @@
+0000000000000000000000000000000000000000 893d883f7236763189fc572939c166dd9e4e1bfc Deimon <deimon1993rf2@yandex.ru> 1709390853 +0300	clone: from github.com:htmlacademy-nodejs-api/frontend-six-cities.git
+893d883f7236763189fc572939c166dd9e4e1bfc 7e8e7bbd1efeb91561bf87bab63fa7f71139c31a Deimon <deimon1993rf2@yandex.ru> 1709494583 +0300	commit: Адаптировано получение списка офферов Сервер -> Клиент
+7e8e7bbd1efeb91561bf87bab63fa7f71139c31a f167afb24610d3bca1f660a8afc8b6ce13d9bcf6 Deimon <deimon1993rf2@yandex.ru> 1709496707 +0300	commit: UserId больше не передается явно
+f167afb24610d3bca1f660a8afc8b6ce13d9bcf6 6393d38115d5c4d6b0b51dfc26d775e2508c80c8 Deimon <deimon1993rf2@yandex.ru> 1709497709 +0300	commit: Получение списка избранных адаптировани Сервер -> Клиент
