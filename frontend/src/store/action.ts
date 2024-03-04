@@ -9,6 +9,7 @@ import { OffersListItemRDO } from '../adapters/dto/offer/rdo/offers-list-item.rd
 import { OfferDetailRDO } from '../adapters/dto/offer/rdo/offer-detail.rdo';
 import { adaptCommentsToClient, adaptOfferDetailToClient, adaptOffersToClient } from '../adapters/to-client.adapters';
 import { CommentRDO } from '../adapters/dto/comments/rdo/comment.rdo';
+import { adaptUserToServer } from '../adapters/to-server.adapters';
 
 type Extra = {
   api: AxiosInstance;
@@ -166,16 +167,16 @@ export const registerUser = createAsyncThunk<void, UserRegister, { extra: Extra 
   Action.REGISTER_USER,
   async ({ email, password, name, avatar, type }, { extra }) => {
     const { api, history } = extra;
-    const { data } = await api.post<{ id: string }>(ApiRoute.Register, {
-      email,
-      password,
-      name,
-      type,
-    });
+    const userData = adaptUserToServer({ email, password, name, avatar, type });
+
+    await api.post<{ id: string }>(ApiRoute.Register, userData);
+
     if (avatar) {
       const payload = new FormData();
-      payload.append('avatar', avatar);
-      await api.post(`/${data.id}${ApiRoute.Avatar}`, payload, {
+
+      payload.append('user-avatar', avatar);
+
+      await api.post(`${ApiRoute.Avatar}`, payload, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
     }

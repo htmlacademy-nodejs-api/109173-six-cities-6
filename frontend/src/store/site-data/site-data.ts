@@ -56,7 +56,7 @@ export const siteData = createSlice({
         state.offers.push(action.payload);
       })
       .addCase(deleteOffer.fulfilled, (state, action) => {
-        const deletedOffer = action.payload
+        const deletedOffer = action.payload;
         state.offers = state.offers.filter((offer) => offer.id !== deletedOffer);
       })
       .addCase(editOffer.fulfilled, (state, action) => {
