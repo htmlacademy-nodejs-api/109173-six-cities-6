@@ -4,9 +4,9 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import type { UserAuth, User, Offer, Comment, CommentAuth, FavoriteAuth, UserRegister, NewOffer } from '../types/types';
 import { ApiRoute, AppRoute, HttpCode } from '../const';
 import { Token } from '../utils';
-import { OffersListItemRDO } from '../adapters/dto/offer/dto/rdo/offers-list-item.rdo';
+import { OffersListItemRDO } from '../adapters/dto/offer/rdo/offers-list-item.rdo';
 import { adaptFavoritesToClient, adaptOffersToClient } from '../adapters/to-client.adapters';
-import { OfferDetailRDO } from '../adapters/dto/offer/dto/rdo/offer-detail.rdo';
+import { OfferDetailRDO } from '../adapters/dto/offer/rdo/offer-detail.rdo';
 
 type Extra = {
   api: AxiosInstance;

@@ -1,7 +1,7 @@
 import { UserType } from '../const';
 import { Offer } from '../types/types';
-import { OfferDetailRDO } from './dto/offer/dto/rdo/offer-detail.rdo';
-import { OffersListItemRDO } from './dto/offer/dto/rdo/offers-list-item.rdo';
+import { OfferDetailRDO } from './dto/offer/rdo/offer-detail.rdo';
+import { OffersListItemRDO } from './dto/offer/rdo/offers-list-item.rdo';
 
 export function adaptOffersToClient(data: OffersListItemRDO[]): Offer[] {
   return data.map((offer) => ({

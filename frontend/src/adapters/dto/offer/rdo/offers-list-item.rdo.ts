@@ -1,4 +1,4 @@
-import { City, OfferType } from '../create-offer.dto';
+import { City, OfferType } from '../dto/create-offer.dto';
 
 export class OffersListItemRDO {
   public id!: string;

@@ -1,6 +1,8 @@
-import { City, Coordinate, FacilitiesType, Images, OfferType } from '../create-offer.dto';
+import { UserRDO } from '../../user/rdo/user.rdo';
+import { City, Coordinate, FacilitiesType, Images, OfferType } from '../dto/create-offer.dto';
 
-export class OfferRDO {
+export class OfferDetailRDO {
+  public id!: string;
   public name!: string;
   public description!: string;
   public date!: string;
@@ -15,7 +17,7 @@ export class OfferRDO {
   public guests!: number;
   public price!: number;
   public facilities!: FacilitiesType[];
-  public userId!: string;
+  public user!: UserRDO;
   public commentCount!: number;
   public coordinates!: Coordinate;
 }
