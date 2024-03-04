@@ -57,7 +57,7 @@ export class PathTransformer {
             continue;
           }
 
-          // Обрабатываем обычные строковые параметры
+          // // Обрабатываем обычные строковые параметры
           if (typeof value === 'string') {
             current[key] = this.getRootPath(value);
           }

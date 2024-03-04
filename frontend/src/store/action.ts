@@ -91,12 +91,15 @@ export const editOffer = createAsyncThunk<Offer, Offer, { extra: Extra }>(
     return data;
   });
 
-export const deleteOffer = createAsyncThunk<void, string, { extra: Extra }>(
+export const deleteOffer = createAsyncThunk<string, string, { extra: Extra }>(
   Action.DELETE_OFFER,
   async (id, { extra }) => {
     const { api, history } = extra;
     await api.delete(`${ApiRoute.Offers}/${id}`);
+
     history.push(AppRoute.Root);
+
+    return id;
   });
 
 export const fetchPremiumOffers = createAsyncThunk<Offer[], string, { extra: Extra }>(

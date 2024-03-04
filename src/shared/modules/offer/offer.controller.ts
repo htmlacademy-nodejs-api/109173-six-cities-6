@@ -146,6 +146,8 @@ export class OfferController extends BaseController implements ControllerAdditio
       }
     }
 
+    console.log('OFFER ', offer);
+
     this.ok(res, fillDTO(OfferDetailRDO, offer));
   }
 
@@ -188,7 +190,7 @@ export class OfferController extends BaseController implements ControllerAdditio
     await this.offerService.deleteById(offerId);
     await this.commentService.deleteByOfferId(offerId);
 
-    this.ok(res, offer);
+    this.ok(res, fillDTO(OfferDetailRDO, offer));
   }
 
   public async getPremiumByCityName({ params }: GetPremiumOffers, res: Response): Promise<void> {

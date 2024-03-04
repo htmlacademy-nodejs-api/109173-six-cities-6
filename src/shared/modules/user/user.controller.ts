@@ -24,7 +24,6 @@ import { ParamsOfferId } from '../../libs/rest/types/params-offerid.type.js';
 
 import { LoggedUserRDO } from './rdo/logged-user.rdo.js';
 import { UserRDO } from './rdo/user.rdo.js';
-import { OffersListItemRDO } from '../offer/rdo/offers-list-item.rdo.js';
 import { CheckUserStatusRDO } from './rdo/check-user-status.rdo.js';
 import { LoginUserDTO } from './dto/login-user.dto.js';
 import { CheckUserStatusDTO } from './dto/check-user-status.dto.js';
@@ -214,7 +213,6 @@ export class UserController extends BaseController implements ControllerAddition
 
   public async getFavorites({ tokenPayload }: GetFavoriteOffersRequest, res: Response): Promise<void> {
     const { userId } = tokenPayload;
-
     const offers = await this.userService.getFavoriteOffers(userId);
 
     this.ok(res, fillDTO(UserFavoritesOffersRDO, offers));

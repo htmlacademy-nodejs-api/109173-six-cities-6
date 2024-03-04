@@ -12,7 +12,7 @@ GET http://localhost:8000/offers/?limit=2 HTTP/1.1
 ###
 
 ## Детальная информация о конкретном предолжении
-GET http://localhost:8000/offers/65e4b67559b5957716e60255 HTTP/1.1
+GET http://localhost:8000/offers/65e60a830e3bf6c6ceba04c9 HTTP/1.1
 # Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI2NWQ4NzM1MTM0ZmQ3N2NkMzI5Y2RjNTgiLCJuYW1lIjoiUm9iZXJ0IERvd25leSIsImVtYWlsIjoiaXJvbm1hbkBzdGFyay1pbmR1c3RyaWVzLmxvYyIsImF2YXRhclVybCI6InVzZXItYXZhdGFyLlBjYnRyZGVienkzTExCQWQ0cDFEZC5qcGVnIiwiaXNQcm8iOnRydWUsImZhdm9yaXRlT2ZmZXJzIjpbIjY1ZDg3M2VlMzRmZDc3Y2QzMjljZGM1ZCIsIjY1ZDg3NDEzMzRmZDc3Y2QzMjljZGM1ZiJdLCJleHAiOjE3MDk2NjEzMTcsImlhdCI6MTcwOTQ4ODUxN30.Jj4tjjjB3sCChxbvSmN2gKGdlNGCXgANQV8HB3QHJJM
 
 ###
@@ -81,5 +81,5 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI2NWQ4NzM1MTM0ZmQ3N2NkM
 ###
 
 ## Удаление предложения и комментариев к нему
-DELETE http://localhost:8000/offers/65e612de78cf0c1a6cfe2f23 HTTP/1.1
+DELETE http://localhost:8000/offers/65e62ff9561eef9bb4572150 HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI2NWQ4NzM1MTM0ZmQ3N2NkMzI5Y2RjNTgiLCJuYW1lIjoiUm9iZXJ0IERvd25leSIsImVtYWlsIjoiaXJvbm1hbkBzdGFyay1pbmR1c3RyaWVzLmxvYyIsImF2YXRhclVybCI6InVzZXItYXZhdGFyLlBjYnRyZGVienkzTExCQWQ0cDFEZC5qcGVnIiwiaXNQcm8iOnRydWUsImZhdm9yaXRlT2ZmZXJzIjpbIjY1ZTRiNjc1NTliNTk1NzcxNmU2MDI1NSJdLCJleHAiOjE3MDk3NDQxODcsImlhdCI6MTcwOTU3MTM4N30.hKQAfB8tNVDM3OA_9HtIuniE56cs0V_ZDeqbIIIq3kY
