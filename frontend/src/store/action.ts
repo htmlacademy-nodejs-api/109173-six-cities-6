@@ -4,9 +4,10 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import type { UserAuth, User, Offer, Comment, CommentAuth, FavoriteAuth, UserRegister, NewOffer } from '../types/types';
 import { ApiRoute, AppRoute, HttpCode } from '../const';
 import { Token } from '../utils';
+
 import { OffersListItemRDO } from '../adapters/dto/offer/rdo/offers-list-item.rdo';
-import { adaptFavoritesToClient, adaptOffersToClient } from '../adapters/to-client.adapters';
 import { OfferDetailRDO } from '../adapters/dto/offer/rdo/offer-detail.rdo';
+import { adaptOfferDetailToClient, adaptOffersToClient } from '../adapters/to-client.adapters';
 
 type Extra = {
   api: AxiosInstance;
@@ -44,7 +45,7 @@ export const fetchFavoriteOffers = createAsyncThunk<Offer[], undefined, { extra:
   Action.FETCH_FAVORITE_OFFERS,
   async (_, { extra }) => {
     const { api } = extra;
-    const { data } = await api.get<OffersListItemRDO[]>(ApiRoute.Favorite);
+    const { data } = await api.get<OfferDetailRDO[]>(ApiRoute.Favorite);
 
     return adaptOffersToClient(data);
   });
@@ -57,7 +58,7 @@ export const fetchOffer = createAsyncThunk<Offer, Offer['id'], { extra: Extra }>
     try {
       const { data } = await api.get<OfferDetailRDO>(`${ApiRoute.Offers}/${id}`);
 
-      return adaptFavoritesToClient(data);
+      return adaptOfferDetailToClient(data);
     } catch (error) {
       const axiosError = error as AxiosError;
 

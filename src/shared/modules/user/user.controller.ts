@@ -32,6 +32,7 @@ import { CreateUserDTO } from './index.js';
 import { fillDTO } from '../../../utils/common.js';
 import { GetOfferDTO } from '../offer/dto/get-offer.dto.js';
 import { UserFavoritesRDO } from './rdo/user-favorites.rdo..js';
+import { UserFavoritesOffersRDO } from './rdo/user-favorites-offers.rdo.js';
 
 type CreateUserRequest = Request<RequestParams, RequestBody, CreateUserDTO>
 type LoginUserRequest = Request<RequestParams, RequestBody, LoginUserDTO>;
@@ -216,7 +217,7 @@ export class UserController extends BaseController implements ControllerAddition
 
     const offers = await this.userService.getFavoriteOffers(userId);
 
-    this.ok(res, fillDTO(OffersListItemRDO, offers));
+    this.ok(res, fillDTO(UserFavoritesOffersRDO, offers));
   }
 
   public async addToFavorites({ params, tokenPayload }: AddToFavoritesRequest, res: Response): Promise<void> {

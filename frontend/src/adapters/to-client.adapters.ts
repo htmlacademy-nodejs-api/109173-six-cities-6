@@ -38,7 +38,7 @@ export function adaptOffersToClient(data: OffersListItemRDO[]): Offer[] {
   }));
 }
 
-export function adaptFavoritesToClient(data: OfferDetailRDO): Offer {
+export function adaptOfferDetailToClient(data: OfferDetailRDO): Offer {
   return {
     id: data.id,
     price: data.price,
