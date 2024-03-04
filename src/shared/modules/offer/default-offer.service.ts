@@ -65,7 +65,7 @@ export class DefaultOfferService implements OfferService, DocumentExists {
     return await this.offerModel
       .findById(id)
       .populate('userId')
-      .exec();
+      .lean();
   }
 
   public async findOrCreate(dto: CreateOfferDTO): FoundOffer {

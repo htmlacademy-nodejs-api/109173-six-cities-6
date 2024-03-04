@@ -182,8 +182,7 @@ export class OfferController extends BaseController implements ControllerAdditio
   public async deleteWithComments(req: GetOfferRequest, res: Response): Promise<void> {
     await this.checkUserRights(req);
 
-    const { params }: GetOfferRequest = req;
-    const { offerId } = params;
+    const { offerId } = req.params;
     const offer = await this.offerService.findById(offerId);
 
     await this.offerService.deleteById(offerId);
