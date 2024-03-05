@@ -5,7 +5,7 @@ import { RestConfig } from '../../config/rest.config.js';
 import { getDirectoryFiles } from '../../../../utils/file-system.js';
 import { Logger } from 'pino';
 import { StaticRoutes } from '../../../../rest/rest.constant.js';
-import { getFullServerPath, isObject } from '../../../../utils/common.js';
+import { getFullServerPath, isObject, isValidURL } from '../../../../utils/common.js';
 
 @injectable()
 export class PathTransformer {
@@ -27,6 +27,10 @@ export class PathTransformer {
   }
 
   private getRootPath(fileName: string) {
+    if(isValidURL(fileName)) {
+      return fileName;
+    }
+
     const serverProtocol = this.config.get('PROTO');
     const serverHost = this.config.get('HOST');
     const serverPort = this.config.get('PORT');

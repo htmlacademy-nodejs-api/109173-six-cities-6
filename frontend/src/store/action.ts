@@ -9,7 +9,7 @@ import { OffersListItemRDO } from '../adapters/dto/offer/rdo/offers-list-item.rd
 import { OfferDetailRDO } from '../adapters/dto/offer/rdo/offer-detail.rdo';
 import { adaptCommentsToClient, adaptOfferDetailToClient, adaptOffersToClient } from '../adapters/to-client.adapters';
 import { CommentRDO } from '../adapters/dto/comments/rdo/comment.rdo';
-import { adaptUserToServer } from '../adapters/to-server.adapters';
+import { adaptOfferToServer, adaptUserToServer } from '../adapters/to-server.adapters';
 
 type Extra = {
   api: AxiosInstance;
@@ -75,8 +75,10 @@ export const fetchOffer = createAsyncThunk<Offer, Offer['id'], { extra: Extra }>
 export const postOffer = createAsyncThunk<Offer, NewOffer, { extra: Extra }>(
   Action.POST_OFFER,
   async (newOffer, { extra }) => {
+    const adaptedOffer = adaptOfferToServer(newOffer);
     const { api, history } = extra;
-    const { data } = await api.post<Offer>(ApiRoute.Offers, newOffer);
+    const { data } = await api.post<Offer>(ApiRoute.Offers, adaptedOffer);
+
     history.push(`${AppRoute.Property}/${data.id}`);
 
     return data;

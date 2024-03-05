@@ -36,6 +36,16 @@ function isObject(value: unknown): value is Record<string, object> {
   return (typeof value === 'object' && value !== null);
 }
 
+function isValidURL(value: string): boolean {
+  try {
+    const url = new URL(value);
+
+    return Boolean(url);
+  } catch(err) {
+    return false;
+  }
+}
+
 export {
   upperCaseFirst,
   getRandomInRange,
@@ -44,5 +54,6 @@ export {
   getRandomElements,
   fillDTO,
   getFullServerPath,
-  isObject
+  isObject,
+  isValidURL
 };

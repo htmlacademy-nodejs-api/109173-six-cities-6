@@ -146,8 +146,6 @@ export class OfferController extends BaseController implements ControllerAdditio
       }
     }
 
-    console.log('OFFER ', offer);
-
     this.ok(res, fillDTO(OfferDetailRDO, offer));
   }
 

@@ -2,7 +2,7 @@ export class CreateOfferDTO {
   public name!: string;
   public description!: string;
   public date!: string;
-  public city!: City;
+  public city!: string;
   public previewImage!: string;
   public images!: Images;
   public isPremium!: boolean;
@@ -12,8 +12,7 @@ export class CreateOfferDTO {
   public rooms!: number;
   public guests!: number;
   public price!: number;
-  public facilities!: FacilitiesType[];
-  public userId!: string;
+  public facilities!: string[];
   public commentCount!: number;
   public coordinates!: Coordinate;
 }
@@ -44,8 +43,7 @@ export const citiesList: City[] = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 
 export const FacilitiesTypes = {
   Breakfast: 'Breakfast',
   Conditioning: 'Air conditioning',
-  Laptop: 'Laptop',
-  Workspace: 'friendly workspace',
+  LaptopWorkspace: 'Laptop friendly workspace',
   Babyseat: 'Baby seat',
   Washer: 'Washer',
   Towels: 'Towels',

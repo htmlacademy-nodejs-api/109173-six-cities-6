@@ -30,11 +30,14 @@ export const createAPI = (): AxiosInstance => {
     (error: AxiosError) => {
       toast.dismiss();
 
-      if(error?.response && error.response.data?.detail) {
-        error.response.data.detail.map((errorItem: ValidationErrorField) => toast.warn(errorItem.messages));
+      if(error?.response && error.response.data?.details) {
+        error.response.data.details.map((errorItem: ValidationErrorField) => {
+          const messages = errorItem.messages.join(' | ');
+          toast.warn(messages);
+        });
+      } else {
+        toast.warn(error.response ? error.response.data.error : error.message);
       }
-
-      toast.warn(error.response ? error.response.data.error : error.message);
 
       return Promise.reject(error);
     }

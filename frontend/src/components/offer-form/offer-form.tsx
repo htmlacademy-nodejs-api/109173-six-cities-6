@@ -6,6 +6,7 @@ import { City, NewOffer, Offer } from '../../types/types';
 import LocationPicker from '../location-picker/location-picker';
 import { CITIES, CityLocation, GOODS, TYPES } from '../../const';
 import { capitalize } from '../../utils';
+import { getMockImageURL } from '../../adapters/utils/common';
 
 enum FormFieldName {
   title = 'title',
@@ -176,7 +177,7 @@ const OfferForm = <T extends Offer | NewOffer>({
           name={FormFieldName.previewImage}
           id="previewImage"
           required
-          defaultValue={previewImage}
+          defaultValue={previewImage !== '' ? previewImage : getMockImageURL()}
         />
       </div>
       <fieldset className="images-fieldset">
@@ -192,7 +193,7 @@ const OfferForm = <T extends Offer | NewOffer>({
               name={`${FormFieldName.image}-${index}`}
               id={`image-${index}`}
               required
-              defaultValue={image}
+              defaultValue={image !== '' ? image : getMockImageURL()}
             />
           </div>
         ))}
