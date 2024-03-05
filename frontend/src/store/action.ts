@@ -87,8 +87,10 @@ export const postOffer = createAsyncThunk<Offer, NewOffer, { extra: Extra }>(
 export const editOffer = createAsyncThunk<Offer, Offer, { extra: Extra }>(
   Action.EDIT_OFFER,
   async (offer, { extra }) => {
+    const adaptedOffer = adaptOfferToServer(offer);
     const { api, history } = extra;
-    const { data } = await api.patch<Offer>(`${ApiRoute.Offers}/${offer.id}`, offer);
+    const { data } = await api.patch<Offer>(`${ApiRoute.Offers}/${offer.id}`, adaptedOffer);
+
     history.push(`${AppRoute.Property}/${data.id}`);
 
     return data;
