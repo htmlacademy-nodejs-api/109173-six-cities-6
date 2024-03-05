@@ -6,8 +6,10 @@ import { FacilitiesType } from '../shared/types/facilities-type.enum.js';
 import { OfferType } from '../shared/types/offer-type.enum.js';
 import { Offer } from '../shared/types/offer.type.js';
 import { UserEntity } from '../shared/modules/user/user.entity.js';
+import { CityCoordinates } from '../shared/types/city-coordinates.enum.js';
+import { Coordinate } from '../shared/types/coordinate.type.js';
 
-const {DELIMITER} = TSVSettings;
+const { DELIMITER } = TSVSettings;
 
 export function makeOffer(fileRow: string): Offer {
   const [
@@ -85,4 +87,8 @@ export function adaptOfferToDB(offer: Offer, user: DocumentType<UserEntity>): Cr
   };
 
   return adaptedOffer;
+}
+
+export function getCoordinatesByCity(cityName: City): Coordinate {
+  return CityCoordinates[cityName];
 }

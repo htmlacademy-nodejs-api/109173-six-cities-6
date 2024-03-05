@@ -16,7 +16,6 @@ import { RequestBody, RequestParams } from '../../libs/rest/types/request.type.j
 import { City } from '../../types/city-type.enum.js';
 import { ParamsCityName } from '../../libs/rest/types/params-cityName.type.js';
 import { ParamsFavoriteStatus } from '../../libs/rest/types/params-favorite-status.type.js';
-import { ParamsUserId } from '../../libs/rest/types/params-userid.type .js';
 import { ParamsOfferId } from '../../libs/rest/types/params-offerid.type.js';
 
 import { CreateOfferDTO } from './dto/create-offer.dto.js';
@@ -32,8 +31,7 @@ import { ControllerAdditionalInterface } from '../../libs/rest/controller/contro
 import { ValidateDTOMiddleware } from '../../libs/rest/middleware/validate-dto.middleware.js';
 import { DocumentExistsMiddleware } from '../../libs/rest/middleware/document-exists.middleware.js';
 import { PrivateRouteMiddleware } from '../../libs/rest/middleware/private-route.middleware.js';
-import { CityCoordinates } from '../../types/city-coordinates.enum.js';
-import { OfferProps } from './offer.constant.js';
+import { getCoordinatesByCity } from '../../../utils/offer.js';
 
 const MessageText = {
   INIT_CONTROLLER: 'Controller initialized'
@@ -41,6 +39,7 @@ const MessageText = {
 
 const ErrorText = {
   NOT_FOUND: 'Offer with requested ID not found',
+  CANT_EDIT: 'You haven`t permit to edit/delete this offer as you didn`t create it',
   CITY_NOT_FOUND: 'Not found premium offers for city',
   USER_NOT_FOUND: 'User with requested ID not found '
 } as const;
@@ -50,8 +49,6 @@ type CreateOfferRequest = Request<RequestParams, RequestBody, CreateOfferDTO>;
 type UpdateOfferRequest = Request<ParamsOfferId, RequestBody, UpdateOfferDTO>
 type DeleteOfferRequest = Request<ParamsOfferId, RequestBody, GetOfferDTO>
 type GetPremiumOffers = Request<ParamsCityName, RequestBody, GetOfferDTO>
-type GetFavoriteOffers = Request<ParamsUserId, RequestBody, GetOfferDTO>
-type ChangeFavoriteStatus = Request<ParamsFavoriteStatus, RequestBody, GetOfferDTO>
 
 @injectable()
 export class OfferController extends BaseController implements ControllerAdditionalInterface {
@@ -72,34 +69,18 @@ export class OfferController extends BaseController implements ControllerAdditio
   }
 
   public registerRoutes() {
-    this.addRoute({
+    this.addRoute({ // Получение списка предложения
       path: '/',
       method: HttpMethod.GET,
       handler: this.getList
     });
-    this.addRoute({
+    this.addRoute({ // Создание предложения
       path: '/',
       method: HttpMethod.POST,
       handler: this.create,
       middlewares: [
-        new PrivateRouteMiddleware(),
+        new PrivateRouteMiddleware(), // (только авторизованные юзеры)
         new ValidateDTOMiddleware(CreateOfferDTO)
-      ]
-    });
-    this.addRoute({
-      path: '/favorites/',
-      method: HttpMethod.GET,
-      handler: this.getFavoritesByUserId,
-      middlewares: [ new PrivateRouteMiddleware() ]
-    });
-    this.addRoute({
-      path: '/favorites/:offerId/:status',
-      method: HttpMethod.PATCH,
-      handler: this.changeFavoriteStatus,
-      middlewares: [
-        new PrivateRouteMiddleware(),
-        new ValidateObjectIdMiddleware('offerId'),
-        new DocumentExistsMiddleware('offerId', this.offerService)
       ]
     });
     this.addRoute({
@@ -107,7 +88,7 @@ export class OfferController extends BaseController implements ControllerAdditio
       method: HttpMethod.GET,
       handler: this.getPremiumByCityName
     });
-    this.addRoute({
+    this.addRoute({ // Получение детальной информации о предложении
       path: '/:offerId',
       method: HttpMethod.GET,
       handler: this.getItem,
@@ -116,7 +97,7 @@ export class OfferController extends BaseController implements ControllerAdditio
         new DocumentExistsMiddleware('offerId', this.offerService)
       ]
     });
-    this.addRoute({
+    this.addRoute({ // Редактирование предложения
       path: '/:offerId',
       method: HttpMethod.PATCH,
       handler: this.update,
@@ -127,7 +108,7 @@ export class OfferController extends BaseController implements ControllerAdditio
         new DocumentExistsMiddleware('offerId', this.offerService),
       ]
     });
-    this.addRoute({
+    this.addRoute({ // Удаление предложения
       path: '/:offerId',
       method: HttpMethod.DELETE,
       handler: this.deleteWithComments,
@@ -160,22 +141,26 @@ export class OfferController extends BaseController implements ControllerAdditio
   }
 
   public async create({ body }: CreateOfferRequest, res: Response): Promise<void> {
-    body.coordinates = CityCoordinates[body.city];
-
     const offer = await this.offerService.create(body);
 
     this.created(res, fillDTO(OfferRDO, offer));
   }
 
-  public async update({ body, params }: UpdateOfferRequest, res: Response): Promise<void> {
-    const { offerId } = params;
+  public async update(req: UpdateOfferRequest, res: Response): Promise<void> {
+    const { offerId } = req.params;
+    const { body } = req;
+
+    await this.checkUserRights(req);
+
     const updatedOffer = await this.offerService.updateById(offerId, body);
 
     this.ok(res, fillDTO(OfferRDO, updatedOffer));
   }
 
-  public async delete({ params }: DeleteOfferRequest, res: Response): Promise<void> {
-    const { offerId } = params;
+  public async delete(req: DeleteOfferRequest, res: Response): Promise<void> {
+    await this.checkUserRights(req);
+
+    const { offerId } = req.params;
     const offer = await this.exists(offerId as string);
 
     await this.offerService.deleteById(offerId);
@@ -184,31 +169,16 @@ export class OfferController extends BaseController implements ControllerAdditio
   }
 
   public async deleteWithComments(req: GetOfferRequest, res: Response): Promise<void> {
+    await this.checkUserRights(req);
+
     const { params }: GetOfferRequest = req;
     const { offerId } = params;
-    const offer = await this.getItem(req, res);
+    const offer = await this.offerService.findById(offerId);
 
     await this.offerService.deleteById(offerId);
     await this.commentService.deleteByOfferId(offerId);
 
     this.ok(res, offer);
-  }
-
-  public async getFavoritesByUserId({ tokenPayload }: GetFavoriteOffers, res: Response): Promise<void> {
-    const { userId } = tokenPayload;
-    const user = await this.userService.exists(userId);
-
-    if(!user) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `${ErrorText.NOT_FOUND}: ${userId}`,
-        this.getControllerName()
-      );
-    }
-
-    const offers = await this.userService.getFavoriteOffers(userId);
-
-    this.ok(res, fillDTO(OfferRDO, offers));
   }
 
   public async getPremiumByCityName({ params }: GetPremiumOffers, res: Response): Promise<void> {
@@ -224,16 +194,6 @@ export class OfferController extends BaseController implements ControllerAdditio
     }
 
     this.ok(res, fillDTO(OfferRDO, offers));
-  }
-
-  public async changeFavoriteStatus({ params }: ChangeFavoriteStatus, res: Response): Promise<void> {
-    const { offerId, status } = params;
-
-    await this.exists(offerId);
-
-    const updatedOffer = await this.offerService.changeFavoriteStatus(offerId, Number(status));
-
-    this.ok(res, fillDTO(OfferDetailRDO, updatedOffer));
   }
 
   private async exists(offerId: string): FoundOffer {
@@ -264,5 +224,21 @@ export class OfferController extends BaseController implements ControllerAdditio
     });
 
     return offers;
+  }
+
+  private async checkUserRights({ params, tokenPayload }: UpdateOfferRequest | DeleteOfferRequest): Promise<boolean> {
+    const { userId } = tokenPayload;
+    const { offerId } = params;
+    const isUserCanEdit = await this.offerService.isUserCanEdit(userId, offerId);
+
+    if(!isUserCanEdit) {
+      throw new HttpError(
+        StatusCodes.UNAUTHORIZED,
+        `${ErrorText.CANT_EDIT}: ${offerId}`,
+        this.getControllerName()
+      );
+    }
+
+    return isUserCanEdit;
   }
 }

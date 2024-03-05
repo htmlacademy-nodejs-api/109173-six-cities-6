@@ -7,6 +7,6 @@ const ErrorText = {
 
 export class UserIncorrectPasswordException extends BaseUserException {
   constructor() {
-    super(StatusCodes.NOT_FOUND, ErrorText.INCORRECT_DATA);
+    super(StatusCodes.UNAUTHORIZED, ErrorText.INCORRECT_DATA);
   }
 }

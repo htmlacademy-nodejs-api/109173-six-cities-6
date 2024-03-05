@@ -2,7 +2,7 @@
 
 ## Список предложений
 GET http://localhost:8000/offers/ HTTP/1.1
-# Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI2NWQ1ZjRiMzYyZDU5ZmNmZDAzY2Q4MGIiLCJuYW1lIjoiUm9iZXJ0IERvd25leSIsImVtYWlsIjoiaXJvbm1hbkBzdGFyay1pbmR1c3RyaWVzLmxvYyIsImF2YXRhclVybCI6IkQ6XFxPcGVuU2VydmVyXFxkb21haW5zXFxzaXgtY2l0aWVzLm5vZGUubG9jXFx1cGxvYWRcXHVzZXItYXZhdGFyLlpjdTRvVWR1Y2hnbUpnMnhFWlNlQi5qcGVnIiwiaXNQcm8iOnRydWUsImZhdm9yaXRlT2ZmZXJzIjpbIjY1YzM1MzlmMTc3YTJhZDNkNTI5ZjAwYyIsIjY1YzM1MzlmMTc3YTJhZDNkNTI5ZjAxYyJdLCJleHAiOjE3MDkyMDgxMTEsImlhdCI6MTcwOTAzNTMxMX0.0juorHTzqy4-gF7uxsKAEPiF1AKTZ0VNbqacopP3aaE
+# Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI2NWQ1ZjRiMzYyZDU5ZmNmZDAzY2Q4MGIiLCJuYW1lIjoiUm9iZXJ0IERvd25leSIsImVtYWlsIjoiaXJvbm1hbkBzdGFyay1pbmR1c3RyaWVzLmxvYyIsImF2YXRhclVybCI6IkQ6XFxPcGVuU2VydmVyXFxkb21haW5zXFxzaXgtY2l0aWVzLm5vZGUubG9jXFx1cGxvYWRcXHVzZXItYXZhdGFyLlpjdTRvVWR1Y2hnbUpnMnhFWlNlQi5qcGVnIiwiaXNQcm8iOnRydWUsImZhdm9yaXRlT2ZmZXJzIjpbIjY1YzM1MzlmMTc3YTJhZDNkNTI5ZjAwYyIsIjY1YzM1MzlmMTc3YTJhZDNkNTI5ZjAxYyJdLCJleHAiOjE3MDkzNjgzMDUsImlhdCI6MTcwOTE5NTUwNX0.Ad3KqAy8ahfYr_SSUC79t-BJz4RL5LnQvjN-d4-tTvQ
 
 ###
 
@@ -22,22 +22,11 @@ GET http://localhost:8000/offers/premium/Cologne HTTP/1.1
 
 ###
 
-## Изменение статуса "Избранное" у предложения
-PATCH  http://localhost:8000/offers/favorites/65d873ee34fd77cd329cdc5d/1 HTTP/1.1
-# Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI2NWQ4#NzM1MTM0ZmQ3N2NkMzI5Y2RjNTgiLCJuYW1lIjoiUm9iZXJ0IERvd25leSIsImVtYWlsIjoiaXJvbm1hbkBzdGFyay1pbmR1c3RyaWVzLmxvYyIsImF2YXRhclVybCI6IkQ6XFxPcGVuU2VydmVyXFxkb21haW5zXFxzaXgtY2l0aWVzLm5vZGUubG9jXFx1cGxvYWRcXHVzZXItYXZhdGFyLmNKZDlkQ1U3MHB2VU56aUQ2Z0tJNy5qcGVnIiwiaXNQcm8iOnRydWUsImZhdm9yaXRlT2ZmZXJzIjpbXSwiZXhwIjoxNzA5MTQ1ODI0LCJpYXQiOjE3MDg5NzMwMjR9.Q6j2hHrHiJFozXhk8qwmvQfwBGib2t0RSDldEfUqm9I
-
-###
-
-## Получение списка избранных предложений для пользователя
-GET http://localhost:8000/offers/favorites/ HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI2NWQ4NzM1MTM0ZmQ3N2NkMzI5Y2RjNTgiLCJuYW1lIjoiUm9iZXJ0IERvd25leSIsImVtYWlsIjoiaXJvbm1hbkBzdGFyay1pbmR1c3RyaWVzLmxvYyIsImF2YXRhclVybCI6IkQ6XFxPcGVuU2VydmVyXFxkb21haW5zXFxzaXgtY2l0aWVzLm5vZGUubG9jXFx1cGxvYWRcXHVzZXItYXZhdGFyLmNKZDlkQ1U3MHB2VU56aUQ2Z0tJNy5qcGVnIiwiaXNQcm8iOnRydWUsImZhdm9yaXRlT2ZmZXJzIjpbXSwiZXhwIjoxNzA5MTQ1ODI0LCJpYXQiOjE3MDg5NzMwMjR9.Q6j2hHrHiJFozXhk8qwmvQfwBGib2t0RSDldEfUqm9I
-
-###
 
 ## Создание предолжения
-POST http://localhost:8000/offers/ HTTP/1.1
+POST http://localhost:9000/offers/ HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI2NWQ1ZjRiMzYyZDU5ZmNmZDAzY2Q4MGIiLCJuYW1lIjoiUm9iZXJ0IERvd25leSIsImVtYWlsIjoiaXJvbm1hbkBzdGFyay1pbmR1c3RyaWVzLmxvYyIsImF2YXRhclVybCI6IkQ6XFxPcGVuU2VydmVyXFxkb21haW5zXFxzaXgtY2l0aWVzLm5vZGUubG9jXFx1cGxvYWRcXHVzZXItYXZhdGFyLlpjdTRvVWR1Y2hnbUpnMnhFWlNlQi5qcGVnIiwiaXNQcm8iOnRydWUsImZhdm9yaXRlT2ZmZXJzIjpbIjY1YzM1MzlmMTc3YTJhZDNkNTI5ZjAwYyIsIjY1YzM1MzlmMTc3YTJhZDNkNTI5ZjAxYyJdLCJleHAiOjE3MDkyMTYxOTYsImlhdCI6MTcwOTA0MzM5Nn0.ahcAe3XW-0jtRyyHVNSvr2Ijh6XJOmxtJ_E21RXEMe0
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI2NWQ4NzM1MTM0ZmQ3N2NkMzI5Y2RjNTgiLCJuYW1lIjoiUm9iZXJ0IERvd25leSIsImVtYWlsIjoiaXJvbm1hbkBzdGFyay1pbmR1c3RyaWVzLmxvYyIsImF2YXRhclVybCI6IkQ6XFxPcGVuU2VydmVyXFxkb21haW5zXFxzaXgtY2l0aWVzLm5vZGUubG9jXFx1cGxvYWRcXHVzZXItYXZhdGFyLnJRZHpYYVBULURNM2pFcDlHS2FUOC5qcGVnIiwiaXNQcm8iOnRydWUsImZhdm9yaXRlT2ZmZXJzIjpbIjY1ZDg3M2VlMzRmZDc3Y2QzMjljZGM1ZCJdLCJleHAiOjE3MDk1NTM3MzYsImlhdCI6MTcwOTM4MDkzNn0.NW8-fLG_I7u3ZGdrUghZ9xUOjjBn_43Bpc5-q4zO70U
 
 {
   "name": "A-frame in mountines",
@@ -55,7 +44,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI2NWQ1ZjRiMzYyZDU5ZmNmZ
   ],
   "isPremium": true,
   "isFavorite": true,
-  "rating": 1.2,
   "type": "house",
   "rooms": 1,
   "guests": 10,
@@ -67,27 +55,29 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI2NWQ1ZjRiMzYyZDU5ZmNmZ
     "Breakfast"
   ],
   "userId": "65c3539f177a2ad3d529f005",
-  "commentCount": 0
+  "commentCount": 0,
+  "coordinates": {
+    "latitude": "1234",
+    "longitude": "42.351697"
+  }
 }
 
 ###
 
 ## Обновление предложения
-PATCH http://localhost:8000/offers/65c3539f177a2ad3d529f002 HTTP/1.1
+PATCH http://localhost:8000/offers/65d8741334fd77cd329cdc5f HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI2NWQ4NzM1MTM0ZmQ3N2NkMzI5Y2RjNTgiLCJuYW1lIjoiUm9iZXJ0IERvd25leSIsImVtYWlsIjoiaXJvbm1hbkBzdGFyay1pbmR1c3RyaWVzLmxvYyIsImF2YXRhclVybCI6IkQ6XFxPcGVuU2VydmVyXFxkb21haW5zXFxzaXgtY2l0aWVzLm5vZGUubG9jXFx1cGxvYWRcXHVzZXItYXZhdGFyLnJRZHpYYVBULURNM2pFcDlHS2FUOC5qcGVnIiwiaXNQcm8iOnRydWUsImZhdm9yaXRlT2ZmZXJzIjpbIjY1ZDg3M2VlMzRmZDc3Y2QzMjljZGM1ZCJdLCJleHAiOjE3MDk1NTM3MzYsImlhdCI6MTcwOTM4MDkzNn0.NW8-fLG_I7u3ZGdrUghZ9xUOjjBn_43Bpc5-q4zO70U
 
 {
-  "images": [
-    "photo1.jpg",
-    "photo2.jpg",
-    "photo3.jpg",
-    "photo4.jpg",
-    "photo5.jpg"
-  ]
+  "rating": 1.1,
+  "cucumber": true,
+  "userId": "65d873b334fd77cd329cdc5b"
 }
 
 ###
 
 ## Удаление предложения и комментариев к нему
-DELETE http://localhost:8000/offers/65c3539f177a2ad3d529f012 HTTP/1.1
+DELETE http://localhost:8000/offers/65df1b5d07abb53894eab2e1 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI2NWQ1ZjRiMzYyZDU5ZmNmZDAzY2Q4MGIiLCJuYW1lIjoiUm9iZXJ0IERvd25leSIsImVtYWlsIjoiaXJvbm1hbkBzdGFyay1pbmR1c3RyaWVzLmxvYyIsImF2YXRhclVybCI6IkQ6XFxPcGVuU2VydmVyXFxkb21haW5zXFxzaXgtY2l0aWVzLm5vZGUubG9jXFx1cGxvYWRcXHVzZXItYXZhdGFyLlpjdTRvVWR1Y2hnbUpnMnhFWlNlQi5qcGVnIiwiaXNQcm8iOnRydWUsImZhdm9yaXRlT2ZmZXJzIjpbIjY1YzM1MzlmMTc3YTJhZDNkNTI5ZjAwYyIsIjY1YzM1MzlmMTc3YTJhZDNkNTI5ZjAxYyJdLCJleHAiOjE3MDkzNjgzMDUsImlhdCI6MTcwOTE5NTUwNX0.Ad3KqAy8ahfYr_SSUC79t-BJz4RL5LnQvjN-d4-tTvQ
 

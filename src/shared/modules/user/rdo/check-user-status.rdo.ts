@@ -1,7 +1,8 @@
 import { Expose } from 'class-transformer';
 
-export class LoggedUserRDO {
+export class CheckUserStatusRDO {
   @Expose() name!: string;
   @Expose() email!: string;
-  @Expose() token!: string;
+  @Expose() avatarUrl!: string;
+  @Expose() isPro!: boolean;
 }

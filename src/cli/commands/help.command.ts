@@ -19,7 +19,7 @@ export class HelpCommand implements Command {
                   ════╚╝╚╝╚═╝═════════════════
       ${chalk.cyan('Программа для подготовки данных для REST API сервера.')}
 
-      Пример: cli.js --<${chalk.blue('command')}> [--arguments]
+      Пример: npm run ts ./src/main.cli.ts --<${chalk.blue('command')}> [--arguments]
 
       Команды:
 

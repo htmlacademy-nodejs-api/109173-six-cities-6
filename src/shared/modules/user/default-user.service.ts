@@ -3,13 +3,12 @@ import { CreateUserDTO, UserEntity } from './index.js';
 import { inject, injectable } from 'inversify';
 import { Logger } from '../../libs/logger/logger.interface.js';
 import { Component } from '../../types/component.enum.js';
-import { FoundUser, UserDoc, UserService, UserToken } from './user-service.interface.js';
+import { FoundUser, UserDoc, UserService } from './user-service.interface.js';
 import { types } from '@typegoose/typegoose';
 import { UpdateUserDTO } from './dto/update-user.dto.js';
 import { FoundOffers } from '../offer/offer-service.interface.js';
 import mongoose from 'mongoose';
 import { DocumentExists } from '../../types/document-exists.interface.js';
-
 const MessageText = {
   ADDED: 'New user successfully added. Email:',
 } as const;
@@ -37,7 +36,7 @@ export class DefaultUserService implements UserService, DocumentExists {
 
   public async updateById(id: string, dto: UpdateUserDTO): FoundUser {
     return await this.userModel
-      .findByIdAndUpdate(id, dto, {new: true})
+      .findByIdAndUpdate(id, dto, { new: true })
       .exec();
   }
 
@@ -47,20 +46,6 @@ export class DefaultUserService implements UserService, DocumentExists {
     return user !== null;
   }
 
-  public async logout(token: UserToken): Promise<void> {
-    const user = await this.userModel
-      .findOne({ token })
-      .exec();
-
-    if(user) {
-      const dto: UpdateUserDTO = {
-        token: ''
-      };
-
-      this.updateById(user.id, dto);
-    }
-  }
-
   public async checkAuthStatus(email: string): FoundUser {
     return await this.userModel
       .findOne({ email, token: { $ne: '' } })
@@ -68,7 +53,7 @@ export class DefaultUserService implements UserService, DocumentExists {
   }
 
   public async findById(id: string): FoundUser {
-    return await this.userModel.findById({ id }).exec();
+    return await this.userModel.findById(id).exec();
   }
 
   public async findByEmail(email: string): FoundUser {
@@ -86,11 +71,40 @@ export class DefaultUserService implements UserService, DocumentExists {
   }
 
   public async addToFavoritesIds(userId: string, offerId: string): FoundUser {
-    const userFavorites: string[] = await this.getFavoriteIds(userId);
+    const user = await this.findById(userId);
+    const userFavorites: string[] = user?.favoriteOffers ?? [];
+
+    if(userFavorites.includes(offerId)) {
+      return user;
+    }
 
     userFavorites.push(offerId);
 
-    return await this.userModel.findByIdAndUpdate(userId, { favoriteOffers: userFavorites });
+    return await this.userModel
+      .findByIdAndUpdate(
+        userId,
+        { favoriteOffers: userFavorites },
+        { new: true }
+      );
+  }
+
+  public async removeFromFavoritesIds(userId: string, offerId: string): FoundUser {
+    console.log('USER: ', userId);
+    const user = await this.findById(userId);
+    const userFavorites: string[] = user?.favoriteOffers ?? [];
+
+    if(!userFavorites.includes(offerId)) {
+      return user;
+    }
+
+    const updatedFavorites = userFavorites.filter((usersOfferID) => usersOfferID !== offerId);
+
+    return await this.userModel
+      .findByIdAndUpdate(
+        userId,
+        { favoriteOffers: updatedFavorites },
+        { new: true }
+      );
   }
 
   public async getFavoriteIds(userId: string): Promise<string[] | []> {

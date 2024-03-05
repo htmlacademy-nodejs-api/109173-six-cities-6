@@ -1,5 +1,6 @@
 import { inject, injectable } from 'inversify';
 import express, { Express } from 'express';
+import cors from 'cors';
 
 import { Config } from '../shared/libs/config/config.interface.js';
 import { RestSchema } from '../shared/libs/config/rest.schema.js';
@@ -67,6 +68,7 @@ export class RestApplication implements Rest{
       express.static(this.config.get('UPLOAD_FILES_DIRECTORY'))
     );
     this.server.use(authMiddleware.execute.bind(authMiddleware));
+    this.server.use(cors());
   }
 
   private async initControllers() {

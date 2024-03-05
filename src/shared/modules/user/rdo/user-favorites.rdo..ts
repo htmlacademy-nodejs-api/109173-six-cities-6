@@ -1,7 +1,7 @@
 import { Expose } from 'class-transformer';
 
-export class LoggedUserRDO {
+export class UserFavoritesRDO {
   @Expose() name!: string;
   @Expose() email!: string;
-  @Expose() token!: string;
+  @Expose() favoriteOffers!: string[];
 }

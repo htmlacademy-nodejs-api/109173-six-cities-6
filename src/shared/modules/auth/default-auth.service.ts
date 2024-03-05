@@ -8,8 +8,6 @@ import { Logger } from '../../libs/logger/logger.interface.js';
 import { RestConfig } from '../../libs/config/rest.config.js';
 import { UserService } from '../user/user-service.interface.js';
 import { TokenPayload } from '../../types/token-payload.type.js';
-import { HttpError } from '../../libs/rest/error/http-error.js';
-import { StatusCodes } from 'http-status-codes';
 import { UserNotFoundException } from './errors/user-not-found.exception.js';
 import { UserIncorrectPasswordException } from './errors/user-incorrect-password.exception.js';
 import { makeSecretKey } from '../../../utils/encrypt.js';
