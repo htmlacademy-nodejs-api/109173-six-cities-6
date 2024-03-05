@@ -4,9 +4,9 @@ import { MockData } from '../../shared/types/mock-data.type.js';
 import { ServiceURL, createAPI } from '../../shared/services/api.js';
 import { TSVFileGenerator } from '../../shared/libs/tsv-file-generator/tsv-file-generator.js';
 import { TSVFileWriter } from '../../shared/libs/tsv-file-writer/tsv-file-writer.js';
-import { GlobalSettings } from '../../global-settings.js';
+import { COMMAND_BEGINNING } from '../cli.constant.js';
 
-const COMMAND_NAME = `${GlobalSettings.COMMAND_BEGINNING}generate`;
+const COMMAND_NAME = `${COMMAND_BEGINNING}generate`;
 
 const ErrorText = {
   LOAD: 'Can`t load data from url:',

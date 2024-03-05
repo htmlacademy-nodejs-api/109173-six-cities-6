@@ -98,6 +98,7 @@ export class CreateOfferDTO {
   public facilities!: FacilitiesType[];
 
   @IsMongoId({ message: OfferErrorText.userId.INVALID_ID })
+  @IsOptional()
   public userId!: string;
 
   @IsInt({ message: OfferErrorText.commentCount.NOT_INTEGER })

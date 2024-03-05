@@ -81,7 +81,7 @@ export class DefaultOfferService implements OfferService, DocumentExists {
 
   public async getPremiumByCity(city: City, offersCount: number = PREMIUM_OFFERS_COUNT): FoundOffers {
     return await this.offerModel
-      .find({ city })
+      .find({ city, isPremium: true })
       .sort({ date: SortType.DOWN })
       .limit(offersCount)
       .exec();

@@ -2,8 +2,8 @@ import { injectable } from 'inversify';
 import { resolve } from 'node:path';
 import { Logger as PinoInstance, pino, transport } from 'pino';
 import { Logger } from './logger.interface.js';
-import { GlobalSettings } from '../../../global-settings.js';
 import { getCurrentModuleDirectoryPath } from '../../../utils/file-system.js';
+import { REST_LOGS } from '../../../rest/rest.constant.js';
 
 const MessageText = {
   INIT: 'Logger initialized'
@@ -27,7 +27,7 @@ export class PinoLogger implements Logger {
 
     if(this.logToFile) {
       const modulePath = getCurrentModuleDirectoryPath();
-      this.logFilePath ??= resolve(modulePath, '../../', GlobalSettings.REST_LOGS);
+      this.logFilePath ??= resolve(modulePath, '../../', REST_LOGS);
 
       transports.push(
         {

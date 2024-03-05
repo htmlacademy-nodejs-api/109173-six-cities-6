@@ -1,4 +1,5 @@
 PORT=8000
+HOST=localhost
 DB_HOST=127.0.0.1
 DB_PORT=27017
 DB_NAME=six-cities_mongodb
@@ -8,6 +9,7 @@ DB_PASSWORD=test
 SERVER_HOST=http://localhost
 SALT=0945j-[sdpfoh]
 UPLOAD_FILES_DIRECTORY=D:\OpenServer\domains\six-cities.node.loc\upload
+STATIC_FILES_DIRECTORY=D:\OpenServer\domains\six-cities.node.loc\static
 JWT_SECRET=skgj-03948hsk
 JWT_SECRET_REFRESH=jgnso823h4lw23-0[]
 JWT_EXPIRED=2d

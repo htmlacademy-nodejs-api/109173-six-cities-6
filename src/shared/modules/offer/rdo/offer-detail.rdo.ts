@@ -7,6 +7,7 @@ import { Images } from '../../../types/offer.type.js';
 import { UserRDO } from '../../user/rdo/user.rdo.js';
 
 export class OfferDetailRDO {
+  @Expose() public id!: string;
   @Expose() public name!: string;
   @Expose() public description!: string;
   @Expose() public date!: string;

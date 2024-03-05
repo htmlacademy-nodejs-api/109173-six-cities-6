@@ -12,13 +12,17 @@ import { Rest } from './rest.interface.js';
 import { DatabaseClient } from '../shared/libs/database-client/database-client.interface.js';
 import { getMongoURI } from '../utils/database.js';
 
-import { AppExceptionFilter } from '../shared/libs/rest/exception-filter/app-exception-filter.js';
+import { ApplicationExceptionFilter } from '../shared/libs/rest/exception-filter/application.exception-filter.js';
 
 import { UserController } from '../shared/modules/user/user.controller.js';
 import { OfferController } from '../shared/modules/offer/offer.controller.js';
 import { CommentController } from '../shared/modules/comment/comment.controller.js';
 import { AuthExceptionFilter } from '../shared/modules/auth/exception-filter/auth-exception-filter.js';
 import { ParseTokenMiddleware } from '../shared/libs/rest/middleware/parse-token.middleware.js';
+import { HttpErrorExceptionFilter } from '../shared/libs/rest/exception-filter/http-error.exceprion-filter.js';
+import { ValidationExceptionFilter } from '../shared/libs/rest/exception-filter/validation-exception-filter.js';
+import { getFullServerPath } from '../utils/common.js';
+import { Routes, StaticRoutes } from './rest.constant.js';
 
 const MessageText = {
   INIT: 'Rest application is initialized',
@@ -41,8 +45,10 @@ export class RestApplication implements Rest{
     @inject(Component.UserController) private readonly userController: UserController,
     @inject(Component.OfferController) private readonly offerController: OfferController,
     @inject(Component.CommentController) private readonly commentController: CommentController,
-    @inject(Component.AppExceptionFilter) private readonly appExceptionFilter: AppExceptionFilter,
+    @inject(Component.AppExceptionFilter) private readonly appExceptionFilter: ApplicationExceptionFilter,
     @inject(Component.AuthExceptionFilter) private readonly authExceptionFilter: AuthExceptionFilter,
+    @inject(Component.HttpExceptionFilter) private readonly httpErrorExceptionFilter: HttpErrorExceptionFilter,
+    @inject(Component.ValidationExceptionFilter) private readonly validationExceptionFilter: ValidationExceptionFilter,
   ) {
     this.server = express();
   }
@@ -64,29 +70,36 @@ export class RestApplication implements Rest{
 
     this.server.use(express.json());
     this.server.use(
-      '/upload',
+      StaticRoutes.UPLOAD_FILES,
       express.static(this.config.get('UPLOAD_FILES_DIRECTORY'))
+    );
+    this.server.use(
+      StaticRoutes.APP_FILES,
+      express.static(this.config.get('STATIC_FILES_DIRECTORY'))
     );
     this.server.use(authMiddleware.execute.bind(authMiddleware));
     this.server.use(cors());
   }
 
   private async initControllers() {
-    this.server.use('/users', this.userController.router);
-    this.server.use('/offers', this.offerController.router);
-    this.server.use('/comments', this.commentController.router);
+    this.server.use(Routes.USERS, this.userController.router);
+    this.server.use(Routes.OFFERS, this.offerController.router);
+    this.server.use(Routes.COMMENTS, this.commentController.router);
   }
 
   private async initExceptionFilters() {
     this.server.use(this.authExceptionFilter.catch.bind(this.authExceptionFilter));
+    this.server.use(this.validationExceptionFilter.catch.bind(this.validationExceptionFilter));
+    this.server.use(this.httpErrorExceptionFilter.catch.bind(this.httpErrorExceptionFilter));
     this.server.use(this.appExceptionFilter.catch.bind(this.appExceptionFilter));
   }
 
   private async initServer() {
+    const protocol = this.config.get('PROTO');
+    const host = this.config.get('HOST');
     const port = this.config.get('PORT');
-    const serverHost = this.config.get('SERVER_HOST');
 
-    this.server.listen(port, () => this.logger.info(`${MessageText.INIT_SERVER_SUCCESS}: ${serverHost}:${port}`));
+    this.server.listen(port, () => this.logger.info(`${MessageText.INIT_SERVER_SUCCESS}: ${getFullServerPath(protocol, host, port)}`));
   }
 
   public async init() {

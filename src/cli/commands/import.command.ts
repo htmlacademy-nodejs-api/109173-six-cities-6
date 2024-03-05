@@ -1,21 +1,25 @@
-import { GlobalSettings } from '../../global-settings.js';
+import { Command, ExecuteParameters } from './command.interface.js';
+import { Logger } from '../../shared/libs/logger/logger.interface.js';
+
+import { RestConfig } from '../../shared/libs/config/rest.config.js';
+import { MongoDatabaseClient } from '../../shared/libs/database-client/mongo.database-client.js';
+import { getDbConnectiondata, getMongoURI } from '../../utils/database.js';
+
+import { COMMAND_BEGINNING } from '../cli.constant.js';
 import { TSVFileReader } from '../../shared/libs/tsv-file-reader/tsv-file-reader.js';
 import { ReadEvent } from '../../shared/libs/tsv-settings.js';
 import { adaptOfferToDB, makeOffer } from '../../utils/offer.js';
-import { Command, ExecuteParameters } from './command.interface.js';
-import { Logger } from '../../shared/libs/logger/logger.interface.js';
-import { MongoDatabaseClient } from '../../shared/libs/database-client/mongo.database-client.js';
-import { UserModel } from '../../shared/modules/user/user.entity.js';
+
 import { OfferModel } from '../../shared/modules/offer/offer.entity.js';
-import { RestConfig } from '../../shared/libs/config/rest.config.js';
-import { getDbConnectiondata, getMongoURI } from '../../utils/database.js';
-import { DefaultUserService, UserService } from '../../shared/modules/user/index.js';
+import { UserModel } from '../../shared/modules/user/user.entity.js';
 import { OfferService } from '../../shared/modules/offer/offer-service.interface.js';
+import { DefaultUserService, UserService } from '../../shared/modules/user/index.js';
 import { DefaultOfferService } from '../../shared/modules/offer/default-offer.service.js';
+
 import { Offer } from '../../shared/types/offer.type.js';
 import { ConsoleLogger } from '../../shared/libs/logger/console.logger.js';
 
-const COMMAND_NAME = `${GlobalSettings.COMMAND_BEGINNING}import`;
+const COMMAND_NAME = `${COMMAND_BEGINNING}import`;
 
 const MessageText = {
   READ_ROWS: 'Read rows count:',

@@ -5,7 +5,7 @@ import { Component } from '../../types/component.enum.js';
 import { Request, Response } from 'express';
 import { RequestBody, RequestParams } from '../../libs/rest/types/request.type.js';
 import { HttpMethod } from '../../libs/rest/types/http-method.enum.js';
-import { HttpError } from '../../libs/rest/error/http-error.js';
+import { HttpError } from '../../libs/rest/errors/http-error.js';
 import { StatusCodes } from 'http-status-codes';
 
 import { BaseController } from '../../libs/rest/controller/base-controller.abstract.js';
@@ -24,7 +24,6 @@ import { ParamsOfferId } from '../../libs/rest/types/params-offerid.type.js';
 
 import { LoggedUserRDO } from './rdo/logged-user.rdo.js';
 import { UserRDO } from './rdo/user.rdo.js';
-import { OffersListItemRDO } from '../offer/rdo/offers-list-item.rdo.js';
 import { CheckUserStatusRDO } from './rdo/check-user-status.rdo.js';
 import { LoginUserDTO } from './dto/login-user.dto.js';
 import { CheckUserStatusDTO } from './dto/check-user-status.dto.js';
@@ -32,6 +31,7 @@ import { CreateUserDTO } from './index.js';
 import { fillDTO } from '../../../utils/common.js';
 import { GetOfferDTO } from '../offer/dto/get-offer.dto.js';
 import { UserFavoritesRDO } from './rdo/user-favorites.rdo..js';
+import { UserFavoritesOffersRDO } from './rdo/user-favorites-offers.rdo.js';
 
 type CreateUserRequest = Request<RequestParams, RequestBody, CreateUserDTO>
 type LoginUserRequest = Request<RequestParams, RequestBody, LoginUserDTO>;
@@ -93,7 +93,7 @@ export class UserController extends BaseController implements ControllerAddition
     });
     this.addRoute({
       path: '/logout',
-      method: HttpMethod.GET,
+      method: HttpMethod.DELETE,
       handler: this.logout,
       middlewares: [ new PrivateRouteMiddleware() ]
     });
@@ -207,16 +207,15 @@ export class UserController extends BaseController implements ControllerAddition
       );
     }
 
-    await this.userService.updateById(userId, { avatarUrl: req.file.path});
+    await this.userService.updateById(userId, { avatarUrl: req.file.filename});
     return this.created(res, req.file?.path);
   }
 
   public async getFavorites({ tokenPayload }: GetFavoriteOffersRequest, res: Response): Promise<void> {
     const { userId } = tokenPayload;
-
     const offers = await this.userService.getFavoriteOffers(userId);
 
-    this.ok(res, fillDTO(OffersListItemRDO, offers));
+    this.ok(res, fillDTO(UserFavoritesOffersRDO, offers));
   }
 
   public async addToFavorites({ params, tokenPayload }: AddToFavoritesRequest, res: Response): Promise<void> {

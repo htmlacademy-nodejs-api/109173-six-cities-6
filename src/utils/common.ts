@@ -28,11 +28,32 @@ function fillDTO<D, O>(dto: ClassConstructor<D>, plainObject: O) {
   return plainToClass(dto, plainObject, { excludeExtraneousValues: true });
 }
 
+function getFullServerPath(protocol: string, host: string, port: number) {
+  return `${protocol}://${host}:${port}`;
+}
+
+function isObject(value: unknown): value is Record<string, object> {
+  return (typeof value === 'object' && value !== null);
+}
+
+function isValidURL(value: string): boolean {
+  try {
+    const url = new URL(value);
+
+    return Boolean(url);
+  } catch(err) {
+    return false;
+  }
+}
+
 export {
   upperCaseFirst,
   getRandomInRange,
   getRandomBoolean,
   getRandomElement,
   getRandomElements,
-  fillDTO
+  fillDTO,
+  getFullServerPath,
+  isObject,
+  isValidURL
 };

@@ -3,12 +3,12 @@
 ## Созодание нового комментария
 POST http://localhost:8000/comments HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiI2NWQ1ZjRiMzYyZDU5ZmNmZDAzY2Q4MGIiLCJuYW1lIjoiUm9iZXJ0IERvd25leSIsImVtYWlsIjoiaXJvbm1hbkBzdGFyay1pbmR1c3RyaWVzLmxvYyIsImF2YXRhclVybCI6InVzZXItYXZhdGFyLmszVjRVU0ZiX18xdVNNbG5kdjNvMy5qcGVnIiwiaXNQcm8iOnRydWUsImZhdm9yaXRlT2ZmZXJzIjpbIjY1ZTU5N2I3OWU3MTc0MDE5ZTY5YzAwMSJdLCJleHAiOjE3MDk3MzcxODEsImlhdCI6MTcwOTU2NDM4MX0.TAmEO9PuDHHGkW-AA_zScCOOCM3uX6QHlLJSBNWEiNA
 
 {
   "text": "Comment text. Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
   "rating": 5,
-  "userId": "65d5f4b362d59fcfd03cd80b",
-  "offerId": "65cf1f6d7757251173e040c1"
+  "offerId": "65e597b79e7174019e69c001"
 }
 
 ###

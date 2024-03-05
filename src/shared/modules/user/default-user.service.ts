@@ -89,7 +89,6 @@ export class DefaultUserService implements UserService, DocumentExists {
   }
 
   public async removeFromFavoritesIds(userId: string, offerId: string): FoundUser {
-    console.log('USER: ', userId);
     const user = await this.findById(userId);
     const userFavorites: string[] = user?.favoriteOffers ?? [];
 

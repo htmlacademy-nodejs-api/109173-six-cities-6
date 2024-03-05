@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Middleware } from './middleware.interface.js';
 import { Types } from 'mongoose';
-import { HttpError } from '../error/http-error.js';
+import { HttpError } from '../errors/http-error.js';
 import { StatusCodes } from 'http-status-codes';
 
 const ErrorText = {
