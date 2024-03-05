@@ -24,6 +24,7 @@ const ReviewList = ({ reviews, isAuthorized, onSubmit, submitStatus }: ReviewLis
           ))}
         </ul>
       </>)}
+    {reviews.length <= 0 && <h2 className="reviews__title">Noone still leave review at this moment.<br /> Will be first :)</h2>}
     {isAuthorized && <ReviewForm onSubmit={onSubmit} submitStatus={submitStatus} />}
   </section>
 );

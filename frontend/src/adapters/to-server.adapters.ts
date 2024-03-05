@@ -1,6 +1,8 @@
-import { NewOffer, UserRegister } from '../types/types';
+import { CommentAuth, NewOffer, UserRegister } from '../types/types';
+import { CreateCommentDTO } from './dto/comments/dto/create-comment.dto';
 import { CreateOfferDTO } from './dto/offer/dto/create-offer.dto';
 import { CreateUserDTO } from './dto/user/dto/create-user.dto';
+import { getISODate } from './utils/common';
 
 export function adaptUserToServer(data: UserRegister): CreateUserDTO {
   return {
@@ -17,7 +19,7 @@ export function adaptOfferToServer(data: NewOffer): CreateOfferDTO {
   return {
     name: data.title,
     description: data.description,
-    date: new Date().toISOString(),
+    date: getISODate(),
     city: data.city.name,
     previewImage: data.previewImage,
     images: data.images,
@@ -34,5 +36,13 @@ export function adaptOfferToServer(data: NewOffer): CreateOfferDTO {
       latitude: String(data.location.latitude),
       longitude: String(data.location.longitude),
     },
+  };
+}
+
+export function adaptCommentToServer(data: CommentAuth): CreateCommentDTO {
+  return {
+    offerId: data.id,
+    text: data.comment,
+    rating: data.rating
   };
 }
