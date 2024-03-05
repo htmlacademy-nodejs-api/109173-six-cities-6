@@ -38,8 +38,6 @@ const Property = (): JSX.Element | null => {
   const comments = useAppSelector(selectComments);
   const commentStatus = useAppSelector(getCommentStatus);
 
-  console.log('COMMENTS: ', comments);
-
   useEffect(() => {
     const { id } = params;
     if (id) {

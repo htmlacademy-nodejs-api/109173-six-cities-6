@@ -62,6 +62,33 @@ export class DefaultOfferService implements OfferService, DocumentExists {
   }
 
   public async findById(id: string): FoundOffer {
+    const offerId = new mongoose.Types.ObjectId(id);
+
+    const convertUserId = {
+      $addFields: {
+        userId: { $toObjectId: '$userId' }
+      }
+    };
+
+    const offer = await this.offerModel
+      .aggregate([
+        { $match: { _id: offerId } }, // Получаем из списка оффер с id = offerId
+        convertUserId, // Конвертируем в полученном оффере поле userId в корректный MongoDB ObjectId
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'userId',
+            foreignField: '_id',
+            as: 'userId', // Перезаписываем поле userId в нашем оффере
+          },
+        },
+        { $unwind: '$userId' }
+      ])
+      .unwind()
+      .exec();
+
+    console.log('OFFER: ', offer);
+
     return await this.offerModel
       .findById(id)
       .populate('userId')
