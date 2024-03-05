@@ -83,7 +83,6 @@ export const siteData = createSlice({
       })
       .addCase(postFavorite.fulfilled, (state, action) => {
         const updatedOffer = action.payload;
-        console.log('UPDATES OFFER: ', updatedOffer);
         state.offers = state.offers.map((offer) => offer.id === updatedOffer.id ? updatedOffer : offer);
         state.premiumOffers = state.premiumOffers.map((offer) => offer.id === updatedOffer.id ? updatedOffer : offer);
         state.favoriteOffers = state.favoriteOffers.concat(updatedOffer);

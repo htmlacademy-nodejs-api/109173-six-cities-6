@@ -206,11 +206,9 @@ export const postFavorite = createAsyncThunk<
   const { api, history } = extra;
 
   try {
-    const { data } = await api.post<OfferDetailRDO>(`${ApiRoute.Favorite}/${id}`);
+    const { data } = await api.post<Offer>(`${ApiRoute.Favorite}/${id}`);
 
-    console.log('FAVORITE DATA: ', data);
-
-    return adaptOfferDetailToClient(data);
+    return data;
   } catch (error) {
     const axiosError = error as AxiosError;
 

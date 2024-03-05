@@ -217,7 +217,7 @@ export class OfferController extends BaseController implements ControllerAdditio
       );
     }
 
-    return offer as FoundOffer;
+    return offer;
   }
 
   private setFavoriteFlags(offers: OfferDoc[], userFavoriteOffers: string[]): OfferDoc[] {
