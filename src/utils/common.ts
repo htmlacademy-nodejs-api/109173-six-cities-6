@@ -1,25 +1,35 @@
 import { ClassConstructor, plainToClass } from 'class-transformer';
 
+const RandomBoolean = {
+  MIN: 0,
+  MAX: 1,
+  THRESHOLD: 0.5
+} as const;
+
+const RandomInRange = {
+  MIN: 0
+} as const;
+
 function upperCaseFirst(value: string) {
   return `${value.charAt(0).toUpperCase()}${value.slice(1)}`;
 }
 
-function getRandomInRange(min: number = 0, max: number = Infinity) {
+function getRandomInRange(min: number = RandomInRange.MIN, max: number = Infinity) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function getRandomBoolean() {
-  return getRandomInRange(0, 1) >= 0.5;
+  return getRandomInRange(RandomBoolean.MIN, RandomBoolean.MAX) >= RandomBoolean.THRESHOLD;
 }
 
 function getRandomElement<T>(array: T[]): T {
-  const randomIndex = getRandomInRange(0, array.length - 1);
+  const randomIndex = getRandomInRange(RandomInRange.MIN, array.length - 1);
 
   return array[randomIndex];
 }
 
 function getRandomElements<T>(array: T[], elementsCount?: number): T[] {
-  const elemsCount = elementsCount ?? getRandomInRange(1, array.length - 1);
+  const elemsCount = elementsCount ?? getRandomInRange(RandomInRange.MIN, array.length - 1);
 
   return Array.from({length: elemsCount}, () => getRandomElement(array));
 }

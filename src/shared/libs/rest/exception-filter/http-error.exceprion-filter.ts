@@ -4,7 +4,6 @@ import { inject, injectable } from 'inversify';
 import { Component } from '../../../types/component.enum.js';
 import { Logger } from 'pino';
 import { HttpError } from '../errors/http-error.js';
-import { StatusCodes } from 'http-status-codes';
 import { AppError } from '../../../types/app-error.enum.js';
 import { createErrorObject } from '../../../../utils/error.js';
 
