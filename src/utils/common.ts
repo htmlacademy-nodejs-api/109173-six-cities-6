@@ -10,10 +10,6 @@ const RandomInRange = {
   MIN: 0
 } as const;
 
-function upperCaseFirst(value: string) {
-  return `${value.charAt(0).toUpperCase()}${value.slice(1)}`;
-}
-
 function getRandomInRange(min: number = RandomInRange.MIN, max: number = Infinity) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
